@@ -1,5 +1,7 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
+import { getAuth, GoogleAuthProvider, browserLocalPersistence, setPersistence } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
@@ -12,7 +14,12 @@ const firebaseConfig = {
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
-const analytics = isSupported().then((yes) => (yes ? getAnalytics(app) : null));
+setPersistence(auth, browserLocalPersistence).catch(() => {});
 
-export { app, analytics };
+isSupported().then((yes) => yes && getAnalytics(app));
+
+export { app, auth, db, googleProvider };
