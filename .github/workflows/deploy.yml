@@ -1,0 +1,38 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: withastro/action@v6
+        with:
+          package-manager: bun@latest
+        env:
+          PUBLIC_FIREBASE_API_KEY: ${{ secrets.PUBLIC_FIREBASE_API_KEY }}
+          PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.PUBLIC_FIREBASE_PROJECT_ID }}
+          PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          PUBLIC_FIREBASE_APP_ID: ${{ secrets.PUBLIC_FIREBASE_APP_ID }}
+          PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.PUBLIC_FIREBASE_MEASUREMENT_ID }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
