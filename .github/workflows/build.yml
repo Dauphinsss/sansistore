@@ -3,6 +3,13 @@ name: Build
 on:
   pull_request:
     branches: [main, production]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "astro.config.*"
+      - "package.json"
+      - "bun.lock"
+      - "tsconfig.json"
 
 jobs:
   build:
