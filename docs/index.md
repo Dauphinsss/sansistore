@@ -29,4 +29,4 @@ bun dev
 - [CI/CD](./cicd.md): required checks and deployments
 - [Daily Report](./daily-report.md): how we post daily updates
 
-Legacy mdBook site: https://procesosagilesumss.github.io/sansistore/
+Docs site: https://procesosagilesumss.github.io/sansistore/
