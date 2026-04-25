@@ -8,10 +8,10 @@ Project documentation (start here): https://procesosagilesumss.github.io/sansist
 
 ## Environments (Vercel)
 
-| Branch | Purpose | Deploy URL |
-|---|---|---|
-| `main` | Staging / QA (pre-release) | https://sansistore-test.vercel.app |
-| `production` | Production (live) | https://sansistore-umss.vercel.app |
+| Branch       | Purpose                    | Deploy URL                         |
+| ------------ | -------------------------- | ---------------------------------- |
+| `main`       | Staging / QA (pre-release) | https://sansistore-test.vercel.app |
+| `production` | Production (live)          | https://sansistore-umss.vercel.app |
 
 ## New dev quick start
 

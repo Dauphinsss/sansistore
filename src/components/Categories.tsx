@@ -30,7 +30,9 @@ export default function Categories() {
     <section id="categorias" className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">Explora por categoría</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">
+            Explora por categoría
+          </h2>
           <p className="text-slate-500">Encuentra exactamente lo que buscas</p>
         </div>
 
@@ -41,7 +43,9 @@ export default function Categories() {
               href="#"
               className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${cat.bg} transition-transform duration-500 group-hover:scale-105`} />
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${cat.bg} transition-transform duration-500 group-hover:scale-105`}
+              />
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
               <div className="relative h-full flex flex-col items-center justify-center text-white p-6 text-center">
                 <span className="text-4xl mb-3">{cat.emoji}</span>

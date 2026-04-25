@@ -13,10 +13,10 @@ bun dev
 
 2. Make sure you understand the environments:
 
-| Branch | Purpose | Deploy URL |
-|---|---|---|
-| `main` | Staging / QA (pre-release) | https://sansistore-test.vercel.app |
-| `production` | Production (live) | https://sansistore-umss.vercel.app |
+| Branch       | Purpose                    | Deploy URL                         |
+| ------------ | -------------------------- | ---------------------------------- |
+| `main`       | Staging / QA (pre-release) | https://sansistore-test.vercel.app |
+| `production` | Production (live)          | https://sansistore-umss.vercel.app |
 
 3. Create work branches from `main` and open PRs back into `main`.
 
