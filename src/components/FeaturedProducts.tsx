@@ -5,11 +5,13 @@ import { db } from '../lib/firebase';
 
 interface Product {
   id: string;
-  nombre: string;
-  precio: number;
-  precioAnterior?: number;
+  name: string;
+  price: number;
+  imageUrl?: string;
+  active?: boolean;
+  hasOffer?: boolean;
+  offerPrice?: number;
   badge?: string;
-  imagen?: string;
 }
 
 export default function FeaturedProducts() {
@@ -19,9 +21,17 @@ export default function FeaturedProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const q = query(collection(db, 'productos'), orderBy('createdAt', 'desc'), limit(6));
+        const q = query(
+          collection(db, 'products'),
+          orderBy('createdAt', 'desc'),
+          limit(6)
+        );
         const snap = await getDocs(q);
-        setProducts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product)));
+        setProducts(
+          snap.docs
+            .map((doc) => ({ id: doc.id, ...doc.data() }) as Product)
+            .filter((product) => product.active !== false)
+        );
       } catch {
         setProducts([]);
       } finally {
@@ -36,7 +46,10 @@ export default function FeaturedProducts() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-2xl font-bold text-slate-900">Destacados</h2>
-          <a href="#" className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+          <a
+            href="#"
+            className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+          >
             Ver todos <ArrowRight size={14} />
           </a>
         </div>
@@ -44,7 +57,10 @@ export default function FeaturedProducts() {
         {loading && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden border border-slate-100 animate-pulse">
+              <div
+                key={i}
+                className="bg-white rounded-2xl overflow-hidden border border-slate-100 animate-pulse"
+              >
                 <div className="aspect-square bg-slate-100" />
                 <div className="p-4 space-y-2">
                   <div className="h-3 bg-slate-100 rounded w-3/4" />
@@ -58,17 +74,27 @@ export default function FeaturedProducts() {
         {!loading && products.length === 0 && (
           <div className="text-center py-20 text-slate-400">
             <Package size={40} className="mx-auto mb-3 opacity-40" />
-            <p className="text-sm">Aún no hay productos. Agrega desde Firestore la colección <code className="bg-slate-100 px-1 rounded">productos</code>.</p>
+            <p className="text-sm">
+              Aún no hay productos. Agrega desde Firestore la colección{' '}
+              <code className="bg-slate-100 px-1 rounded">products</code>.
+            </p>
           </div>
         )}
 
         {!loading && products.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {products.map((product) => (
-              <div key={product.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-200 transition-colors">
+              <div
+                key={product.id}
+                className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-200 transition-colors"
+              >
                 <div className="relative bg-slate-100 aspect-square flex items-center justify-center overflow-hidden">
-                  {product.imagen ? (
-                    <img src={product.imagen} alt={product.nombre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  {product.imageUrl ? (
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   ) : (
                     <Package size={40} className="text-slate-300" />
                   )}
@@ -82,11 +108,20 @@ export default function FeaturedProducts() {
                   </button>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-medium text-slate-900 text-sm">{product.nombre}</h3>
+                  <h3 className="font-medium text-slate-900 text-sm">
+                    {product.name}
+                  </h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-slate-900 font-bold text-sm">${product.precio}</span>
-                    {product.precioAnterior && (
-                      <span className="text-slate-400 text-xs line-through">${product.precioAnterior}</span>
+                    <span className="text-slate-900 font-bold text-sm">
+                      $
+                      {product.hasOffer && product.offerPrice
+                        ? product.offerPrice
+                        : product.price}
+                    </span>
+                    {product.hasOffer && product.offerPrice && (
+                      <span className="text-slate-400 text-xs line-through">
+                        ${product.price}
+                      </span>
                     )}
                   </div>
                 </div>

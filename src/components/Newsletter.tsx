@@ -7,15 +7,21 @@ export default function Newsletter() {
       </div>
 
       <div className="relative max-w-2xl mx-auto px-4 text-center">
-        <span className="text-indigo-400 text-sm font-semibold uppercase tracking-widest mb-4 block">Newsletter</span>
+        <span className="text-indigo-400 text-sm font-semibold uppercase tracking-widest mb-4 block">
+          Newsletter
+        </span>
         <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
           Sé el primero en enterarte
         </h2>
         <p className="text-slate-400 mb-10">
-          Recibe novedades, ofertas exclusivas y lanzamientos antes que nadie directamente en tu correo.
+          Recibe novedades, ofertas exclusivas y lanzamientos antes que nadie
+          directamente en tu correo.
         </p>
 
-        <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+        <form
+          className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <input
             type="email"
             placeholder="tu@correo.com"
@@ -29,7 +35,9 @@ export default function Newsletter() {
           </button>
         </form>
 
-        <p className="text-slate-600 text-xs mt-4">Sin spam. Cancela cuando quieras.</p>
+        <p className="text-slate-600 text-xs mt-4">
+          Sin spam. Cancela cuando quieras.
+        </p>
       </div>
     </section>
   );
