@@ -43,6 +43,8 @@ classDiagram
     +string displayName
     +string role
     +string institutionalId
+    +boolean isActive
+    +string createdBy
     +timestamp createdAt
   }
 
@@ -60,6 +62,8 @@ classDiagram
     +string categoryId
     +string name
     +boolean active
+    +string createdBy
+    +timestamp createdAt
   }
 
   class products {
@@ -146,6 +150,11 @@ classDiagram
     +timestamp closedAt
   }
 
+  class settings {
+    +string documentId
+    +number reservationTimeLimit
+  }
+
   users "1" --> "0..*" locations : owns
   users "1" --> "0..*" orders : places
   users "1" --> "0..*" reviews : writes
@@ -157,6 +166,7 @@ classDiagram
   orders "1" --> "1" deliveries : has
   orders "1" --> "1" payments : has
   deliveries "0..*" --> "1" courierSessions : belongs
+  users "1" --> "1" settings : configures
 ```
 
 ### Technical notes
