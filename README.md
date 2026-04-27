@@ -41,7 +41,8 @@ classDiagram
     +string uid
     +string email
     +string displayName
-    +string role
+    +string phoneNumber
+    +array roles
     +string institutionalId
     +boolean isActive
     +string createdBy
@@ -176,6 +177,7 @@ The model is a good base for an ecommerce app with delivery, with three implemen
 - In Firestore, you do not always need to store `productId`, `orderId`, etc. inside the document if the document ID already represents that value. Store it only when exports or search flows need it.
 - `inventoryMovements` should belong under `products` or live as a root collection indexed by `productId`. Nesting it under `inventory` can make global audit queries harder.
 - Define closed values for `role`, `status`, `type`, and `method` from the start to avoid inconsistent states.
+- (TODO) `roles` is an array accepting: admin | vendedor | mensajero | operador | comprador. Example: ["admin", "comprador"] -> CHECK. Use array-contains for queries.
 
 ## Branching and releases
 
