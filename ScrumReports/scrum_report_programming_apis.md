@@ -16,3 +16,9 @@
 - **Yesterday:** Participe en la planificacion de la base de datos y planificacion de vercel para el mockup del proyecto. 
 - **Today:** Planificar de sprint 1 con mi grupo y cooperacion con los demas teams para el desarrollo del primer sprint
 - **Blockers:** None. 
+
+## Adrián Said Andrade Medina
+- **Yesterday:** Participé en la coordinación general del equipo y revisión de los avances definidos para el Sprint 1.
+- **Today:** Apoyar en la planificación del Sprint 1 y mantenerme alineado con las tareas asignadas del equipo.
+Blockers: None.
+- **Blockers:** None.
