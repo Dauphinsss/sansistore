@@ -10,3 +10,9 @@
 - **Yesterday:** Participé en la reunión de representantes/líderes de equipo para la primera versión de la base de datos. Inicialización del entorno de desarrollo en medio local para iniciar la implementación.
 - **Today:** Finalizar la planificación del sprint 1 con el resto de mis compañeros. Mantener contacto con el/los encargado(s) del repositorio para resguardar la coordinación de los equipos.
 - **Blockers:** None.
+
+## Bruno Salcedo Cadiz
+
+- **Yesterday:** Participe en la planificacion de la base de datos y planificacion de vercel para el mockup del proyecto. 
+- **Today:** Planificar de sprint 1 con mi grupo y cooperacion con los demas teams para el desarrollo del primer sprint
+- **Blockers:** None. 
