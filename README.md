@@ -127,13 +127,22 @@ classDiagram
   }
 
   class deliveries {
-    +string deliveryId
-    +string orderId
-    +string courierId
-    +string status
-    +string incidentReason
-    +number amountCollected
-    +timestamp assignedAt
+  +string deliveryId
+  +string orderId
+  +string courierId
+  +string status
+  +string deliveryCode
+  +number attemptNumber
+  +string incidentReason
+  +string failureReason
+  +number amountCollected
+  +timestamp assignedAt
+  +timestamp pickedUpAt
+  +timestamp deliveredAt
+  +timestamp failedAt
+  +timestamp reprogrammedAt
+  +timestamp createdAt
+  +timestamp updatedAt
   }
 
   class payments {
