@@ -2,8 +2,8 @@
 
 ## Dayana Saletth Ortuño Guzman
 
- * **Yesterday:** En la HU *“Como comprador quiero pagar contra entrega”*, coloque sus criterios de aceptación y detalles en GitHub.
-* **Today:** Crearé el diseño correspondiente en Figma.
+ * **Yesterday:** Trabaje en la HU *“Como comprador quiero pagar contra entrega”*, coloque sus criterios de aceptación y detalles en GitHub.
+* **Today:** Coordinare junto con el equipo, para planificar el sprint 1, deacuerdo eso empezare hacer mockups en figma.
 * **Blockers:** None
 
 ## Maria Victoria Grageda Vallejos
