@@ -16,8 +16,8 @@
 
 ## Bruno Salcedo Cadiz
 
-- **Yesterday:** Participe en la planificacion de la base de datos y planificacion de vercel para el mockup del proyecto.
-- **Today:** Planificar de sprint 1 con mi grupo y cooperacion con los demas teams para el desarrollo del primer sprint
+- **Yesterday:** Participé en la planificación de la base de datos y del despliegue en Vercel para el mockup del proyecto.
+- **Today:** Planificar el Sprint 1 con mi grupo y cooperar con los demás equipos en el desarrollo del primer sprint.
 - **Blockers:** None.
 
 ## Adrián Said Andrade Medina
