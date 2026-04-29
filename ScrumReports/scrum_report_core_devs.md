@@ -12,3 +12,8 @@
 - **Yesterday:** Investigar Astro y Firebase
 - **Today:** Inicializar el repositorio en mi maquina y avanzar con las tareas de la HU1.
 - **Blockers:** Ninguno
+
+## Soliz Moya Alejandra
+- **Yesterday:** Revisar las HU e inicializar el repositorio
+- **Today:** Realizar los mockups de las HU definidas.
+- **Blockers:** Ninguno
