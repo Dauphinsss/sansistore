@@ -43,7 +43,6 @@ classDiagram
     +string displayName
     +array roles
     +string institutionalId
-    +string phone 
     +timestamp createdAt
   }
 
@@ -61,6 +60,8 @@ classDiagram
     +string categoryId
     +string name
     +boolean active
+    +string createdBy
+    +timestamp createdAt
   }
 
   class products {
@@ -150,6 +151,11 @@ classDiagram
     +timestamp closedAt
   }
 
+  class settings {
+    +string documentId
+    +number reservationTimeLimit
+  }
+
   users "1" --> "0..*" locations : owns
   users "1" --> "0..*" orders : places
   users "1" --> "0..*" reviews : writes
@@ -161,6 +167,7 @@ classDiagram
   orders "1" --> "1" deliveries : has
   orders "1" --> "1" payments : has
   deliveries "0..*" --> "1" courierSessions : belongs
+  users "1" --> "1" settings : configures
 ```
 
 ### Technical notes
@@ -170,6 +177,7 @@ The model is a good base for an ecommerce app with delivery, with three implemen
 - In Firestore, you do not always need to store `productId`, `orderId`, etc. inside the document if the document ID already represents that value. Store it only when exports or search flows need it.
 - `inventoryMovements` should belong under `products` or live as a root collection indexed by `productId`. Nesting it under `inventory` can make global audit queries harder.
 - Define closed values for `role`, `status`, `type`, and `method` from the start to avoid inconsistent states.
+- (TODO) `roles` is an array accepting: admin | vendedor | mensajero | operador | comprador. Example: ["admin", "comprador"] -> CHECK. Use array-contains for queries.
 
 ## Branching and releases
 
