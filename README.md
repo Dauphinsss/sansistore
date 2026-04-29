@@ -239,6 +239,11 @@ classDiagram
     +number reservationTimeLimit
   }
 
+  class settings {
+    +string documentId
+    +number reservationTimeLimit
+  }
+
   users "1" --> "0..*" locations : owns
   users "1" --> "0..*" orders : places
   users "1" --> "0..*" reviews : writes
