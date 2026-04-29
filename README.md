@@ -43,7 +43,6 @@ classDiagram
     +string displayName
     +array roles
     +string institutionalId
-    +string phone 
     +timestamp createdAt
   }
 
