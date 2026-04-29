@@ -1,4 +1,4 @@
-## Daily Reports - Team 6 Software One
+## Daily Reports - Team 6 SoftwareOne
 
 ### Llanos Vega Juan Carlos
 
