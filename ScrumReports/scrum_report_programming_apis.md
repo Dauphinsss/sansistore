@@ -47,3 +47,9 @@
 - **Yesterday:** Investigue sobre astro y firebase. Participé en la reunión del grupo para seleccionar las historias de usuario del primer sprint y llene las descripciones, criterios de aceptación y tareas de 2 historias de usuario.
 - **Today:** Empezare con la implementación de la historia de usuario seleccionada para este sprint.
 - **Blockers:** None.
+
+### Bruno Salcedo Cadiz
+
+- **Yesterday:** Configure el entorno de desarrollo local y termine de crear las descripciones de historias de usuario asignadas al team.
+- **Today:** Empezare a desarrollar las historias de usuario asignadas del primer sprint
+- **Blockers:** None.
