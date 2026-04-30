@@ -54,8 +54,14 @@
 - **Today:** Empezare a desarrollar las historias de usuario asignadas del primer sprint
 - **Blockers:** None.
 
-### Adrian Said Andrade Medina 
+### Adrian Said Andrade Medina
 
 - **Yesterday:** Participé en la reunión del grupo para seleccionar las historias de usuario del primer sprint. Redacte las historias de usuario que seleccione.
 - **Today:** Hoy comenzare con la planificación del trabajo para las hus.
+- **Blockers:** None.
+
+## Jhoel Gustavo Aiza Arce
+
+- **Yesterday:** Finalización del despliegue del prototipo funcional (mockup en código) en Vercel tras decisión grupal de omitir Figma para acelerar la validación de lógica de rutas UMSS.
+- **Today:** Implementación y documentación del Frontend Design System del proyecto, definiendo el sistema de diseño global (tokens de color, tipografía, espaciado, componentes, theming y arquitectura UI) para garantizar consistencia visual, escalabilidad y mantenibilidad del frontend. Participación en la defensa del Sprint 1.
 - **Blockers:** None.
