@@ -53,3 +53,9 @@
 - **Yesterday:** Configure el entorno de desarrollo local y termine de crear las descripciones de historias de usuario asignadas al team.
 - **Today:** Empezare a desarrollar las historias de usuario asignadas del primer sprint
 - **Blockers:** None.
+
+### Adrian Said Andrade Medina 
+
+- **Yesterday:** Participé en la reunión del grupo para seleccionar las historias de usuario del primer sprint. Redacte las historias de usuario que seleccione.
+- **Today:** Hoy comenzare con la planificación del trabajo para las hus.
+- **Blockers:** None.
