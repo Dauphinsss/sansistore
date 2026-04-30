@@ -1,4 +1,4 @@
-# Sprint 1: Daily Report - Team 2 
+# Sprint 1: Daily Report - Team 2
 
 ## 04/28/2026
 
@@ -32,9 +32,7 @@
 - **Today:** Ayudar en la planificación del Sprint 1.
 - **Blockers:** None.
 
-
-***
-
+---
 
 ## 30-04-2026
 
@@ -42,4 +40,10 @@
 
 - **Yesterday:** Terminé de configurar el entorno de desarrollo local. Participé en la reunión interna del grupo para seleccionar las historias de usuario del primer sprint y aporté llenando las descripciones necesarias para documentar las HU.
 - **Today:** Empezaré con el desarrollo de las primeras de historia de usuarios elegidas para este primer sprint.
+- **Blockers:** None.
+
+### Efrain Peralta Felipe
+
+- **Yesterday:** Investigue sobre astro y firebase. Participé en la reunión del grupo para seleccionar las historias de usuario del primer sprint y llene las descripciones, criterios de aceptación y tareas de 2 historias de usuario.
+- **Today:** Empezare con la implementación de la historia de usuario seleccionada para este sprint.
 - **Blockers:** None.
