@@ -4,50 +4,50 @@ const categories = [
     description: 'Lo último en tendencias',
     emoji: '✨',
     color: '#88B04B',
+    bgClass: 'bg-primary',
   },
   {
     name: 'Más vendidos',
     description: 'Los favoritos del momento',
     emoji: '🔥',
     color: '#1E1E1E',
+    bgClass: 'bg-primary-action',
   },
   {
     name: 'Ofertas',
     description: 'Hasta 50% de descuento',
     emoji: '🏷️',
     color: '#88B04B',
+    bgClass: 'bg-primary',
   },
   {
     name: 'Colecciones',
     description: 'Selecciones exclusivas',
     emoji: '🎁',
     color: '#1E1E1E',
+    bgClass: 'bg-primary-action',
   },
 ];
 
 export default function Categories() {
   return (
-    <section
-      id="categorias"
-      className="py-24"
-      style={{ backgroundColor: '#FFFBF4' }}
-    >
+    <section id="categorias" className="py-24 bg-bg-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* HEADER */}
         <div className="text-center mb-14">
           <h2
             style={{
-              color: '#1E1E1E',
               fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
               fontWeight: 900,
               letterSpacing: '-0.03em',
             }}
+            className="text-text-light"
           >
             Explora por categoría
           </h2>
 
-          <p style={{ color: '#1E1E1E', opacity: 0.6 }}>
+          <p className="text-text-light opacity-60">
             Encuentra exactamente lo que buscas
           </p>
         </div>
@@ -59,21 +59,11 @@ export default function Categories() {
             <a
               key={cat.name}
               href="#"
-              className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer transition-all duration-300 hover:-translate-y-1"
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '1px solid rgba(136,176,75,0.15)',
-              }}
+              className={`group relative overflow-hidden rounded-2xl aspect-square cursor-pointer transition-all duration-300 hover:-translate-y-1 bg-card-bg-light border border-border-light`}
             >
 
               {/* BACKGROUND LAYER */}
-              <div
-                className="absolute inset-0 transition-all duration-500 group-hover:scale-110"
-                style={{
-                  backgroundColor: cat.color,
-                  opacity: 0.08,
-                }}
-              />
+              <div className={`absolute inset-0 transition-all duration-500 group-hover:scale-110 ${cat.bgClass} opacity-[0.08]`} />
 
               {/* HOVER GLOW (GREEN CONSISTENCY) */}
               <div
@@ -93,29 +83,16 @@ export default function Categories() {
                   {cat.emoji}
                 </span>
 
-                <h3
-                  className="text-lg font-bold transition-colors duration-300 group-hover:text-[#88B04B]"
-                  style={{ color: '#1E1E1E' }}
-                >
+                <h3 className="text-lg font-bold transition-colors duration-300 group-hover:text-primary text-text-light">
                   {cat.name}
                 </h3>
 
-                <p
-                  className="text-sm mt-1"
-                  style={{ color: '#1E1E1E', opacity: 0.6 }}
-                >
-                  {cat.description}
-                </p>
+                <p className="text-sm mt-1 text-text-light opacity-60">{cat.description}</p>
 
               </div>
 
               {/* BORDER ACCENT ON HOVER */}
-              <div
-                className="absolute inset-0 rounded-2xl pointer-events-none transition-all duration-300 group-hover:border-[#88B04B]"
-                style={{
-                  border: '1px solid transparent',
-                }}
-              />
+              <div className="absolute inset-0 rounded-2xl pointer-events-none transition-all duration-300 border border-transparent group-hover:border-primary" />
 
             </a>
           ))}

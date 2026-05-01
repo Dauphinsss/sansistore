@@ -1,1 +1,16 @@
 @import 'tailwindcss';
+
+@theme {
+    --color-bg-light: #fffbf4;
+    --color-bg-dark: #0a0b0d;
+    --color-primary: #88b04b;
+    --color-primary-action: #1e1e1e;
+    --color-text-light: #1e1e1e;
+    --color-text-dark: #f5f3ef;
+    --color-card-bg-light: #ffffff;
+    --color-card-bg-dark: #141518;
+    --color-secondary-bg-light: #e8e5d8;
+    --color-secondary-bg-dark: #1a1b1e;
+    --color-border-light: rgba(136, 176, 75, 0.15);
+    --color-border-dark: rgba(255, 255, 255, 0.08);
+}

@@ -42,44 +42,16 @@ export default function Navbar() {
 
   const handleLogout = () => signOut(auth).catch(console.error);
 
-  const linkStyle = {
-    fontSize: '13px',
-    color: '#1E1E1E',
-    opacity: 0.55,
-    fontWeight: 600,
-    letterSpacing: '0.02em',
-    transition: 'all 0.3s cubic-bezier(0.2, 0, 0, 1)',
-  };
-
-  const hoverGreen = (e: any) => {
-    e.currentTarget.style.color = '#88B04B';
-    e.currentTarget.style.opacity = '1';
-  };
-
-  const hoverReset = (e: any) => {
-    e.currentTarget.style.color = '#1E1E1E';
-    e.currentTarget.style.opacity = '0.55';
-  };
+  // Use Tailwind classes for colors and hover states (colors defined in tailwind.config.cjs)
 
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md"
-      style={{
-        backgroundColor: 'rgba(255, 251, 244, 0.85)',
-        borderBottom: '1px solid rgba(136,176,75,0.15)',
-        fontFamily: 'Inter, sans-serif',
-      }}
-    >
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-bg-light/85 border-b border-border-light font-sans">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14">
 
           {/* LOGO */}
-          <a
-            href="/"
-            className="font-black tracking-tight"
-            style={{ fontSize: '16px', color: '#1E1E1E' }}
-          >
-            sansi<span style={{ color: '#88B04B' }}>store</span>
+          <a href="/" className="font-black tracking-tight text-[16px] text-text-light">
+            sansi<span className="text-primary">store</span>
           </a>
 
           {/* LINKS */}
@@ -88,9 +60,7 @@ export default function Navbar() {
               <a
                 key={item}
                 href="#"
-                style={linkStyle}
-                onMouseEnter={hoverGreen}
-                onMouseLeave={hoverReset}
+                className="text-[13px] text-text-light opacity-[0.55] font-semibold tracking-[0.02em] transition-all hover:text-primary hover:opacity-100"
               >
                 {item}
               </a>
@@ -101,41 +71,15 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
 
             {/* SEARCH */}
-            <button
-              className="transition-all"
-              style={{ color: '#1E1E1E', opacity: 0.55 }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#88B04B';
-                e.currentTarget.style.opacity = '1';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#1E1E1E';
-                e.currentTarget.style.opacity = '0.55';
-              }}
-            >
+            <button className="transition-all text-text-light opacity-[0.55] hover:text-primary hover:opacity-100">
               <Search size={18} />
             </button>
 
             {/* CART */}
-            <button
-              className="relative transition-all"
-              style={{ color: '#1E1E1E', opacity: 0.55 }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#88B04B';
-                e.currentTarget.style.opacity = '1';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#1E1E1E';
-                e.currentTarget.style.opacity = '0.55';
-              }}
-            >
+            <button className="relative transition-all text-text-light opacity-[0.55] hover:text-primary hover:opacity-100">
               <ShoppingBag size={18} />
               <span
-                className="absolute -top-1 -right-1 text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold"
-                style={{
-                  backgroundColor: '#1E1E1E',
-                  color: '#FFFBF4',
-                }}
+                className="absolute -top-1 -right-1 text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold bg-primary-action text-bg-light"
               >
                 0
               </span>
@@ -153,23 +97,11 @@ export default function Navbar() {
                     />
                   )}
 
-                  <span
-                    className="hidden sm:inline"
-                    style={{
-                      fontSize: '13px',
-                      color: '#1E1E1E',
-                      opacity: 0.7,
-                    }}
-                  >
+                  <span className="hidden sm:inline text-[13px] text-text-light opacity-70">
                     {user.displayName}
                   </span>
 
-                  <button
-                    onClick={handleLogout}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#88B04B')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#1E1E1E')}
-                    style={{ opacity: 0.5, transition: 'all 0.3s cubic-bezier(0.2,0,0,1)' }}
-                  >
+                  <button onClick={handleLogout} className="opacity-50 transition-all hover:text-primary">
                     <LogOut size={16} />
                   </button>
 
@@ -177,35 +109,14 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="px-4 py-1.5 rounded-full border transition-all active:scale-95"
-                  style={{
-                    borderColor: 'rgba(136,176,75,0.25)',
-                    color: '#1E1E1E',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    transition: 'all 0.3s cubic-bezier(0.2,0,0,1)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#88B04B';
-                    e.currentTarget.style.color = '#88B04B';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(136,176,75,0.25)';
-                    e.currentTarget.style.color = '#1E1E1E';
-                  }}
+                  className="px-4 py-1.5 rounded-full border transition-all active:scale-95 text-[13px] font-semibold text-text-light border-border-light hover:border-primary hover:text-primary"
                 >
                   Iniciar sesión
                 </button>
               ))}
 
             {/* MOBILE */}
-            <button
-              className="md:hidden"
-              style={{ color: '#1E1E1E', opacity: 0.6 }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#88B04B')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#1E1E1E')}
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
+            <button className="md:hidden text-text-light opacity-60 hover:text-primary" onClick={() => setMenuOpen(!menuOpen)}>
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
 
@@ -214,19 +125,12 @@ export default function Navbar() {
 
         {/* MOBILE MENU */}
         {menuOpen && (
-          <div
-            className="md:hidden py-3 flex flex-col gap-3"
-            style={{
-              borderTop: '1px solid rgba(136,176,75,0.15)',
-            }}
-          >
+          <div className="md:hidden py-3 flex flex-col gap-3 border-t border-border-light">
             {['Novedades', 'Ofertas', 'Colecciones'].map((item) => (
               <a
                 key={item}
                 href="#"
-                style={linkStyle}
-                onMouseEnter={hoverGreen}
-                onMouseLeave={hoverReset}
+                className="text-[13px] text-text-light opacity-[0.55] font-semibold tracking-[0.02em] transition-all hover:text-primary hover:opacity-100"
               >
                 {item}
               </a>

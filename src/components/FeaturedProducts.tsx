@@ -44,31 +44,16 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section
-      id="productos"
-      className="py-20"
-      style={{ backgroundColor: '#FFFBF4' }}
-    >
+    <section id="productos" className="py-20 bg-bg-light">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
         {/* HEADER */}
         <div className="flex items-end justify-between mb-10">
-          <h2
-            style={{
-              color: '#1E1E1E',
-              fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
-              letterSpacing: '-0.03em',
-              fontWeight: 900,
-            }}
-          >
+          <h2 className="text-text-light" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', letterSpacing: '-0.03em', fontWeight: 900 }}>
             Destacados
           </h2>
 
-          <a
-            href="#"
-            className="inline-flex items-center gap-1 text-sm font-semibold transition-all duration-300 hover:gap-2"
-            style={{ color: '#88B04B' }}
-          >
+          <a href="#" className="inline-flex items-center gap-1 text-sm font-semibold transition-all duration-300 hover:gap-2 text-primary">
             Ver todos <ArrowRight size={14} />
           </a>
         </div>
@@ -77,18 +62,11 @@ export default function FeaturedProducts() {
         {loading && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-2xl overflow-hidden border animate-pulse"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderColor: 'rgba(136,176,75,0.15)',
-                }}
-              >
-                <div className="aspect-square" style={{ backgroundColor: '#E8E5D8' }} />
+              <div key={i} className="rounded-2xl overflow-hidden border animate-pulse bg-card-bg-light border-border-light">
+                <div className="aspect-square bg-secondary-bg-light" />
                 <div className="p-4 space-y-2">
-                  <div className="h-3 w-3/4 rounded" style={{ backgroundColor: '#E8E5D8' }} />
-                  <div className="h-3 w-1/3 rounded" style={{ backgroundColor: '#E8E5D8' }} />
+                  <div className="h-3 w-3/4 rounded bg-secondary-bg-light" />
+                  <div className="h-3 w-1/3 rounded bg-secondary-bg-light" />
                 </div>
               </div>
             ))}
@@ -98,10 +76,8 @@ export default function FeaturedProducts() {
         {/* EMPTY */}
         {!loading && products.length === 0 && (
           <div className="text-center py-20">
-            <Package size={40} className="mx-auto mb-3 opacity-40" />
-            <p className="text-sm" style={{ color: '#1E1E1E', opacity: 0.5 }}>
-              Aún no hay productos.
-            </p>
+            <Package size={40} className="mx-auto mb-3 opacity-40 text-text-light" />
+            <p className="text-sm text-text-light opacity-50">Aún no hay productos.</p>
           </div>
         )}
 
@@ -110,20 +86,10 @@ export default function FeaturedProducts() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 
             {products.map((product) => (
-              <div
-                key={product.id}
-                className="group cursor-pointer rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-1"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderColor: 'rgba(136,176,75,0.15)',
-                }}
-              >
+              <div key={product.id} className="group cursor-pointer rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 bg-card-bg-light border-border-light">
 
                 {/* IMAGE */}
-                <div
-                  className="relative aspect-square flex items-center justify-center overflow-hidden"
-                  style={{ backgroundColor: '#E8E5D8' }}
-                >
+                <div className="relative aspect-square flex items-center justify-center overflow-hidden bg-secondary-bg-light">
                   {product.imageUrl ? (
                     <img
                       src={product.imageUrl}
@@ -131,62 +97,32 @@ export default function FeaturedProducts() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
-                    <Package size={40} style={{ color: '#1E1E1E', opacity: 0.2 }} />
+                    <Package size={40} className="text-text-light opacity-20" />
                   )}
 
                   {/* BADGE */}
                   {product.badge && (
-                    <span
-                      className="absolute top-3 left-3 px-2 py-0.5 rounded-full text-xs font-semibold"
-                      style={{
-                        backgroundColor: '#1E1E1E',
-                        color: '#FFFBF4',
-                      }}
-                    >
-                      {product.badge}
-                    </span>
+                    <span className="absolute top-3 left-3 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-action text-bg-light">{product.badge}</span>
                   )}
 
                   {/* QUICK ACTION */}
-                  <button
-                    className="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
-                    style={{
-                      backgroundColor: '#FFFBF4',
-                      color: '#1E1E1E',
-                    }}
-                  >
+                  <button className="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 bg-bg-light text-text-light">
                     <ShoppingBag size={14} />
                   </button>
                 </div>
 
                 {/* INFO */}
                 <div className="p-4">
-                  <h3
-                    className="text-sm font-semibold group-hover:text-[#88B04B] transition-colors"
-                    style={{ color: '#1E1E1E' }}
-                  >
-                    {product.name}
-                  </h3>
+                  <h3 className="text-sm font-semibold group-hover:text-primary transition-colors text-text-light">{product.name}</h3>
 
                   <div className="flex items-center gap-2 mt-1">
 
-                    <span
-                      className="text-sm font-bold"
-                      style={{ color: '#1E1E1E' }}
-                    >
-                      $
-                      {product.hasOffer && product.offerPrice
-                        ? product.offerPrice
-                        : product.price}
+                    <span className="text-sm font-bold text-text-light">$
+                      {product.hasOffer && product.offerPrice ? product.offerPrice : product.price}
                     </span>
 
                     {product.hasOffer && product.offerPrice && (
-                      <span
-                        className="text-xs line-through"
-                        style={{ color: '#1E1E1E', opacity: 0.4 }}
-                      >
-                        ${product.price}
-                      </span>
+                      <span className="text-xs line-through text-text-light opacity-40">${product.price}</span>
                     )}
 
                   </div>
