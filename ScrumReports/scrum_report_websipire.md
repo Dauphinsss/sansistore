@@ -1,4 +1,4 @@
-# Daily Reports - Team 3 Webspire
+# Daily Reports - Team 3 Webspire 28/04/2026
 
 ## Dayana Saleth Ortuño Guzman
 
@@ -37,4 +37,9 @@
 
  * **Yesterday:** Coordiné con el equipo la planificación del Sprint 1. Con base en eso, comenzamos a diseñar los mockups en Figma junto a mi compañera Victoria.
 * **Today:** Finalizar los ajustes pendientes en los mockups. Posteriormente, iniciar la implementación de la historia de usuario: *“Como mensajero, quiero marcar un pedido como entregado para registrar que la entrega fue completada”* .
+* **Blockers:** None
+
+## Maria Victoria Grageda Vallejos
+* **Yesterday:** Apoyé en la planificación del Sprint 1 junto con el equipo WebSpire y colaboré con el diseño y revisión de los mockups en Figma, tomando en cuenta las historias de usuario priorizadas para este sprint.
+* **Today:** Continuaré apoyando en los ajustes finales de los mockups y en la revisión de que el diseño esté alineado con las historias de usuario del Sprint 1. También coordinaré con el equipo para iniciar la implementación de las funcionalidades correspondientes.
 * **Blockers:** None
