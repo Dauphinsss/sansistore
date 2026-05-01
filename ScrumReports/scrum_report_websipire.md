@@ -44,7 +44,17 @@
 * **Today:** Continuaré apoyando en los ajustes finales de los mockups y en la revisión de que el diseño esté alineado con las historias de usuario del Sprint 1. También coordinaré con el equipo para iniciar la implementación de las funcionalidades correspondientes.
 * **Blockers:** None
 
-* ## Juan Daniel Vasquez Casana 
+## Juan Daniel Vasquez Casana 
 * **Yesterday:** Participé en la planificación del Sprint 1 y diseñé el flujo de la HU-02, considerando validaciones como la restricción de pedidos asignados al mensajero y la confirmación previa al cambio de estado.  
 * **Today:** Continuaré con los ajustes del flujo de la HU-02 y posteriormente iniciaré la implementación de la funcionalidad para marcar pedidos como “Entregado”.  
-* **Blockers:** Ninguno  
+* **Blockers:** Ninguno
+
+## Jose Brandon Pinedo Gonzales
+* **Yesterday:** Participé en la revisión de la historia de usuario relacionada con la visualización del monto exacto a cobrar por parte del mensajero. Junto con Alejandro, se identificaron los datos necesarios para su implementación, como el monto total del pedido, el estado del pago y la información de entrega.
+* **Today:** Continuaré coordinando con Alejandro y el equipo para definir cómo se mostrará el monto exacto a cobrar en la interfaz del mensajero, verificando que esté alineado con el pedido correspondiente y que ayude a evitar errores durante el cobro.
+* **Blockers:** None
+
+## Alejandro Torrico Quispe
+* **Yesterday:** Apoyé en el análisis de la historia de usuario “Como mensajero, quiero ver el monto exacto a cobrar para evitar errores”, revisando junto con Brandon los datos necesarios para que el mensajero pueda visualizar correctamente el monto de cobro asociado al pedido.
+* **Today:** Continuaré colaborando en la definición de la interfaz y la lógica necesaria para mostrar el monto exacto del pedido, tomando en cuenta el estado de pago, la información de entrega y la validación del pedido asignado al mensajero.
+* **Blockers:** None
