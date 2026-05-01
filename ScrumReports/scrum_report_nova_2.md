@@ -54,3 +54,8 @@
 * **Yesterday:** Revisé las HU y el modelo de la BD, junto con la configuración del entorno de desarrollo.
 * **Today:** Revisé algunos sitios web para ver cómo manejan funciones similares a las HU y obtener ideas para el mockup.
 * **Blockers:** None.
+
+##  Camila Wara Fernandez Sandoval
+- **Yesterday:**  Prepare e instale mi entorno de desarrollo 
+- **Today:**  participación en el diseño de mock ups 
+- **Blockers:** None
