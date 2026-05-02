@@ -1,14 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
 import FeaturedProducts from '../components/FeaturedProducts';
 import Footer from '../components/Footer';
 ---
 
 <Layout title="Sansistore">
   <Navbar client:load />
-  <Hero client:load />
   <FeaturedProducts client:load />
   <Footer client:load />
 </Layout>

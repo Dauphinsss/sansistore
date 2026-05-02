@@ -108,7 +108,9 @@ export default function FeaturedProducts() {
 
                   {/* BADGE */}
                   {product.badge && (
-                    <span className="absolute top-3 left-3 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-action text-bg-light">{product.badge}</span>
+                    <span className="absolute top-3 left-3 rounded-full bg-primary-action px-2 py-0.5 text-xs font-semibold text-white">
+                      {product.badge}
+                    </span>
                   )}
 
                   {/* QUICK ACTION */}
