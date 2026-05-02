@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ShoppingBag, ArrowRight, Package } from 'lucide-react';
-import { collection, getDocs, orderBy, query, limit } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { collection, getDocs, orderBy, query, limit, where } from 'firebase/firestore';
+import CategoryFilter from './CategoryFilter';
 
 interface Product {
   id: string;
@@ -13,43 +14,56 @@ interface Product {
   hasOffer?: boolean;
   offerPrice?: number;
   badge?: string;
+  categoryId?: string;
 }
+
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [filterError, setFilterError] = useState(false); 
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
+      setFilterError(false);
       try {
-        const q = query(
-          collection(db, 'products'),
-          orderBy('createdAt', 'desc'),
-          limit(6)
-        );
+        const q = selectedCategory
+          ? query(
+              collection(db, 'products'),
+              where('categoryId', '==', selectedCategory),
+              orderBy('createdAt', 'desc'),
+              limit(6)
+            )
+          : query(
+              collection(db, 'products'),
+              orderBy('createdAt', 'desc'),
+              limit(6)
+            );
         const snap = await getDocs(q);
-
         setProducts(
           snap.docs
             .map((doc) => ({ id: doc.id, ...doc.data() }) as Product)
             .filter((p) => p.active !== false)
         );
-      } catch {
+      } catch (err) {
+        console.error(err); 
+        setFilterError(true);
         setProducts([]);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
-  }, []);
+  }, [selectedCategory]);
 
   return (
     <section id="productos" className="py-20 bg-bg-light">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
         {/* HEADER */}
-        <div className="flex items-end justify-between mb-10">
+        <div className="flex items-end justify-between mb-6">
           <h2 className="text-text-light" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', letterSpacing: '-0.03em', fontWeight: 900 }}>
             Destacados
           </h2>
@@ -58,6 +72,16 @@ export default function FeaturedProducts() {
             Ver todos <ArrowRight size={14} />
           </a>
         </div>
+         <CategoryFilter
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+
+        {filterError && (
+          <div className="mb-6 rounded-2xl border border-red-300/40 bg-red-500/10 px-5 py-4 text-sm font-medium text-red-500">
+            Ocurrió un error al filtrar los productos. Por favor, intenta de nuevo.
+          </div>
+        )}
 
         {/* LOADING */}
         {loading && (
@@ -75,15 +99,19 @@ export default function FeaturedProducts() {
         )}
 
         {/* EMPTY */}
-        {!loading && products.length === 0 && (
+        {!loading && !filterError && products.length === 0 && (
           <div className="text-center py-20">
             <Package size={40} className="mx-auto mb-3 opacity-40 text-text-light" />
-            <p className="text-sm text-text-light opacity-50">Aún no hay productos.</p>
+            <p className="text-sm text-text-light opacity-50">
+              {selectedCategory
+                ? 'No hay productos disponibles en esta categoría.'
+                : 'Aún no hay productos.'}
+            </p>
           </div>
         )}
 
         {/* PRODUCTS */}
-        {!loading && products.length > 0 && (
+        {!loading && !filterError && products.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 
             {products.map((product) => (
