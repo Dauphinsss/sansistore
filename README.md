@@ -29,7 +29,7 @@ For local development you can run the Firebase emulators for Firestore and Auth.
 bun run emu
 ```
 
-When `PUBLIC_APP_ENV` is not `production` the frontend will automatically connect to the emulators (Firestore on localhost:8080, Auth on localhost:9099). See `src/lib/firebase.ts` for details.
+When `PUBLIC_USE_FIREBASE_EMULATORS=true` and the app is running in development, the frontend will connect to the emulators (Firestore on localhost:8080, Auth on localhost:9099). See `src/lib/firebase.ts` for details.
 
 Seeding local emulator
 
@@ -43,6 +43,8 @@ node ./seed/index.mjs seed-products
 ```
 
 The seeder defaults to the Firestore emulator (it sets `FIRESTORE_EMULATOR_HOST=localhost:8080` if not provided) so it will not write to production by accident.
+
+For the current catalog seed, you can also sync products directly to Firestore with `node --env-file=.env scripts/push-products-to-firestore.mjs`.
 
 Java requirement
 
@@ -98,11 +100,15 @@ classDiagram
     +string productId
     +string categoryId
     +string name
+    +string slug
+    +string description
     +number price
     +string imageUrl
     +boolean active
     +boolean hasOffer
     +number offerPrice
+    +string badge
+    +string sourceUrl
   }
 
   class inventory {
@@ -126,9 +132,10 @@ classDiagram
   class reviews {
     +string reviewId
     +string productId
-    +string userId
+    +string authorName
     +number rating
     +string comment
+    +boolean active
     +timestamp createdAt
   }
 
@@ -247,10 +254,13 @@ classDiagram
 
 ### Technical notes
 
-The model is a good base for an ecommerce app with delivery, with three implementation details to keep consistent:
+The model is a good base for an ecommerce app with delivery. Keep these implementation details consistent:
 
 - In Firestore, you do not always need to store `productId`, `orderId`, etc. inside the document if the document ID already represents that value. Store it only when exports or search flows need it.
+- In the current catalog seed, `products` and `reviews` use UUIDs as Firestore document IDs. In practice, the `productId` and `reviewId` shown in this diagram can map to the document ID itself.
 - `inventoryMovements` should belong under `products` or live as a root collection indexed by `productId`. Nesting it under `inventory` can make global audit queries harder.
+- `products` should include a human-readable `description` for the catalog detail flow. Optional presentation fields such as `badge` and `sourceUrl` can be stored when the frontend needs merchandising labels or traceability of seeded data.
+- `reviews` can be seeded with `authorName` when there is no authenticated `userId` yet. Once buyer reviews are enabled, define whether both fields will coexist or whether `authorName` becomes derived display data.
 - Define closed values for `role`, `status`, `type`, and `method` from the start to avoid inconsistent states.
 - Delivery lifecycle timestamps must be stored in `deliveries`: `assignedAt`, `pickedUpAt`, and `deliveredAt`, to support tracking and performance metrics.
 - `evidenceUrl` is optional and stores delivery or incident evidence when required.

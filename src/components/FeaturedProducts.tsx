@@ -5,6 +5,7 @@ import { db } from '../lib/firebase';
 
 interface Product {
   id: string;
+  slug: string;
   name: string;
   price: number;
   imageUrl?: string;
@@ -86,7 +87,12 @@ export default function FeaturedProducts() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 
             {products.map((product) => (
-              <div key={product.id} className="group cursor-pointer rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 bg-card-bg-light border-border-light">
+              <a
+                key={product.id}
+                href={`/productos/${product.slug}`}
+                aria-label={`Ver detalle de ${product.name}`}
+                className="group block rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 bg-card-bg-light border-border-light"
+              >
 
                 {/* IMAGE */}
                 <div className="relative aspect-square flex items-center justify-center overflow-hidden bg-secondary-bg-light">
@@ -106,14 +112,19 @@ export default function FeaturedProducts() {
                   )}
 
                   {/* QUICK ACTION */}
-                  <button className="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 bg-bg-light text-text-light">
+                  <span
+                    aria-hidden="true"
+                    className="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 bg-bg-light text-text-light"
+                  >
                     <ShoppingBag size={14} />
-                  </button>
+                  </span>
                 </div>
 
                 {/* INFO */}
                 <div className="p-4">
-                  <h3 className="text-sm font-semibold group-hover:text-primary transition-colors text-text-light">{product.name}</h3>
+                  <span className="text-sm font-semibold group-hover:text-primary transition-colors text-text-light">
+                    {product.name}
+                  </span>
 
                   <div className="flex items-center gap-2 mt-1">
 
@@ -128,7 +139,7 @@ export default function FeaturedProducts() {
                   </div>
                 </div>
 
-              </div>
+              </a>
             ))}
 
           </div>
