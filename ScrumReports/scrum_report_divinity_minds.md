@@ -55,3 +55,8 @@
 - **Yesterday:** Trabajé en el refinamiento de la historia de usuario, asegurando claridad en su definición.
 - **Today:** Actualicé la historia de usuario en la planificación de GitHub para mantener coherencia con el Sprint.
 - **Blockers:** n/a.
+
+## Marcos Velasquez Vela
+- **Yesterday:** Preparé la base de datos de productos con descripciones, imágenes y reviews; además implementé la HU de detalle de producto con navegación desde el catálogo, vista por `slug`, carga directa desde Firestore y manejo de error.
+- **Today:** Realizar pruebas de la HU de detalle de producto y apoyar en la integración de las siguientes tareas del Sprint 1.
+- **Blockers:** n/a.
