@@ -14,6 +14,9 @@ interface Product {
   hasOffer?: boolean;
   offerPrice?: number | null;
   active?: boolean;
+  stockAvailable?: number;
+  stockTotal?: number;
+  enabled?: boolean;
 }
 
 interface Review {
@@ -26,6 +29,13 @@ interface Review {
 
 interface ProductDetailProps {
   productSlug: string;
+}
+
+interface InventoryRecord {
+  productId: string;
+  stockAvailable?: number;
+  stockTotal?: number;
+  enabled?: boolean;
 }
 
 function formatPrice(amount: number) {
@@ -47,6 +57,7 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imageFailed, setImageFailed] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -54,6 +65,7 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
     const fetchProductData = async () => {
       setLoading(true);
       setError(null);
+      setImageFailed(false);
 
       try {
         const productQuery = query(
@@ -77,19 +89,35 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
           id: productDoc.id,
           ...productDoc.data(),
         } as Product;
+        const inventoryQuery = query(
+          collection(db, 'inventory'),
+          where('productId', '==', productDoc.id),
+          limit(1)
+        );
 
         const reviewsQuery = query(
           collection(db, 'reviews'),
           where('productId', '==', productDoc.id),
           where('active', '==', true)
         );
-        const reviewsSnap = await getDocs(reviewsQuery);
+        const [inventorySnap, reviewsSnap] = await Promise.all([
+          getDocs(inventoryQuery),
+          getDocs(reviewsQuery),
+        ]);
+        const inventoryData = inventorySnap.empty
+          ? null
+          : (inventorySnap.docs[0].data() as InventoryRecord);
         const productReviews = reviewsSnap.docs
           .map((reviewDoc) => ({ id: reviewDoc.id, ...reviewDoc.data() }) as Review)
           .sort((left, right) => right.rating - left.rating || left.authorName.localeCompare(right.authorName));
 
         if (!ignore) {
-          setProduct(productData);
+          setProduct({
+            ...productData,
+            enabled: inventoryData?.enabled ?? true,
+            stockAvailable: inventoryData?.stockAvailable ?? 0,
+            stockTotal: inventoryData?.stockTotal ?? inventoryData?.stockAvailable ?? 0,
+          });
           setReviews(productReviews);
         }
       } catch {
@@ -111,6 +139,13 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
       ignore = true;
     };
   }, [productSlug]);
+
+  const currentPrice =
+    product && product.hasOffer && product.offerPrice ? product.offerPrice : product?.price ?? 0;
+  const stockAvailable = product?.stockAvailable ?? 0;
+  const isAvailable = stockAvailable > 0 && product?.enabled !== false;
+  const normalizedDescription = product?.description?.trim();
+  const descriptionText = normalizedDescription ? normalizedDescription : 'Sin descripción';
 
   return (
     <section className="min-h-screen bg-bg-light py-10">
@@ -138,6 +173,10 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
                 <div className="mt-5 flex items-center gap-3">
                   <div className="h-8 w-28 animate-pulse rounded bg-secondary-bg-light" />
                   <div className="h-5 w-16 animate-pulse rounded bg-secondary-bg-light" />
+                </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="h-7 w-28 animate-pulse rounded-full bg-secondary-bg-light" />
+                  <div className="h-4 w-36 animate-pulse rounded bg-secondary-bg-light" />
                 </div>
                 <div className="mt-6 space-y-3">
                   <div className="h-4 w-full animate-pulse rounded bg-secondary-bg-light" />
@@ -195,20 +234,24 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
             <div className="grid gap-8 md:grid-cols-[1.05fr_0.95fr]">
               <div className="overflow-hidden rounded-[2rem] border border-border-light bg-card-bg-light">
                 <div className="relative aspect-square bg-secondary-bg-light">
-                  {product.imageUrl ? (
+                  {product.imageUrl && !imageFailed ? (
                     <img
                       src={product.imageUrl}
                       alt={product.name}
                       className="h-full w-full object-cover"
+                      onError={() => setImageFailed(true)}
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <Package size={56} className="text-text-light opacity-25" />
+                      <div className="flex flex-col items-center gap-3 text-text-light opacity-50">
+                        <Package size={56} className="opacity-70" />
+                        <span className="text-sm font-medium">Imagen no disponible</span>
+                      </div>
                     </div>
                   )}
 
                   {product.badge && (
-                    <span className="absolute left-5 top-5 rounded-full bg-primary-action px-3 py-1 text-xs font-semibold text-bg-light">
+                    <span className="absolute left-5 top-5 rounded-full bg-primary-action px-3 py-1 text-xs font-semibold text-white">
                       {product.badge}
                     </span>
                   )}
@@ -224,18 +267,28 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
                 </h1>
 
                 <div className="mt-5 flex items-center gap-3">
-                  <span className="text-2xl font-black text-text-light">
-                    {formatPrice(product.hasOffer && product.offerPrice ? product.offerPrice : product.price)}
-                  </span>
+                  <span className="text-2xl font-black text-text-light">{formatPrice(currentPrice)}</span>
                   {product.hasOffer && product.offerPrice && (
                     <span className="text-sm text-text-light opacity-45 line-through">
                       {formatPrice(product.price)}
                     </span>
                   )}
                 </div>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      isAvailable ? 'bg-primary/15 text-primary' : 'bg-text-light/10 text-text-light'
+                    }`}
+                  >
+                    {isAvailable ? 'Disponible' : 'Producto agotado'}
+                  </span>
+                  <span className="text-sm text-text-light opacity-70">
+                    Stock: {stockAvailable} disponibles
+                  </span>
+                </div>
 
                 <p className="mt-6 text-sm leading-7 text-text-light opacity-80">
-                  {product.description}
+                  {descriptionText}
                 </p>
               </div>
             </div>

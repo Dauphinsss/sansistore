@@ -102,8 +102,7 @@ export const catalogProducts = [
     category: 'abarrotes',
     name: 'Arroz Grano de Oro Caisy 1 kg',
     price: 13.5,
-    description:
-      'Arroz de grano largo para acompanar almuerzos y comidas familiares, facil de preparar en casa.',
+    description: '   ',
     imageUrl:
       'https://hipermaxi.com/tienda-api/marketfile/ImageEcommerce?hashfile=a7aad26_2e85_4057_b8b4_dd06128d71f2.webp&co=5&size=900x900',
     sourceUrl:
