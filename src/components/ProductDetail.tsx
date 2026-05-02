@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, MessageSquare, Package, Star } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Star } from 'lucide-react';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
@@ -27,6 +27,8 @@ interface Review {
 interface ProductDetailProps {
   productSlug: string;
 }
+
+const PRODUCT_PLACEHOLDER = '/product-placeholder.svg';
 
 function formatPrice(amount: number) {
   return `Bs ${amount.toFixed(2)}`;
@@ -200,11 +202,17 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
                       src={product.imageUrl}
                       alt={product.name}
                       className="h-full w-full object-cover"
+                      onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = PRODUCT_PLACEHOLDER;
+                      }}
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <Package size={56} className="text-text-light opacity-25" />
-                    </div>
+                    <img
+                      src={PRODUCT_PLACEHOLDER}
+                      alt={`Imagen predeterminada de ${product.name}`}
+                      className="h-full w-full object-cover"
+                    />
                   )}
 
                   {product.badge && (

@@ -171,7 +171,7 @@ export const catalogProducts = [
     description:
       'Mocochinchi deshidratado listo para preparar una bebida tradicional boliviana de sabor dulce.',
     imageUrl:
-      'https://hipermaxi.com/tienda-api/marketfile/ImageEcommerce?hashfile=7801756_7695_4242_940c_b3d75ab834e9.webp&co=5&size=900x900',
+      'https://hipermaxi.com/tienda-api/marketfile/ImageEcommerce?hashfile=demo-image-missing.webp&co=5&size=900x900',
     badge: 'Tradicional',
     stockTotal: 30,
     stockAvailable: 12,
