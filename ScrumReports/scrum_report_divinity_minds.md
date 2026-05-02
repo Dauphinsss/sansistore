@@ -40,3 +40,8 @@
 - **Yesterday:** Configuré Firebase local para todos los equipos junto con seeders de productos para nuestro equipo, cerré PRs de referencia del día anterior, y participé en la definición de la HU #32 junto con el refinamiento de otras historias de usuarios.
 - **Today:** Desarrollo de la HU #32.
 - **Blockers:** Definir correctamente las historias de usuario. 
+
+## Merudia Calderon Dayeza
+- **Yesterday:** Trabajé en la definición de la HU de búsqueda y filtros, y comencé su desarrollo.
+- **Today:** Continuar con el desarrollo de la HU de búsqueda y filtros.
+- **Blockers:** n/a. 
