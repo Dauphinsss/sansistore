@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import {
+  deleteDoc,
   doc,
   getFirestore,
   serverTimestamp,
@@ -26,10 +27,6 @@ for (const [key, value] of Object.entries(firebaseConfig)) {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-function reviewId(productId, index) {
-  return `${productId}-review-${index + 1}`;
-}
-
 async function main() {
   console.log(`Syncing ${categories.length} categories and ${catalogProducts.length} products to Firestore project ${firebaseConfig.projectId}...`);
 
@@ -44,9 +41,22 @@ async function main() {
   }
 
   for (const product of catalogProducts) {
+    if (!product.legacyId) continue;
+
+    await deleteDoc(doc(db, 'products', product.legacyId)).catch(() => {});
+    await deleteDoc(doc(db, 'inventory', product.legacyId)).catch(() => {});
+    console.log('Removed legacy product IDs for', product.legacyId);
+
+    for (let index = 1; index <= product.reviews.length; index += 1) {
+      await deleteDoc(doc(db, 'reviews', `${product.legacyId}-review-${index}`)).catch(() => {});
+    }
+  }
+
+  for (const product of catalogProducts) {
     await setDoc(doc(db, 'products', product.id), {
       categoryId: product.category,
       name: product.name,
+      slug: product.slug,
       description: product.description,
       price: product.price,
       imageUrl: product.imageUrl,
@@ -71,9 +81,8 @@ async function main() {
     }, { merge: true });
     console.log('Upserted inventory', product.id);
 
-    for (const [index, review] of product.reviews.entries()) {
-      const currentReviewId = reviewId(product.id, index);
-      await setDoc(doc(db, 'reviews', currentReviewId), {
+    for (const review of product.reviews) {
+      await setDoc(doc(db, 'reviews', review.id), {
         productId: product.id,
         authorName: review.authorName,
         rating: review.rating,
@@ -82,7 +91,7 @@ async function main() {
         createdBy: 'direct-seed',
         createdAt: serverTimestamp(),
       }, { merge: true });
-      console.log('Upserted review', currentReviewId);
+      console.log('Upserted review', review.id);
     }
   }
 

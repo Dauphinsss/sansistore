@@ -5,10 +5,6 @@ import { categories, catalogProducts } from './catalog-data.mjs';
 export async function run({ adminApp, db }) {
   const firestore = db;
 
-  function reviewId(productId, index) {
-    return `${productId}-review-${index + 1}`;
-  }
-
   function rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -34,6 +30,7 @@ export async function run({ adminApp, db }) {
     await docRef.set({
       categoryId: categoryMap[p.category],  // Reference the Firestore-assigned category document ID
       name: p.name,
+      slug: p.slug,
       description: p.description,
       price: p.price,
       imageUrl: p.imageUrl,
@@ -60,9 +57,8 @@ export async function run({ adminApp, db }) {
     });
     console.log('Upserted inventory for', productId, 'with ID', invRef.id);
 
-    for (const [index, review] of p.reviews.entries()) {
-      const currentReviewId = reviewId(productId, index);
-      const reviewRef = firestore.collection('reviews').doc(currentReviewId);
+    for (const review of p.reviews) {
+      const reviewRef = firestore.collection('reviews').doc(review.id);
       await reviewRef.set({
         productId,
         authorName: review.authorName,
@@ -72,7 +68,7 @@ export async function run({ adminApp, db }) {
         createdBy: 'seeder',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      console.log('Upserted review', currentReviewId, 'for', productId);
+      console.log('Upserted review', review.id, 'for', productId);
     }
   }
 

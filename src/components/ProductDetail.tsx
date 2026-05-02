@@ -1,0 +1,234 @@
+import { useEffect, useState } from 'react';
+import { ArrowLeft, MessageSquare, Package, Star } from 'lucide-react';
+import { collection, getDocs, limit, query, where } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
+interface Product {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl?: string;
+  badge?: string | null;
+  hasOffer?: boolean;
+  offerPrice?: number | null;
+  active?: boolean;
+}
+
+interface Review {
+  id: string;
+  authorName: string;
+  comment: string;
+  rating: number;
+  active?: boolean;
+}
+
+interface ProductDetailProps {
+  productSlug: string;
+}
+
+function formatPrice(amount: number) {
+  return `Bs ${amount.toFixed(2)}`;
+}
+
+function renderStars(rating: number) {
+  return Array.from({ length: 5 }, (_, index) => (
+    <Star
+      key={`${rating}-${index}`}
+      size={14}
+      className={index < rating ? 'fill-primary text-primary' : 'text-text-light opacity-20'}
+    />
+  ));
+}
+
+export default function ProductDetail({ productSlug }: ProductDetailProps) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchProductData = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const productQuery = query(
+          collection(db, 'products'),
+          where('slug', '==', productSlug),
+          limit(1)
+        );
+        const productSnap = await getDocs(productQuery);
+
+        if (productSnap.empty) {
+          if (!ignore) {
+            setProduct(null);
+            setReviews([]);
+            setError('No se encontró el producto solicitado.');
+          }
+          return;
+        }
+
+        const productDoc = productSnap.docs[0];
+        const productData = {
+          id: productDoc.id,
+          ...productDoc.data(),
+        } as Product;
+
+        const reviewsQuery = query(
+          collection(db, 'reviews'),
+          where('productId', '==', productDoc.id),
+          where('active', '==', true)
+        );
+        const reviewsSnap = await getDocs(reviewsQuery);
+        const productReviews = reviewsSnap.docs
+          .map((reviewDoc) => ({ id: reviewDoc.id, ...reviewDoc.data() }) as Review)
+          .sort((left, right) => right.rating - left.rating || left.authorName.localeCompare(right.authorName));
+
+        if (!ignore) {
+          setProduct(productData);
+          setReviews(productReviews);
+        }
+      } catch {
+        if (!ignore) {
+          setProduct(null);
+          setReviews([]);
+          setError('No se pudo cargar el detalle del producto.');
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchProductData();
+
+    return () => {
+      ignore = true;
+    };
+  }, [productSlug]);
+
+  return (
+    <section className="min-h-screen bg-bg-light py-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <a
+          href="/#productos"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-opacity hover:opacity-80"
+        >
+          <ArrowLeft size={16} />
+          Volver al catálogo
+        </a>
+
+        {loading && (
+          <div className="grid gap-8 md:grid-cols-[1.05fr_0.95fr]">
+            <div className="aspect-square animate-pulse rounded-3xl bg-secondary-bg-light" />
+            <div className="space-y-4">
+              <div className="h-4 w-24 animate-pulse rounded bg-secondary-bg-light" />
+              <div className="h-10 w-3/4 animate-pulse rounded bg-secondary-bg-light" />
+              <div className="h-6 w-28 animate-pulse rounded bg-secondary-bg-light" />
+              <div className="space-y-2">
+                <div className="h-4 w-full animate-pulse rounded bg-secondary-bg-light" />
+                <div className="h-4 w-full animate-pulse rounded bg-secondary-bg-light" />
+                <div className="h-4 w-5/6 animate-pulse rounded bg-secondary-bg-light" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="rounded-3xl border border-border-light bg-card-bg-light px-6 py-10 text-center">
+            <MessageSquare size={36} className="mx-auto mb-4 text-primary" />
+            <h1 className="text-xl font-black text-text-light">Error al cargar el detalle</h1>
+            <p className="mt-2 text-sm text-text-light opacity-70">{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && product && (
+          <div className="space-y-10">
+            <div className="grid gap-8 md:grid-cols-[1.05fr_0.95fr]">
+              <div className="overflow-hidden rounded-[2rem] border border-border-light bg-card-bg-light">
+                <div className="relative aspect-square bg-secondary-bg-light">
+                  {product.imageUrl ? (
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <Package size={56} className="text-text-light opacity-25" />
+                    </div>
+                  )}
+
+                  {product.badge && (
+                    <span className="absolute left-5 top-5 rounded-full bg-primary-action px-3 py-1 text-xs font-semibold text-bg-light">
+                      {product.badge}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-center rounded-[2rem] border border-border-light bg-card-bg-light px-6 py-8 sm:px-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                  Detalle del producto
+                </p>
+                <h1 className="mt-3 text-3xl font-black tracking-tight text-text-light sm:text-4xl">
+                  {product.name}
+                </h1>
+
+                <div className="mt-5 flex items-center gap-3">
+                  <span className="text-2xl font-black text-text-light">
+                    {formatPrice(product.hasOffer && product.offerPrice ? product.offerPrice : product.price)}
+                  </span>
+                  {product.hasOffer && product.offerPrice && (
+                    <span className="text-sm text-text-light opacity-45 line-through">
+                      {formatPrice(product.price)}
+                    </span>
+                  )}
+                </div>
+
+                <p className="mt-6 text-sm leading-7 text-text-light opacity-80">
+                  {product.description}
+                </p>
+              </div>
+            </div>
+
+            <section className="rounded-[2rem] border border-border-light bg-card-bg-light px-6 py-8 sm:px-8">
+              <div className="flex items-center gap-3">
+                <MessageSquare size={18} className="text-primary" />
+                <h2 className="text-xl font-black text-text-light">Comentarios del producto</h2>
+              </div>
+
+              {reviews.length === 0 ? (
+                <p className="mt-6 text-sm text-text-light opacity-60">
+                  Este producto aún no tiene comentarios registrados.
+                </p>
+              ) : (
+                <div className="mt-6 grid gap-4">
+                  {reviews.map((review) => (
+                    <article
+                      key={review.id}
+                      className="rounded-2xl border border-border-light bg-secondary-bg-light/50 px-5 py-4"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-sm font-bold text-text-light">{review.authorName}</p>
+                        <div className="flex items-center gap-1">{renderStars(review.rating)}</div>
+                      </div>
+                      <p className="mt-3 text-sm leading-6 text-text-light opacity-80">
+                        {review.comment}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
