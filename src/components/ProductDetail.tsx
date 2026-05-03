@@ -60,6 +60,10 @@ function getDiscountPercentage(product: Product | null) {
   return Math.round(((basePrice - offerPrice) / basePrice) * 100);
 }
 
+function isOfferBadge(badge?: string | null) {
+  return badge?.trim().toLowerCase() === 'oferta';
+}
+
 function getBadgeData(product: Product | null) {
   const discountPercentage = getDiscountPercentage(product);
 
@@ -70,7 +74,7 @@ function getBadgeData(product: Product | null) {
     };
   }
 
-  if (!product?.badge) return null;
+  if (!product?.badge || isOfferBadge(product.badge)) return null;
 
   return {
     label: product.badge,

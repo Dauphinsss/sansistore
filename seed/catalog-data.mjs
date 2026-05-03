@@ -210,4 +210,35 @@ export const catalogProducts = [
       },
     ],
   },
+  {
+    id: 'b62fd8d5-1d66-4f39-a26f-6b7e9fda9088',
+    legacyId: 'galletas-agua-victoria-120-gr',
+    slug: 'galletas-agua-victoria-120-gr',
+    category: 'abarrotes',
+    name: 'Galletas Agua Victoria 120 gr',
+    price: 8,
+    description:
+      'Galletas ligeras y crocantes para acompanar desayunos, meriendas o bebidas calientes.',
+    imageUrl:
+      'https://hipermaxi.com/tienda-api/marketfile/ImageEcommerce?hashfile=4f68019_a70a_438f_9131_f066da396bce.webp&co=5&size=900x900',
+    badge: 'Oferta',
+    hasOffer: true,
+    offerPrice: 8,
+    sourceUrl:
+      'https://www.hipermaxi.com/la-paz/hipermaxi-el-poeta/producto/779005/galletas-agua-victoria-120-gr',
+    reviews: [
+      {
+        id: 'a7af31da-401e-4497-9f29-b28b5adbc1e1',
+        authorName: 'Andrea',
+        rating: 4,
+        comment: 'Son practicas para tener en la despensa y acompanar el cafe.',
+      },
+      {
+        id: '12725be7-bafd-4848-a88d-e77545dffb9b',
+        authorName: 'Ruben',
+        rating: 4,
+        comment: 'Buena textura y vienen bien para meriendas rapidas.',
+      },
+    ],
+  },
 ];
