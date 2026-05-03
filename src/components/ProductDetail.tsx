@@ -66,7 +66,7 @@ function getBadgeData(product: Product | null) {
   if (discountPercentage) {
     return {
       label: `-${discountPercentage}%`,
-      className: 'bg-red-600 text-white',
+      className: 'product-detail-badge product-detail-badge--discount',
     };
   }
 
@@ -74,7 +74,7 @@ function getBadgeData(product: Product | null) {
 
   return {
     label: product.badge,
-    className: 'bg-primary-action text-white',
+    className: 'product-detail-badge product-detail-badge--label',
   };
 }
 
@@ -313,8 +313,10 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      isAvailable ? 'bg-primary/15 text-primary' : 'bg-text-light/10 text-text-light'
+                    className={`product-detail-status-badge ${
+                      isAvailable
+                        ? 'product-detail-status-badge--available'
+                        : 'product-detail-status-badge--unavailable'
                     }`}
                   >
                     {isAvailable ? 'Disponible' : 'Producto agotado'}
