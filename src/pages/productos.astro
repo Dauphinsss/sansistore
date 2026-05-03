@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import ProductCatalog from '../features/products/components/ProductCatalog';
+---
+
+<Layout title="Catálogo de Productos | Sansistore">
+  <Navbar client:load />
+  <ProductCatalog client:load />
+  <Footer client:load />
+</Layout>
