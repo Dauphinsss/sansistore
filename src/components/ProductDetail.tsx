@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, MessageSquare, Package, Star } from 'lucide-react';
+import { ArrowLeft, ChevronRight, MessageSquare, Package, Star } from 'lucide-react';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
@@ -185,26 +185,42 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
   const badgeData = getBadgeData(product);
 
   return (
-    <section className="min-h-screen bg-bg-light py-10">
+    <section className="min-h-screen bg-bg-light pb-10 pt-20 sm:pt-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <a
-          href="/#productos"
-          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-opacity hover:opacity-80"
-        >
-          <ArrowLeft size={16} />
-          Volver al catálogo
-        </a>
+        <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+          <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-sm text-text-light">
+            <a href="/" className="font-semibold opacity-70 transition-opacity hover:opacity-100">
+              Inicio
+            </a>
+            <ChevronRight size={14} className="opacity-35" aria-hidden="true" />
+            <a href="/#productos" className="font-semibold opacity-70 transition-opacity hover:opacity-100">
+              Productos
+            </a>
+            <ChevronRight size={14} className="opacity-35" aria-hidden="true" />
+            <span className="font-bold text-primary" aria-current="page">
+              Detalle
+            </span>
+          </nav>
+
+          <a
+            href="/#productos"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-border-light bg-card-bg-light px-4 py-2 text-sm font-semibold text-text-light transition-colors hover:border-primary hover:text-primary"
+          >
+            <ArrowLeft size={16} />
+            Volver al catálogo
+          </a>
+        </div>
 
         {loading && (
-          <div className="space-y-10">
-            <div className="grid gap-8 md:grid-cols-[1.05fr_0.95fr]">
+          <div className="space-y-6 sm:space-y-10">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-[1.05fr_0.95fr] md:gap-8">
               <div className="overflow-hidden rounded-[2rem] border border-border-light bg-card-bg-light">
                 <div className="relative aspect-square animate-pulse bg-secondary-bg-light">
                   <div className="absolute left-5 top-5 h-7 w-20 rounded-full bg-card-bg-light/80" />
                 </div>
               </div>
 
-              <div className="rounded-[2rem] border border-border-light bg-card-bg-light px-6 py-8 sm:px-8">
+              <div className="rounded-[2rem] border border-border-light bg-card-bg-light px-5 py-6 sm:px-8 sm:py-8">
                 <div className="h-4 w-28 animate-pulse rounded bg-secondary-bg-light" />
                 <div className="mt-4 h-10 w-4/5 animate-pulse rounded bg-secondary-bg-light" />
                 <div className="mt-5 flex items-center gap-3">
@@ -224,7 +240,7 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
               </div>
             </div>
 
-            <section className="rounded-[2rem] border border-border-light bg-card-bg-light px-6 py-8 sm:px-8">
+            <section className="rounded-[2rem] border border-border-light bg-card-bg-light px-5 py-6 sm:px-8 sm:py-8">
               <div className="flex items-center gap-3">
                 <div className="h-5 w-5 animate-pulse rounded-full bg-secondary-bg-light" />
                 <div className="h-6 w-52 animate-pulse rounded bg-secondary-bg-light" />
@@ -267,8 +283,8 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
         )}
 
         {!loading && !error && product && (
-          <div className="space-y-10">
-            <div className="grid gap-8 md:grid-cols-[1.05fr_0.95fr]">
+          <div className="space-y-6 sm:space-y-10">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-[1.05fr_0.95fr] md:gap-8">
               <div className="overflow-hidden rounded-[2rem] border border-border-light bg-card-bg-light">
                 <div className="relative aspect-square bg-secondary-bg-light">
                   {product.imageUrl && !imageFailed ? (
@@ -295,7 +311,7 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
                 </div>
               </div>
 
-              <div className="flex flex-col justify-center rounded-[2rem] border border-border-light bg-card-bg-light px-6 py-8 sm:px-8">
+              <div className="flex flex-col justify-center rounded-[2rem] border border-border-light bg-card-bg-light px-5 py-6 sm:px-8 sm:py-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
                   Detalle del producto
                 </p>
@@ -332,7 +348,7 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
               </div>
             </div>
 
-            <section className="rounded-[2rem] border border-border-light bg-card-bg-light px-6 py-8 sm:px-8">
+            <section className="rounded-[2rem] border border-border-light bg-card-bg-light px-5 py-6 sm:px-8 sm:py-8">
               <div className="flex items-center gap-3">
                 <MessageSquare size={18} className="text-primary" />
                 <h2 className="text-xl font-black text-text-light">Comentarios del producto</h2>
