@@ -237,7 +237,7 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
   const showOffer = hasValidOffer(product);
   const currentPrice = showOffer ? product?.offerPrice ?? 0 : product?.price ?? 0;
   const stockAvailable = product?.stockAvailable ?? 0;
-  const isAvailable = stockAvailable > 0 && product?.enabled !== false;
+  const isAvailable = stockAvailable > 0 && product?.enabled !== false && product?.active !== false;
   const normalizedDescription = product?.description?.trim();
   const descriptionText = normalizedDescription ? normalizedDescription : 'Sin descripción';
   const badgeData = getBadgeData(product);
@@ -410,9 +410,11 @@ export default function ProductDetail({ productSlug }: ProductDetailProps) {
                   >
                     {isAvailable ? 'Disponible' : 'Producto agotado'}
                   </span>
-                  <span className="text-sm text-text-light opacity-70">
-                    Stock: {stockAvailable} disponibles
-                  </span>
+                  {isAvailable && (
+                    <span className="text-sm text-text-light opacity-70">
+                      Stock: {stockAvailable} disponibles
+                    </span>
+                  )}
                 </div>
 
                 <p className="mt-6 text-sm leading-7 text-text-light opacity-80">
