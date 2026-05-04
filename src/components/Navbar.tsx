@@ -10,10 +10,12 @@ import {
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { auth, googleProvider } from '../lib/firebase';
+import ErrorCard from './ErrorCard';
 
 type ThemeMode = 'light' | 'dark';
 
 const THEME_STORAGE_KEY = 'sansistore-theme';
+const INSTITUTIONAL_DOMAIN = '@est.umss.edu'; 
 
 const applyTheme = (theme: ThemeMode) => {
   document.documentElement.dataset.theme = theme;
@@ -29,6 +31,7 @@ const applyTheme = (theme: ThemeMode) => {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [theme, setTheme] = useState<ThemeMode>('light');
 
@@ -47,8 +50,18 @@ export default function Navbar() {
 
   const handleLogin = async () => {
     try {
+      googleProvider.setCustomParameters({
+        hd: INSTITUTIONAL_DOMAIN.replace('@', '') 
+      });
       await setPersistence(auth, browserLocalPersistence);
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+
+      if (result.user.email && !result.user.email.endsWith(INSTITUTIONAL_DOMAIN)) {
+        await signOut(auth);
+        setAuthError('Solo se permiten cuentas institucionales para acceder a SansiStore.');
+        return;
+      }
+
     } catch (e: unknown) {
       const ignored = [
         'auth/popup-closed-by-user',
@@ -72,6 +85,7 @@ export default function Navbar() {
   // Use Tailwind classes for colors and hover states (colors defined in tailwind.config.cjs)
 
   return (
+    <>
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-bg-light/85 border-b border-border-light font-sans">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14">
@@ -208,5 +222,14 @@ export default function Navbar() {
         )}
       </div>
     </nav>
+      {authError && (
+        <ErrorCard 
+          isOpen={authError !== null} 
+          onClose={() => setAuthError(null)} 
+          message={`Para ingresar a Sansistore debes utilizar tu cuenta institucional terminada en ${INSTITUTIONAL_DOMAIN}.`}
+          title="Acceso Denegado"
+        />
+      )}
+    </>
   );
 }
