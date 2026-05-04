@@ -154,7 +154,22 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
   const [nameExpanded, setNameExpanded] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [nameTruncated, setNameTruncated] = useState(false);
+  const [expandedReviews, setExpandedReviews] = useState<Set<number>>(new Set());
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const reviewRefs = useRef<Map<number, HTMLParagraphElement>>(new Map());
+  const [truncatedReviews, setTruncatedReviews] = useState<Set<number>>(new Set());
+
+  const toggleReview = (index: number) => {
+    setExpandedReviews((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
     let ignore = false;
@@ -310,6 +325,21 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
     { value: 'highest', label: 'Mayor puntuación' },
     { value: 'lowest', label: 'Menor puntuación' },
   ];
+
+  useEffect(() => {
+    const checkTruncation = () => {
+      const truncated = new Set<number>();
+      reviewRefs.current.forEach((el, index) => {
+        if (el && el.scrollHeight > el.clientHeight) {
+          truncated.add(index);
+        }
+      });
+      setTruncatedReviews(truncated);
+    };
+    checkTruncation();
+    window.addEventListener('resize', checkTruncation);
+    return () => window.removeEventListener('resize', checkTruncation);
+  }, [visibleReviews]);
 
   return (
     <section className="min-h-screen bg-bg-light pb-10 pt-20 sm:pt-24">
@@ -555,7 +585,7 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
                 </div>
               ) : (
                 <div className="mt-6 grid gap-4">
-                  {visibleReviews.map((review) => (
+                  {visibleReviews.map((review, index) => (
                     <article
                       key={review.id}
                       className="rounded-2xl border border-border-light bg-secondary-bg-light/50 px-5 py-4"
@@ -578,9 +608,24 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
                           </span>
                         </div>
                       </div>
-                      <p className="mt-3 text-sm leading-6 text-text-light opacity-80">
+                      <p
+                        ref={(el) => {
+                          if (el) reviewRefs.current.set(index, el);
+                          else reviewRefs.current.delete(index);
+                        }}
+                        className={`mt-3 text-sm leading-6 text-text-light opacity-80 ${!expandedReviews.has(index) ? 'line-clamp-3' : ''}`}
+                      >
                         {review.comment}
                       </p>
+                      {(truncatedReviews.has(index) || expandedReviews.has(index)) && (
+                        <button
+                          type="button"
+                          onClick={() => toggleReview(index)}
+                          className="mt-1 cursor-pointer text-sm font-semibold text-primary hover:underline"
+                        >
+                          {expandedReviews.has(index) ? 'mostrar menos' : 'mostrar más'}
+                        </button>
+                      )}
                     </article>
                   ))}
 
