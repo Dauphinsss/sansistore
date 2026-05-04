@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import { ShoppingBag, Package, Search, X, History, Trash2 } from 'lucide-react';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { getOfferBadgeData, hasValidOffer } from '../lib/productOffers';
 import CategoryFilter from './CategoryFilter';
 
 interface Product {
@@ -69,38 +70,20 @@ function formatPrice(amount: number) {
   return `Bs ${amount.toFixed(2)}`;
 }
 
-function hasValidOffer(product: Product) {
-  return Boolean(
-    product.hasOffer &&
-      typeof product.offerPrice === 'number' &&
-      product.offerPrice < product.price
-  );
-}
-
-function getDiscountPercentage(product: Product) {
-  if (!hasValidOffer(product)) return null;
-
-  return Math.round(((product.price - product.offerPrice!) / product.price) * 100);
-}
-
-function isOfferBadge(badge?: string) {
-  return badge?.trim().toLowerCase() === 'oferta';
-}
-
 function getBadgeData(product: Product) {
-  const discountPercentage = getDiscountPercentage(product);
+  const badgeData = getOfferBadgeData(product);
 
-  if (discountPercentage) {
+  if (badgeData?.isDiscount) {
     return {
-      label: `-${discountPercentage}%`,
+      label: badgeData.label,
       className: 'bg-red-600 text-white',
     };
   }
 
-  if (!product.badge || isOfferBadge(product.badge)) return null;
+  if (!badgeData) return null;
 
   return {
-    label: product.badge,
+    label: badgeData.label,
     className: 'bg-primary-action text-white',
   };
 }

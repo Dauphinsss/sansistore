@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, ChevronRight, MessageSquare, Star } from 'lucide-react';
 import { Timestamp, collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { getOfferBadgeData, hasValidOffer } from '../lib/productOffers';
 
 interface Product {
   id: string;
@@ -48,42 +49,20 @@ function formatPrice(amount: number) {
   return `Bs ${amount.toFixed(2)}`;
 }
 
-function hasValidOffer(product: Product | null) {
-  return Boolean(
-    product &&
-      product.hasOffer &&
-      typeof product.offerPrice === 'number' &&
-      product.offerPrice < product.price
-  );
-}
-
-function getDiscountPercentage(product: Product | null) {
-  if (!hasValidOffer(product)) return null;
-
-  const basePrice = product?.price ?? 0;
-  const offerPrice = product?.offerPrice ?? 0;
-
-  return Math.round(((basePrice - offerPrice) / basePrice) * 100);
-}
-
-function isOfferBadge(badge?: string | null) {
-  return badge?.trim().toLowerCase() === 'oferta';
-}
-
 function getBadgeData(product: Product | null) {
-  const discountPercentage = getDiscountPercentage(product);
+  const badgeData = getOfferBadgeData(product);
 
-  if (discountPercentage) {
+  if (badgeData?.isDiscount) {
     return {
-      label: `-${discountPercentage}%`,
+      label: badgeData.label,
       className: 'product-detail-badge product-detail-badge--discount',
     };
   }
 
-  if (!product?.badge || isOfferBadge(product.badge)) return null;
+  if (!badgeData) return null;
 
   return {
-    label: product.badge,
+    label: badgeData.label,
     className: 'product-detail-badge product-detail-badge--label',
   };
 }
