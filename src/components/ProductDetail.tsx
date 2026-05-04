@@ -151,6 +151,8 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
   const [imageFailed, setImageFailed] = useState(false);
   const [reviewSort, setReviewSort] = useState<ReviewSortKey>('recent');
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(REVIEW_PAGE_SIZE);
+  const [nameExpanded, setNameExpanded] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -161,6 +163,8 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
       setImageFailed(false);
       setReviewSort('recent');
       setVisibleReviewsCount(REVIEW_PAGE_SIZE);
+      setNameExpanded(false);
+      setDescriptionExpanded(false);
 
       try {
         if (initialProduct) {
@@ -425,9 +429,22 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
                   Detalle del producto
                 </p>
-                <h1 className="mt-3 text-3xl font-black tracking-tight text-text-light sm:text-4xl">
+                <h1
+                  className={`mt-3 text-3xl font-black tracking-tight text-text-light sm:text-4xl ${!nameExpanded ? 'line-clamp-3' : ''} cursor-pointer`}
+                  onClick={() => setNameExpanded(!nameExpanded)}
+                  title={product.name}
+                >
                   {product.name}
                 </h1>
+                {product.name.split('\n').length > 3 && (
+                  <button
+                    type="button"
+                    onClick={() => setNameExpanded(!nameExpanded)}
+                    className="mt-1 cursor-pointer text-sm font-semibold text-primary hover:underline"
+                  >
+                    {nameExpanded ? 'mostrar menos' : 'mostrar más'}
+                  </button>
+                )}
 
                 <div className="mt-5 flex items-center gap-3">
                   <span className="text-2xl font-black text-text-light">{formatPrice(currentPrice)}</span>
@@ -454,9 +471,18 @@ export default function ProductDetail({ productSlug, initialProduct }: ProductDe
                   )}
                 </div>
 
-                <p className="mt-6 text-sm leading-7 text-text-light opacity-80">
-                  {descriptionText}
-                </p>
+                <div className="mt-6">
+                  <p className={`text-sm leading-7 text-text-light opacity-80 ${!descriptionExpanded ? 'line-clamp-7' : ''}`}>
+                    {descriptionText}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setDescriptionExpanded(!descriptionExpanded)}
+                    className="mt-1 text-sm font-semibold text-primary hover:underline"
+                  >
+                    {descriptionExpanded ? 'mostrar menos' : 'mostrar más'}
+                  </button>
+                </div>
               </div>
             </div>
 
