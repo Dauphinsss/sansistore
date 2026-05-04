@@ -9,7 +9,8 @@ import {
   browserLocalPersistence,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
-import { auth, googleProvider } from '../lib/firebase';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, googleProvider, db } from '../lib/firebase';
 import ErrorCard from './ErrorCard';
 
 type ThemeMode = 'light' | 'dark';
@@ -60,6 +61,23 @@ export default function Navbar() {
         await signOut(auth);
         setAuthError('Solo se permiten cuentas institucionales para acceder a SansiStore.');
         return;
+      }
+
+      const userRef = doc(db, 'users', result.user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        const institutionalId = result.user.email!.split('@')[0];
+        await setDoc(userRef, {
+          uid: result.user.uid,
+          email: result.user.email,
+          displayName: result.user.displayName || 'Usuario UMSS', // por el momento esto
+          roles: ['comprador'],
+          institutionalId: institutionalId,
+          isActive: true,
+          createdBy: 'system',
+          createdAt: serverTimestamp()
+        });
       }
 
     } catch (e: unknown) {
