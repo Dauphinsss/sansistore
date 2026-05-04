@@ -3,13 +3,6 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import ProductDetail from '../../components/ProductDetail';
-import { catalogProducts } from '../../../seed/catalog-data.mjs';
-
-export function getStaticPaths() {
-  return catalogProducts.map((product) => ({
-    params: { slug: product.slug },
-  }));
-}
 
 const { slug } = Astro.params;
 ---
