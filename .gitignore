@@ -30,3 +30,4 @@ pnpm-debug.log*
 #cositas
 src/features/inventory/x
 src/features/x
+*.log
