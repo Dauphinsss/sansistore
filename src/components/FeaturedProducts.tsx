@@ -90,17 +90,6 @@ export default function FeaturedProducts() {
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
     const fetchProducts = async () => {
       setError(null);
 
@@ -354,6 +343,20 @@ export default function FeaturedProducts() {
                           ? `Stock: ${product.stockAvailable} disponibles`
                           : 'Stock: 0 disponibles'}
                       </p>
+                    </div>
+
+                    <div className="mt-auto pt-4">
+                      <button
+                        type="button"
+                        disabled={!isAvailable}
+                        className={`inline-flex w-full items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition-all ${
+                          isAvailable
+                            ? 'bg-primary text-primary-action hover:opacity-90'
+                            : 'cursor-not-allowed bg-secondary-bg-light text-text-light opacity-45'
+                        }`}
+                      >
+                        Agregar al carrito
+                      </button>
                     </div>
                   </div>
                 </article>
