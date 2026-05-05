@@ -86,3 +86,8 @@
   Enfocado en la estructuración del módulo `delivery/prog_api` y la definición de endpoints necesarios para soportar la lógica de negocio.
 
 - **Blockers:** None.
+
+- ### Bruno Salcedo Cadiz
+- **Yesterday:** Inicie con el desarrollo de la historia de usuario asignada y cree seeds para la base de datos en el apartado que estoy trabajando
+- **Today:** Continuar desarrollando la historia de usuario
+- **Blockers:** Dudas de estandares seguido sobre las ramas 
