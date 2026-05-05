@@ -76,3 +76,8 @@
 * **Yesterday:** Avancé en el desarrollo del frontend de la HU “Marcar pedido como entregado”, implementando la visualización de pedidos asignados y la opción de “Marcar como entregado”, considerando los criterios de aceptación.
 * **Today:** Integrar la lógica para el cambio de estado del pedido y la confirmación previa.
 * **Blockers:** None
+
+## Alejandro Torrico Quispe
+* **Yesterday:** Implementé la base del panel de pedidos asignados para el rol mensajero, creando la vista donde se muestran los pedidos relacionados al usuario autenticado. También avancé en la visualización del monto exacto a cobrar, el método de pago y el estado de la entrega, considerando los criterios de aceptación de la HU.
+* **Today:** Continuar con la integración del panel de mensajero, revisar la conexión con los datos de pedidos y ajustar la funcionalidad para que pueda consumir información real cuando esté disponible el flujo completo de asignación de pediSe depende de la integración con las funcionalidades de creación de pedidos, pago contra entrega y asignación de pedidos al mensajero para trabajar con datos reales del flujo completo.
+* **Blockers:** Se depende de la integración con las funcionalidades de creación de pedidos y asignación de pedidos al mensajero para trabajar con datos reales del flujo completo.
