@@ -38,17 +38,17 @@
 
 # Daily Report - Team 1
 
+## Castro Tejada Steven Lisandro
+
+- **Yesterday:** Alinee la HU de ofertas con criterios de aceptacion y prepare el diseño del indicador de descuento y el filtro en el catalogo; revise la data esperada desde backend.
+- **Today:** Definir el flujo de UI para precios con descuento y estado vacio, y dejar listo el esqueleto del filtro para integrar cuando este disponible la carga de productos.
+- **Blockers:** Dependencia de la HU de productos disponibles para integrar el filtro y render.
+
 ## Gutierrez Hinojosa Jhon Deymar
 
 - **Yesterday:** Configuré Firebase local para todos los equipos junto con seeders de productos para nuestro equipo, cerré PRs de referencia del día anterior, y participé en la definición de la HU #32 junto con el refinamiento de otras historias de usuarios.
 - **Today:** Desarrollo de la HU #32.
 - **Blockers:** Definir correctamente las historias de usuario.
-
-## Merudia Calderon Dayeza
-
-- **Yesterday:** Trabajé en la definición de la HU de búsqueda y filtros, y comencé su desarrollo.
-- **Today:** Continuar con el desarrollo de la HU de búsqueda y filtros.
-- **Blockers:** n/a.
 
 ## Merino Vidal Mateo Alejandro
 
@@ -56,13 +56,25 @@
 - **Today:** Actualicé la historia de usuario en la planificación de GitHub para mantener coherencia con el Sprint.
 - **Blockers:** n/a.
 
+## Merudia Calderon Dayeza
+
+- **Yesterday:** Trabajé en la definición de la HU de búsqueda y filtros, y comencé su desarrollo.
+- **Today:** Continuar con el desarrollo de la HU de búsqueda y filtros.
+- **Blockers:** n/a.
+
 ## Marcos Velasquez Vela
 - **Yesterday:** Preparé la base de datos de productos con descripciones, imágenes y reviews; además implementé la HU de detalle de producto con navegación desde el catálogo, vista por `slug`, carga directa desde Firestore y manejo de error.
 - **Today:** Realizar pruebas de la HU de detalle de producto y apoyar en la integración de las siguientes tareas del Sprint 1.
 - **Blockers:** n/a.
 
+---
+
+# 05/05/2026
+
+# Daily Report - Team 1
+
 ## Castro Tejada Steven Lisandro
 
-- **Yesterday:** Alinee la HU de ofertas con criterios de aceptacion y prepare el diseño del indicador de descuento y el filtro en el catalogo; revise la data esperada desde backend.
-- **Today:** Definir el flujo de UI para precios con descuento y estado vacio, y dejar listo el esqueleto del filtro para integrar cuando este disponible la carga de productos.
-- **Blockers:** Dependencia de la HU de productos disponibles para integrar el filtro y render.
+- **Yesterday:** Reestructure y actualice la HU #205, implemente el filtro "Solo ofertas" con reglas de oferta valida, unifique logica compartida en catalogo/detalle y ajuste estados de error/vacio; ademas resolvi conflictos de merge en `ProductDetail` y valide la rama para PR.
+- **Today:** Preparar y abrir PR de `ver-productos-disponibles` hacia `main`, adjuntando validaciones y cierre de pendientes del merge.
+- **Blockers:** n/a.
