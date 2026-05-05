@@ -1,0 +1,27 @@
+---
+export const prerender = false;
+
+import Layout from '../../../../layouts/Layout.astro';
+import CategoryEditForm from '../../../../components/admin/categories/CategoryEditForm';
+
+const { id } = Astro.params;
+
+// Datos mock — se reemplazarán con Firestore en el backend
+const MOCK_CATEGORIES: Record<string, { categoryId: string; name: string; description: string; active: boolean }> = {
+  cat_001: { categoryId: 'cat_001', name: 'Nacional', description: 'Comida típica boliviana', active: true },
+  cat_002: { categoryId: 'cat_002', name: 'Pizzas', description: 'Pizzas artesanales y al horno', active: true },
+  cat_003: { categoryId: 'cat_003', name: 'Sushi', description: 'Rolls y platos japoneses', active: true },
+  cat_004: { categoryId: 'cat_004', name: 'Burgers', description: 'Hamburguesas artesanales', active: true },
+  cat_005: { categoryId: 'cat_005', name: 'Café', description: 'Bebidas calientes y frías', active: false },
+};
+
+const category = id ? MOCK_CATEGORIES[id] : null;
+
+if (!category) {
+  return Astro.redirect('/admin/categories');
+}
+---
+
+<Layout title={`Editar ${category.name} · SansiStore Admin`}>
+  <CategoryEditForm client:load category={category} />
+</Layout>
