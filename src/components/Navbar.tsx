@@ -83,13 +83,18 @@ export default function Navbar() {
 
           {/* LINKS */}
           <div className="hidden md:flex items-center gap-8">
-            {['Novedades', 'Ofertas', 'Colecciones'].map((item) => (
+            {[
+              { label: 'Novedades', href: '#' },
+              { label: 'Ofertas', href: '#' },
+              { label: 'Colecciones', href: '#' },
+              { label: 'Mensajero', href: '/mensajero' },
+            ].map((item) => (
               <a
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="text-[13px] text-text-light opacity-[0.60] font-semibold tracking-[0.02em] transition-all hover:text-primary hover:opacity-100"
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
@@ -195,13 +200,18 @@ export default function Navbar() {
         {/* MOBILE MENU */}
         {menuOpen && (
           <div className="md:hidden py-3 flex flex-col gap-3 border-t border-border-light">
-            {['Novedades', 'Ofertas', 'Colecciones'].map((item) => (
+            {[
+              { label: 'Novedades', href: '#' },
+              { label: 'Ofertas', href: '#' },
+              { label: 'Colecciones', href: '#' },
+              { label: 'Mensajero', href: '/mensajero' },
+            ].map((item) => (
               <a
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="text-[13px] text-text-light opacity-[0.55] font-semibold tracking-[0.02em] transition-all hover:text-primary hover:opacity-100"
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
