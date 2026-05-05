@@ -71,3 +71,8 @@
 * **Yesterday:** Avancé en la implementación de la HU “Como comprador quiero pagar contra entrega”, dejando conectada la selección de productos, el resumen del pedido, el cálculo del total y el registro del pedido con su pago pendiente.
 * **Today:** Revisar el funcionamiento del flujo integrado en la página principal y apoyar en ajustes visuales o validaciones que sean necesarios.
 * **Blockers:** None
+
+## Juan Daniel Vasquez Casana
+* **Yesterday:** Avancé en el desarrollo del frontend de la HU “Marcar pedido como entregado”, implementando la visualización de pedidos asignados y la opción de “Marcar como entregado”, considerando los criterios de aceptación.
+* **Today:** Integrar la lógica para el cambio de estado del pedido y la confirmación previa.
+* **Blockers:** None
