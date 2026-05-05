@@ -91,3 +91,8 @@
 - **Yesterday:** Inicie con el desarrollo de la historia de usuario asignada y cree seeds para la base de datos en el apartado que estoy trabajando
 - **Today:** Continuar desarrollando la historia de usuario
 - **Blockers:** Dudas de estandares seguido sobre las ramas 
+
+- ### Adrian Said Andrade Medina
+- **Yesterday:** Comence con el desarrollo de la historia de usuario que me toco
+- **Today:** Continuar con la construccion historia de usuario
+- **Blockers:** Dudas de conceptuales de astro
