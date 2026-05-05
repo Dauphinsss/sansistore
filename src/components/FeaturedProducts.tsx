@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import { ShoppingBag, Package, Search, X, History, Trash2 } from 'lucide-react';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { getOfferBadgeData, hasValidOffer } from '../lib/productOffers';
 import CategoryFilter from './CategoryFilter';
 
 interface Product {
@@ -47,7 +48,9 @@ function saveSearchTerm(term: string) {
   if (!term.trim()) return;
   try {
     const current = getSearchHistory();
-    const filtered = current.filter((t) => t.toLowerCase() !== term.toLowerCase());
+    const filtered = current.filter(
+      (t) => t.toLowerCase() !== term.toLowerCase()
+    );
     const updated = [term, ...filtered].slice(0, MAX_HISTORY_ITEMS);
     localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(updated));
   } catch {
@@ -58,7 +61,9 @@ function saveSearchTerm(term: string) {
 function deleteSearchTerm(term: string) {
   try {
     const current = getSearchHistory();
-    const updated = current.filter((t) => t.toLowerCase() !== term.toLowerCase());
+    const updated = current.filter(
+      (t) => t.toLowerCase() !== term.toLowerCase()
+    );
     localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(updated));
   } catch {
     // Ignore storage errors
@@ -69,38 +74,20 @@ function formatPrice(amount: number) {
   return `Bs ${amount.toFixed(2)}`;
 }
 
-function hasValidOffer(product: Product) {
-  return Boolean(
-    product.hasOffer &&
-      typeof product.offerPrice === 'number' &&
-      product.offerPrice < product.price
-  );
-}
-
-function getDiscountPercentage(product: Product) {
-  if (!hasValidOffer(product)) return null;
-
-  return Math.round(((product.price - product.offerPrice!) / product.price) * 100);
-}
-
-function isOfferBadge(badge?: string) {
-  return badge?.trim().toLowerCase() === 'oferta';
-}
-
 function getBadgeData(product: Product) {
-  const discountPercentage = getDiscountPercentage(product);
+  const badgeData = getOfferBadgeData(product);
 
-  if (discountPercentage) {
+  if (badgeData?.isDiscount) {
     return {
-      label: `-${discountPercentage}%`,
+      label: badgeData.label,
       className: 'bg-red-600 text-white',
     };
   }
 
-  if (!product.badge || isOfferBadge(product.badge)) return null;
+  if (!badgeData) return null;
 
   return {
-    label: product.badge,
+    label: badgeData.label,
     className: 'bg-primary-action text-white',
   };
 }
@@ -109,21 +96,29 @@ interface FeaturedProductsProps {
   initialSearch?: string;
 }
 
-export default function FeaturedProducts({ initialSearch = '' }: FeaturedProductsProps) {
+export default function FeaturedProducts({
+  initialSearch = '',
+}: FeaturedProductsProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [appliedSearch, setAppliedSearch] = useState(initialSearch);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [searchHistory, setSearchHistory] = useState<string[]>(() =>
+    getSearchHistory()
+  );
   const [inputFocused, setInputFocused] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showOffersOnly, setShowOffersOnly] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setShowSuggestions(false);
       }
     };
@@ -148,7 +143,10 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
 
         const inventoryByProductId = new Map(
           inventorySnap.docs.map((inventoryDoc) => {
-            const inventory = { id: inventoryDoc.id, ...inventoryDoc.data() } as Inventory;
+            const inventory = {
+              id: inventoryDoc.id,
+              ...inventoryDoc.data(),
+            } as Inventory;
             return [inventory.productId ?? inventoryDoc.id, inventory];
           })
         );
@@ -156,7 +154,10 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
         setProducts(
           productsSnap.docs
             .map((productDoc) => {
-              const product = { id: productDoc.id, ...productDoc.data() } as Product;
+              const product = {
+                id: productDoc.id,
+                ...productDoc.data(),
+              } as Product;
               const inventory = inventoryByProductId.get(productDoc.id);
 
               return {
@@ -179,47 +180,66 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
     fetchProducts();
   }, []);
 
-  useEffect(() => {
-    setSearchHistory(getSearchHistory());
-  }, []);
-
   const removeAccents = (text: string) => {
     return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   };
 
   const filteredProducts = useMemo(() => {
     let result = products;
+
+    if (showOffersOnly) {
+      result = result.filter((product) => hasValidOffer(product));
+    }
+
     if (selectedCategory) {
       result = result.filter((p) => p.categoryId === selectedCategory);
     }
+
     if (!appliedSearch) return result;
+
     const term = removeAccents(appliedSearch.toLowerCase());
-    const byName = result.filter((p) => removeAccents(p.name.toLowerCase()).includes(term));
+    const byName = result.filter((p) =>
+      removeAccents(p.name.toLowerCase()).includes(term)
+    );
     const byDescription = result.filter(
-      (p) => !removeAccents(p.name.toLowerCase()).includes(term) && p.description && removeAccents(p.description.toLowerCase()).includes(term)
+      (p) =>
+        !removeAccents(p.name.toLowerCase()).includes(term) &&
+        p.description &&
+        removeAccents(p.description.toLowerCase()).includes(term)
     );
     return [...byName, ...byDescription];
-  }, [products, appliedSearch, selectedCategory]);
+  }, [products, appliedSearch, selectedCategory, showOffersOnly]);
 
   const searchSuggestions = useMemo(() => {
     if (!searchTerm || searchTerm.length < 1) {
       if (inputFocused && searchHistory.length > 0) {
-        return searchHistory.map((term) => ({ type: 'history' as const, term }));
+        return searchHistory.map((term) => ({
+          type: 'history' as const,
+          term,
+        }));
       }
       return [];
     }
     const normalizedTerm = removeAccents(searchTerm.toLowerCase());
     const historySuggestions = searchHistory
-      .filter((term) => removeAccents(term.toLowerCase()).includes(normalizedTerm))
+      .filter((term) =>
+        removeAccents(term.toLowerCase()).includes(normalizedTerm)
+      )
       .map((term) => ({ type: 'history' as const, term }));
     const productSuggestions = products
-      .filter((p) => removeAccents(p.name.toLowerCase()).includes(normalizedTerm))
+      .filter((p) =>
+        removeAccents(p.name.toLowerCase()).includes(normalizedTerm)
+      )
       .slice(0, 5)
       .map((p) => ({ type: 'product' as const, product: p }));
     return [...historySuggestions, ...productSuggestions];
   }, [products, searchTerm, searchHistory, inputFocused]);
 
-  const highlightText = (text: string, term: string, enabled: boolean = true) => {
+  const highlightText = (
+    text: string,
+    term: string,
+    enabled: boolean = true
+  ) => {
     if (!enabled || !term || !text) return text;
     const normalizedText = removeAccents(text);
     const normalizedTerm = removeAccents(term);
@@ -233,7 +253,10 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
         result.push(text.slice(lastIndex, match.index));
       }
       result.push(
-        <mark key={match.index} className="bg-primary/30 text-primary font-semibold rounded px-0.5">
+        <mark
+          key={match.index}
+          className="bg-primary/30 text-primary font-semibold rounded px-0.5"
+        >
           {text.slice(match.index, match.index + match[0].length)}
         </mark>
       );
@@ -249,7 +272,11 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
     if (!term) return null;
     const t = removeAccents(term.toLowerCase());
     if (removeAccents(product.name.toLowerCase()).includes(t)) return 'name';
-    if (product.description && removeAccents(product.description.toLowerCase()).includes(t)) return 'description';
+    if (
+      product.description &&
+      removeAccents(product.description.toLowerCase()).includes(t)
+    )
+      return 'description';
     return null;
   };
 
@@ -300,17 +327,41 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
         <div className="mb-10">
           <h2
             className="text-text-light"
-            style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', letterSpacing: '-0.03em', fontWeight: 900 }}
+            style={{
+              fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+              letterSpacing: '-0.03em',
+              fontWeight: 900,
+            }}
           >
             Productos disponibles
           </h2>
         </div>
 
-       <div className="mb-6 flex items-center gap-3 max-w-6xl">
+        <div className="mb-6 flex max-w-6xl flex-wrap items-center gap-3">
           <CategoryFilter
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
           />
+          <button
+            type="button"
+            onClick={() => setShowOffersOnly((current) => !current)}
+            aria-pressed={showOffersOnly}
+            aria-label={
+              showOffersOnly
+                ? 'Quitar filtro Solo ofertas'
+                : 'Activar filtro Solo ofertas'
+            }
+            className={`inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+              showOffersOnly
+                ? 'border-primary bg-primary text-bg-light hover:brightness-110'
+                : 'border-border-light text-text-light hover:border-primary hover:text-primary'
+            }`}
+          >
+            Solo ofertas
+            {showOffersOnly && (
+              <X size={14} className="ml-2" aria-hidden="true" />
+            )}
+          </button>
           <div ref={searchRef} className="relative flex-1">
             <Search
               size={18}
@@ -342,16 +393,25 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
               </button>
             )}
 
-          {showSuggestions && searchSuggestions.length > 0 && (
-            <ul className="absolute top-full left-0 right-0 z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border border-border-light bg-card-bg-light py-1 shadow-lg">
-              {searchSuggestions.map((suggestion, index) => (
-                <li key={suggestion.type === 'history' ? `history-${suggestion.term}` : suggestion.product.id}>
-                  <div className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-light">
-                    <button
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        const term = suggestion.type === 'history' ? suggestion.term : suggestion.product.name;
+            {showSuggestions && searchSuggestions.length > 0 && (
+              <ul className="absolute top-full left-0 right-0 z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border border-border-light bg-card-bg-light py-1 shadow-lg">
+                {searchSuggestions.map((suggestion) => (
+                  <li
+                    key={
+                      suggestion.type === 'history'
+                        ? `history-${suggestion.term}`
+                        : suggestion.product.id
+                    }
+                  >
+                    <div className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-light">
+                      <button
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          const term =
+                            suggestion.type === 'history'
+                              ? suggestion.term
+                              : suggestion.product.name;
                           if (suggestion.type === 'history') {
                             saveSearchTerm(term);
                             setSearchHistory(getSearchHistory());
@@ -362,58 +422,67 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
                           setSearchTerm(term);
                           setAppliedSearch(term);
                           updateUrl(term);
+                          setShowSuggestions(false);
+                        }}
+                        className="flex flex-1 items-center gap-2 hover:bg-secondary-bg-light rounded py-1 -my-1 cursor-pointer"
+                      >
+                        {suggestion.type === 'history' && (
+                          <History
+                            size={14}
+                            className="text-primary shrink-0"
+                          />
+                        )}
+                        <span className="line-clamp-1">
+                          {suggestion.type === 'history'
+                            ? highlightText(suggestion.term, searchTerm, true)
+                            : highlightText(
+                                suggestion.product.name,
+                                searchTerm,
+                                true
+                              )}
+                        </span>
+                      </button>
+                      {suggestion.type === 'history' && (
+                        <button
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            deleteSearchTerm(suggestion.term);
+                            setSearchHistory(getSearchHistory());
+                          }}
+                          className="shrink-0 p-1 text-text-light opacity-40 hover:text-red-500 hover:opacity-100 cursor-pointer rounded"
+                          aria-label="Eliminar de historial"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {showSuggestions &&
+              searchSuggestions.length === 0 &&
+              searchTerm && (
+                <ul className="absolute top-full left-0 right-0 z-20 mt-1 rounded-lg border border-border-light bg-card-bg-light py-1 shadow-lg">
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        saveSearchTerm(searchTerm);
+                        setSearchHistory(getSearchHistory());
+                        setAppliedSearch(searchTerm);
                         setShowSuggestions(false);
                       }}
-                      className="flex flex-1 items-center gap-2 hover:bg-secondary-bg-light rounded py-1 -my-1 cursor-pointer"
+                      className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-text-light hover:bg-secondary-bg-light"
                     >
-                      {suggestion.type === 'history' && (
-                        <History size={14} className="text-primary shrink-0" />
-                      )}
-                      <span className="line-clamp-1">
-                        {suggestion.type === 'history'
-                          ? highlightText(suggestion.term, searchTerm, true)
-                          : highlightText(suggestion.product.name, searchTerm, true)}
-                      </span>
+                      Buscar &quot;{searchTerm}&quot;
                     </button>
-                    {suggestion.type === 'history' && (
-                      <button
-                        type="button"
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          deleteSearchTerm(suggestion.term);
-                          setSearchHistory(getSearchHistory());
-                        }}
-                        className="shrink-0 p-1 text-text-light opacity-40 hover:text-red-500 hover:opacity-100 cursor-pointer rounded"
-                        aria-label="Eliminar de historial"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-          {showSuggestions && searchSuggestions.length === 0 && searchTerm && (
-            <ul className="absolute top-full left-0 right-0 z-20 mt-1 rounded-lg border border-border-light bg-card-bg-light py-1 shadow-lg">
-              <li>
-                <button
-                  type="button"
-                  onClick={() => {
-                    saveSearchTerm(searchTerm);
-                    setSearchHistory(getSearchHistory());
-                    setAppliedSearch(searchTerm);
-                    setShowSuggestions(false);
-                  }}
-                  className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-text-light hover:bg-secondary-bg-light"
-                >
-                  Buscar "{searchTerm}"
-                </button>
-              </li>
-            </ul>
-          )}
-          </div> 
+                  </li>
+                </ul>
+              )}
+          </div>
         </div>
 
         {loading && (
@@ -433,30 +502,50 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
           </div>
         )}
 
-        {!loading && !error && filteredProducts.length === 0 && (appliedSearch || selectedCategory) && (
-          <div className="py-20 text-center">
-            <Package size={40} className="mx-auto mb-3 text-text-light opacity-40" />
-            <p className="text-sm text-text-light opacity-50">
-              {selectedCategory && !appliedSearch
-                ? 'No hay productos disponibles en esta categoría'
-                : 'No se encontraron productos'}
+        {!loading && error && (
+          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+
+        {!loading &&
+          filteredProducts.length === 0 &&
+          (appliedSearch || selectedCategory || showOffersOnly) && (
+            <div className="py-20 text-center">
+              <Package
+                size={40}
+                className="mx-auto mb-3 text-text-light opacity-40"
+              />
+              <p className="text-sm text-text-light opacity-50">
+                {showOffersOnly
+                  ? 'No hay ofertas disponibles en este momento'
+                  : selectedCategory && !appliedSearch
+                    ? 'No hay productos disponibles en esta categoría'
+                    : 'No se encontraron productos'}
+              </p>
+            </div>
+          )}
+
+        {!loading && error && products.length === 0 && (
+          <div className="rounded-3xl border border-border-light bg-card-bg-light px-6 py-12 text-center">
+            <Package size={40} className="mx-auto mb-3 text-primary" />
+            <p className="text-sm font-semibold text-text-light">
+              No se pudo cargar el catálogo.
+            </p>
+            <p className="mt-2 text-sm text-text-light opacity-70">
+              Intenta nuevamente más tarde.
             </p>
           </div>
         )}
 
-        {!loading && error && (
-          <div className="rounded-3xl border border-border-light bg-card-bg-light px-6 py-12 text-center">
-            <Package size={40} className="mx-auto mb-3 text-primary" />
-            <p className="text-sm font-semibold text-text-light">{error}</p>
-          </div>
-        )}
-
-        {!loading && !error && products.length > 0 && (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {!loading && filteredProducts.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {filteredProducts.map((product) => {
               const showOffer = hasValidOffer(product);
               const badgeData = getBadgeData(product);
-              const currentPrice = showOffer ? product.offerPrice! : product.price;
+              const currentPrice = showOffer
+                ? product.offerPrice!
+                : product.price;
               const isAvailable = (product.stockAvailable ?? 0) > 0;
 
               return (
@@ -494,27 +583,43 @@ export default function FeaturedProducts({ initialSearch = '' }: FeaturedProduct
                     <div className="flex items-center justify-between gap-3">
                       <span
                         className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                          isAvailable ? 'bg-primary/15 text-primary' : 'bg-primary-action text-white'
+                          isAvailable
+                            ? 'bg-primary/15 text-primary'
+                            : 'bg-primary-action text-white'
                         }`}
                       >
                         {isAvailable ? 'Disponible' : 'Producto agotado'}
                       </span>
-                      <ShoppingBag size={15} className="text-text-light opacity-35" />
+                      <ShoppingBag
+                        size={15}
+                        className="text-text-light opacity-35"
+                      />
                     </div>
 
                     <div className="mt-3 space-y-2">
                       <span className="block line-clamp-2 text-sm font-semibold leading-5 text-text-light transition-colors group-hover:text-primary">
-                        {highlightText(product.name, appliedSearch, getMatchField(product, appliedSearch) === 'name')}
+                        {highlightText(
+                          product.name,
+                          appliedSearch,
+                          getMatchField(product, appliedSearch) === 'name'
+                        )}
                       </span>
 
                       {product.description && (
                         <p className="mt-1 line-clamp-2 text-xs text-text-light opacity-65">
-                          {highlightText(product.description, appliedSearch, getMatchField(product, appliedSearch) === 'description')}
+                          {highlightText(
+                            product.description,
+                            appliedSearch,
+                            getMatchField(product, appliedSearch) ===
+                              'description'
+                          )}
                         </p>
                       )}
 
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-bold text-text-light">{formatPrice(currentPrice)}</span>
+                        <span className="text-sm font-bold text-text-light">
+                          {formatPrice(currentPrice)}
+                        </span>
                         {showOffer && (
                           <span className="text-xs text-text-light opacity-40 line-through">
                             {formatPrice(product.price)}
