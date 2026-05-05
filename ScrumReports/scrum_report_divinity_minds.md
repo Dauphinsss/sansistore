@@ -79,6 +79,12 @@
 - **Today:** Preparar y abrir PR de `ver-productos-disponibles` hacia `main`, adjuntando validaciones y cierre de pendientes del merge.
 - **Blockers:** n/a.
 
+## Gutierrez Hinojosa Jhon Deymar
+
+- **Yesterday:** Reporté bugs en las HUs de mis compañeros y realicé correcciones y mejoras en la búsqueda y en los detalles de producto.
+- **Today:** Automatizaré las pruebas con Playwright y realizaré una revisión en busca de bugs.
+- **Blockers:** Marcos inició la HU de productos disponibles desde la rama de detalles, lo que provocó conflictos al mergear main con el trabajo de Steven. Falta una definición más clara de HUs independientes, lo que retrasó el avance del equipo.
+
 ## Merudia Calderon Dayeza
 
 - **Yesterday:** Finalicé la historia de usuario "Búsqueda de productos por nombre". Implementé la barra de búsqueda en el catálogo, asegurando que sea case-insensitive, gestione correctamente la limpieza de filtros (botón X / ESC), los mensajes de estado vacío y el límite de 100 caracteres.
