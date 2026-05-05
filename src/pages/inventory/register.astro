@@ -1,0 +1,26 @@
+---
+import InventoryLayout from '../../layouts/InventoryLayout.astro';
+import { StockTable } from '../../features/inventory/components/StockTable.tsx';
+---
+
+<InventoryLayout title="Sansistore | Registrar Producto">
+  <div class="flex items-center justify-between mb-8">
+    <h1
+      class="font-['Outfit'] font-black text-2xl tracking-tight text-(--theme-text)"
+    >
+      Registrar <span class="text-primary">Producto</span>
+    </h1>
+    <a
+      href="/inventory/register"
+      class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-(--theme-bg) font-['Outfit'] font-bold text-sm tracking-wide transition-all duration-200 hover:brightness-110 active:scale-95"
+    >
+      + Nuevo producto
+    </a>
+  </div>
+
+  <div
+    class="bg-(--theme-card-bg) border border-(--theme-border) rounded-2xl p-6"
+  >
+    <StockTable client:load />
+  </div>
+</InventoryLayout>;
