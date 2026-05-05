@@ -81,3 +81,8 @@
 * **Yesterday:** Implementé la base del panel de pedidos asignados para el rol mensajero, creando la vista donde se muestran los pedidos relacionados al usuario autenticado. También avancé en la visualización del monto exacto a cobrar, el método de pago y el estado de la entrega, considerando los criterios de aceptación de la HU.
 * **Today:** Continuar con la integración del panel de mensajero, revisar la conexión con los datos de pedidos y ajustar la funcionalidad para que pueda consumir información real cuando esté disponible el flujo completo de asignación de pediSe depende de la integración con las funcionalidades de creación de pedidos, pago contra entrega y asignación de pedidos al mensajero para trabajar con datos reales del flujo completo.
 * **Blockers:** Se depende de la integración con las funcionalidades de creación de pedidos y asignación de pedidos al mensajero para trabajar con datos reales del flujo completo.
+
+## Jose Brandon Pinedo Gonzales
+* **Yesterday:** Avancé en la implementación de la HU “Visualizar monto exacto a cobrar”, desarrollando la vista del Panel del Mensajero y el detalle de cobro del pedido. Integré la lectura de pedidos desde Firestore, la visualización del monto total, subtotal y cargos adicionales, además del estado de pago “Pendiente de cobro” y el método de pago “Pago contra entrega”.
+* **Today:** Continuar con pruebas del flujo en el emulador, validar casos donde el monto no sea válido y ajustar la asignación de pedidos al mensajero para que el panel muestre únicamente los pedidos correspondientes.
+* **Blockers:** None
