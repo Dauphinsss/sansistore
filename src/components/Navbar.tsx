@@ -215,7 +215,7 @@ export default function Navbar() {
                     >
                       <a
                         role="menuitem"
-                        href="/acciones-delivery"
+                        href="/delivery-actions"
                         className="block px-4 py-2.5 text-[13px] font-semibold text-text-light transition-colors hover:bg-border-light/40 hover:text-primary"
                       >
                         Acciones delivery
