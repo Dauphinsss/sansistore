@@ -61,7 +61,7 @@ export default function MapPicker() {
     }
 
     const payload = {
-      userId: "TEMP_USER",
+      userId: 'TEMP_USER',
       lat,
       lng,
       label,
@@ -139,8 +139,8 @@ export default function MapPicker() {
         center={mapCenter}
         zoom={16}
         style={{
-          height: "320px",
-          borderRadius: "1.25rem",
+          height: '320px',
+          borderRadius: '1.25rem',
         }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -208,12 +208,12 @@ export default function MapPicker() {
           value={type}
           onChange={(e) => setType(e.target.value as LocationType)}
           style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "12px",
-            border: "1px solid var(--theme-border)",
-            background: "var(--theme-bg)",
-            color: "var(--theme-text)",
+            width: '100%',
+            padding: '10px',
+            borderRadius: '12px',
+            border: '1px solid var(--theme-border)',
+            background: 'var(--theme-bg)',
+            color: 'var(--theme-text)',
           }}
         >
           <option value="AULA">Aula</option>
@@ -234,12 +234,12 @@ export default function MapPicker() {
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Ej: Aula 962 - Facultad de Tecnología"
           style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "12px",
-            border: "1px solid var(--theme-border)",
-            background: "var(--theme-bg)",
-            color: "var(--theme-text)",
+            width: '100%',
+            padding: '10px',
+            borderRadius: '12px',
+            border: '1px solid var(--theme-border)',
+            background: 'var(--theme-bg)',
+            color: 'var(--theme-text)',
           }}
         />
       </div>
