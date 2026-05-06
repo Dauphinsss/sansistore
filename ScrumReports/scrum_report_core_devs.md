@@ -65,7 +65,12 @@
 - **Today:**        Realizar la estructura del proyecto para el area 7, inventario, y realizar la UserStorie "Ingreso de Lotes, solo formulario"
 - **Blockers:**     Un pequeño error de dependecias o funcionamiento de astro.
 
-- ## Soliz Moya Alejandra
+## Soliz Moya Alejandra
 - **Yesterday:**    Ayude en el diseño del sidebar.
 - **Today:**        Revise documentacion de react para las dudas que tenia.
 - **Blockers:**     Ninguno.
+
+## Rios Quiruchi Edney Jhojan
+- **Yesterday:**    Agregar redireccion al inventario en la pagina.
+- **Today:**        Agregar el sidebar y layout dentro la pagina de inventarios.
+- **Blockers:**     Problemas al hacer push a la rama main.
