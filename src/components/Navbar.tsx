@@ -115,7 +115,7 @@ export default function Navbar() {
 
           {/* LINKS */}
           <div className="hidden md:flex items-center gap-8">
-            {['Novedades', 'Ofertas', 'Colecciones'].map((item) => (
+            {[{ label: 'Productos', href: '/productos' }, { label: 'Novedades', href: '#' }, { label: 'Ofertas', href: '#' }].map((item) => (
               <a
                 key={item.label}
                 href={item.href}
@@ -227,18 +227,13 @@ export default function Navbar() {
         {/* MOBILE MENU */}
         {menuOpen && (
           <div className="md:hidden py-3 flex flex-col gap-3 border-t border-border-light">
-            {[
-              { label: 'Novedades', href: '#' },
-              { label: 'Ofertas', href: '#' },
-              { label: 'Colecciones', href: '#' },
-              { label: 'Mensajero', href: '/mensajero' },
-            ].map((item) => (
+            {['Novedades', 'Ofertas', 'Colecciones'].map((item) => (
               <a
-                key={item.label}
-                href={item.href}
+                key={item}
+                href="#"
                 className="text-[13px] text-text-light opacity-[0.55] font-semibold tracking-[0.02em] transition-all hover:text-primary hover:opacity-100"
               >
-                {item.label}
+                {item}
               </a>
             ))}
           </div>
