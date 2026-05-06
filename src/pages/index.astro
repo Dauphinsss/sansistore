@@ -1,8 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
-import FeaturedProducts from '../components/FeaturedProducts';
 import Footer from '../components/Footer';
 import CashOnDeliveryCheckout from '../features/cobro/components/CashOnDeliveryCheckout';
 ---
@@ -11,7 +9,6 @@ import CashOnDeliveryCheckout from '../features/cobro/components/CashOnDeliveryC
   <Navbar client:load />
   <Hero client:load />
   <FeaturedProducts client:load />
-  <CashOnDeliveryCheckout client:load />
   <Footer client:load />
 </Layout>
 
