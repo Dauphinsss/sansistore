@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Read environment variables from file.
@@ -32,6 +36,10 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
+
+  /* Global setup and teardown */
+  globalSetup: path.join(__dirname, 'tests/global-setup.ts'),
+  globalTeardown: path.join(__dirname, 'tests/global-teardown.ts'),
 
   /* Configure projects for major browsers */
   projects: [
@@ -77,5 +85,8 @@ export default defineConfig({
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      FIRESTORE_EMULATOR_HOST: 'localhost:8080',
+    },
   },
 });
