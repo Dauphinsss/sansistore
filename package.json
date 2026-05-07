@@ -20,6 +20,7 @@
     "default": "seed"
   },
   "dependencies": {
+    "@astrojs/node": "^10.1.0",
     "@astrojs/react": "^5.0.4",
     "@astrojs/vercel": "^10.0.6",
     "@tailwindcss/vite": "^4.2.2",

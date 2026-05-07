@@ -61,7 +61,7 @@ export default function MapPicker() {
     }
 
     const payload = {
-      userId: 'TEMP_USER',
+      userId: "TEMP_USER",
       lat,
       lng,
       label,
@@ -79,57 +79,27 @@ export default function MapPicker() {
   };
 
   return (
-    <div
-      style={{
-        background: "var(--theme-card-bg)",
-        color: "var(--theme-text)",
-        padding: "16px",
-        borderRadius: "1.25rem",
-        border: "1px solid var(--theme-border)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "14px",
-      }}
-    >
-      <h1 style={{ fontWeight: 800 }}>
-        Seleccionar ubicacion
+    <div className="bg-[var(--theme-card-bg)] text-[var(--theme-text)] p-4 rounded-2xl border border-[var(--theme-border)] flex flex-col gap-3.5">
+      <h1 className="font-extrabold text-lg">
+        Seleccionar ubicación
       </h1>
 
       {showError && errorMessage && (
-        <div
-          style={{
-            background: "#ff4444",
-            color: "white",
-            padding: "12px",
-            borderRadius: "12px",
-            marginBottom: "10px",
-            fontSize: "14px",
-            whiteSpace: "pre-line",
-            animation: "slideDown 0.3s ease-out",
-          }}
-        >
+        <div className="bg-red-500 text-white p-3 rounded-xl mb-2.5 text-sm whitespace-pre-line animate-slideDown">
           {errorMessage}
         </div>
       )}
 
-      <div
-        style={{
-          background: "var(--theme-secondary-bg)",
-          padding: "8px 12px",
-          borderRadius: "8px",
-          fontSize: "12px",
-          marginBottom: "8px",
-        }}
-      >
+      <div className="bg-[var(--theme-secondary-bg)] p-3 rounded-lg text-xs mb-2">
         <strong>Zonas permitidas:</strong>
-        <ul style={{ margin: "4px 0 0 20px", padding: 0 }}>
+        <ul className="mt-1 ml-5 list-disc">
           {allowedZones.map((zone, idx) => (
-            <li key={idx}>
+            <li key={idx} className="mb-1">
               <strong>{zone.name}</strong>
               <br />
-              <small style={{ opacity: 0.7 }}>
+              <span className="opacity-70 text-xs">
                 Área definida por {zone.points.length} puntos
-              </small>
+              </span>
             </li>
           ))}
         </ul>
@@ -138,10 +108,8 @@ export default function MapPicker() {
       <MapContainer
         center={mapCenter}
         zoom={16}
-        style={{
-          height: '320px',
-          borderRadius: '1.25rem',
-        }}
+        className="h-80 rounded-xl z-0"
+        style={{ borderRadius: "1rem" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         
@@ -166,55 +134,36 @@ export default function MapPicker() {
         />
       </MapContainer>
 
+      {/* Ubicación */}
       <div>
-        <h4 style={{ fontWeight: 700 }}>Ubicacion</h4>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <div style={{ flex: 1 }}>
-            <label style={{ fontSize: "12px", opacity: 0.7 }}>Latitud</label>
+        <h4 className="font-bold mb-2">Ubicación</h4>
+        <div className="flex gap-2.5">
+          <div className="flex-1">
+            <label className="text-xs opacity-70 block mb-1">Latitud</label>
             <input
               value={lat.toFixed(6)}
               readOnly
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "12px",
-                border: "1px solid var(--theme-border)",
-                background: "var(--theme-secondary-bg)",
-                color: "var(--theme-text)",
-              }}
+              className="w-full p-2.5 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-secondary-bg)] text-[var(--theme-text)] text-sm"
             />
           </div>
-          <div style={{ flex: 1 }}>
-            <label style={{ fontSize: "12px", opacity: 0.7 }}>Longitud</label>
+          <div className="flex-1">
+            <label className="text-xs opacity-70 block mb-1">Longitud</label>
             <input
               value={lng.toFixed(6)}
               readOnly
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "12px",
-                border: "1px solid var(--theme-border)",
-                background: "var(--theme-secondary-bg)",
-                color: "var(--theme-text)",
-              }}
+              className="w-full p-2.5 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-secondary-bg)] text-[var(--theme-text)] text-sm"
             />
           </div>
         </div>
       </div>
 
+      {/* Tipo de lugar */}
       <div>
-        <h4 style={{ fontWeight: 700 }}>Tipo de lugar</h4>
+        <h4 className="font-bold mb-2">Tipo de lugar</h4>
         <select
           value={type}
           onChange={(e) => setType(e.target.value as LocationType)}
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: '12px',
-            border: '1px solid var(--theme-border)',
-            background: 'var(--theme-bg)',
-            color: 'var(--theme-text)',
-          }}
+          className="w-full p-2.5 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-text)] text-sm"
         >
           <option value="AULA">Aula</option>
           <option value="LABORATORIO">Laboratorio</option>
@@ -222,41 +171,28 @@ export default function MapPicker() {
           <option value="AUDITORIO">Auditorio</option>
           <option value="BIBLIOTECA">Biblioteca</option>
           <option value="CENTRO DE ESTUDIANTES">Centro de estudiantes</option>
-          <option value="CAFETERIA">Cafeteria</option>
+          <option value="CAFETERIA">Cafetería</option>
           <option value="OTRO">Otro</option>
         </select>
       </div>
 
+      {/* Detalles de la ubicación */}
       <div>
-        <h4 style={{ fontWeight: 700 }}>Detalles de la ubicacion</h4>
+        <h4 className="font-bold mb-2">Detalles de la ubicación</h4>
         <input
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Ej: Aula 962 - Facultad de Tecnología"
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: '12px',
-            border: '1px solid var(--theme-border)',
-            background: 'var(--theme-bg)',
-            color: 'var(--theme-text)',
-          }}
+          className="w-full p-2.5 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-text)] text-sm placeholder:text-gray-400"
         />
       </div>
 
+      {/* Botón Guardar */}
       <button
         onClick={handleSave}
-        style={{
-          background: "var(--color-primary)",
-          color: "white",
-          padding: "12px",
-          borderRadius: "9999px",
-          fontWeight: 700,
-          marginTop: "6px",
-          cursor: "pointer",
-        }}
+        className="bg-[#88b04b] hover:bg-[#7a9e43] text-white p-3 rounded-full font-bold mt-1.5 cursor-pointer transition-colors"
       >
-        Guardar
+        Guardar ubicación
       </button>
     </div>
   );
