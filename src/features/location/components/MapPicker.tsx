@@ -1,28 +1,19 @@
 // components/MapPicker.tsx
 import React from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents, Polygon } from "react-leaflet";
-import { useLocation } from "../hooks/useLocation";
-import { useZoneValidation } from "../hooks/useZoneValidation";
-import { saveLocation } from "../services/locationService";
+import { useMapPicker } from "../hooks/useMapPicker";
 import type { LocationType } from "../types";
 import "leaflet/dist/leaflet.css";
-import { useAuthUser } from "../../../hooks/useAuthUser";
-
-
 
 type MapEventsProps = {
-    setLat: React.Dispatch<React.SetStateAction<number>>;
-    setLng: React.Dispatch<React.SetStateAction<number>>;
     onLocationChange: (lat: number, lng: number) => void;
 };
 
-function MapEvents({ setLat, setLng, onLocationChange }: MapEventsProps) {
+function MapEvents({ onLocationChange }: MapEventsProps) {
     useMapEvents({
         click(e) {
             const { lat, lng } = e.latlng;
             onLocationChange(lat, lng);
-            setLat(lat);
-            setLng(lng);
         },
     });
 
@@ -35,68 +26,29 @@ export default function MapPicker() {
         lng,
         label,
         type,
-        setLat,
-        setLng,
         setLabel,
         setType,
-    } = useLocation();
-
-    const {
-        errorMessage,
+        mapCenter,
+        handleLocationChange,
         showError,
-        validateLocation,
-        validateBeforeSave,
-        getSuccessMessage,
+        errorMessage,
         allowedZones,
-    } = useZoneValidation();
-
-    const mapCenter: [number, number] = allowedZones.length > 0 && allowedZones[0].points.length > 0
-        ? allowedZones[0].points[0]
-        : [lat, lng];
-
-    const handleLocationChange = (newLat: number, newLng: number) => {
-        validateLocation(newLat, newLng);
-    };
-
-    const { user } = useAuthUser();
-
-    const handleSave = async () => {
-        if (!validateBeforeSave(lat, lng)) {
-            return;
-        }
-
-        const payload = {
-            userId: user?.uid ?? "",
-            lat,
-            lng,
-            label,
-            type,
-            isDefault: false,
-        };
-
-        try {
-            await saveLocation(payload);
-            alert(getSuccessMessage(lat, lng));
-        } catch (err) {
-            console.error("ERROR:", err);
-            alert("Error al guardar la ubicación");
-        }
-    };
-
+        handleSave,
+    } = useMapPicker();
 
     return (
         <div className="bg-(--theme-card-bg) text-(--theme-text) p-4 rounded-2xl border border-(--theme-border) flex flex-col gap-3.5">
- 
+
             <h1 className="font-extrabold text-lg">
                 Seleccionar ubicacion
             </h1>
- 
+
             {showError && errorMessage && (
-                <div className="bg-red-500 text-white px-3 py-3 rounded-xl mb-2.5 text-sm whitespace-pre-line animate-[slideDown_0.3s_ease-out]">
+                <div className="bg-red-500 text-white px-3 py-3 rounded-xl mb-2.5 text-sm whitespace-pre-line">
                     {errorMessage}
                 </div>
             )}
- 
+
             <div className="bg-(--theme-secondary-bg) px-3 py-2 rounded-lg text-xs mb-2">
                 <strong>Zonas permitidas:</strong>
                 <ul className="mt-1 ml-5 list-disc">
@@ -111,8 +63,8 @@ export default function MapPicker() {
                     ))}
                 </ul>
             </div>
- 
-            {/* Leaflet requiere height como inline style — no procesa clases CSS externas */}
+
+            {/* Leaflet requiere height como inline style */}
             <MapContainer
                 center={mapCenter}
                 zoom={16}
@@ -120,7 +72,7 @@ export default function MapPicker() {
                 className="rounded-2xl"
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
- 
+
                 {allowedZones.map((zone, idx) => (
                     <Polygon
                         key={idx}
@@ -133,15 +85,11 @@ export default function MapPicker() {
                         }}
                     />
                 ))}
- 
+
                 <Marker position={[lat, lng]} />
-                <MapEvents
-                    setLat={setLat}
-                    setLng={setLng}
-                    onLocationChange={handleLocationChange}
-                />
+                <MapEvents onLocationChange={handleLocationChange} />
             </MapContainer>
- 
+
             <div>
                 <h4 className="font-bold mb-1">Ubicacion</h4>
                 <div className="flex gap-2.5">
@@ -163,25 +111,30 @@ export default function MapPicker() {
                     </div>
                 </div>
             </div>
- 
+
             <div>
                 <h4 className="font-bold mb-1">Tipo de lugar</h4>
-                <select
-                    value={type}
-                    onChange={(e) => setType(e.target.value as LocationType)}
-                    className="w-full px-2.5 py-2 rounded-xl border border-(--theme-border) bg-(--theme-bg) text-(--theme-text)"
-                >
-                    <option value="AULA">Aula</option>
-                    <option value="LABORATORIO">Laboratorio</option>
-                    <option value="OFICINA">Oficina</option>
-                    <option value="AUDITORIO">Auditorio</option>
-                    <option value="BIBLIOTECA">Biblioteca</option>
-                    <option value="CENTRO DE ESTUDIANTES">Centro de estudiantes</option>
-                    <option value="CAFETERIA">Cafeteria</option>
-                    <option value="OTRO">Otro</option>
-                </select>
+                <div className="relative">
+                    <select
+                        value={type}
+                        onChange={(e) => setType(e.target.value as LocationType)}
+                        className="w-full px-2.5 py-2 pr-8 rounded-xl border border-(--theme-border) bg-(--theme-bg) text-(--theme-text) appearance-none"
+                    >
+                        <option value="AULA">Aula</option>
+                        <option value="LABORATORIO">Laboratorio</option>
+                        <option value="OFICINA">Oficina</option>
+                        <option value="AUDITORIO">Auditorio</option>
+                        <option value="BIBLIOTECA">Biblioteca</option>
+                        <option value="CENTRO DE ESTUDIANTES">Centro de estudiantes</option>
+                        <option value="CAFETERIA">Cafeteria</option>
+                        <option value="OTRO">Otro</option>
+                    </select>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-(--theme-text) opacity-50">
+                        ▾
+                    </span>
+                </div>
             </div>
- 
+
             <div>
                 <h4 className="font-bold mb-1">Detalles de la ubicacion</h4>
                 <input
@@ -191,7 +144,7 @@ export default function MapPicker() {
                     className="w-full px-2.5 py-2 rounded-xl border border-(--theme-border) bg-(--theme-bg) text-(--theme-text)"
                 />
             </div>
- 
+
             <button
                 onClick={handleSave}
                 className="bg-(--color-primary) text-white py-3 rounded-full font-bold mt-1.5 cursor-pointer"
