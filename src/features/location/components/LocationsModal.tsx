@@ -1,39 +1,19 @@
-import { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Home, Briefcase, Dumbbell, MapPin } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { X, Plus, MapPin } from 'lucide-react';
 
 import LocationCard from "./LocationCard";
 
-import type { UserLocation } from "./LocationCard";
-
-
-
-const MOCK_LOCATIONS: UserLocation[] = [
-    {
-        locationId: 'loc_001',
-        userId: 'usr_ignacio',
-        label: 'Casa',
-        type: 'home',
-        lat: -17.3895,
-        lng: -66.1568,
-        isDefault: false,
-    },
-    {
-        locationId: 'loc_003',
-        userId: 'usr_ignacio',
-        label: 'Gimnasio',
-        type: 'gym',
-        lat: -17.4012,
-        lng: -66.1644,
-        isDefault: true,
-    },
-];
+import type { Location } from "../types";
+import { useAuthUser } from '../../../hooks/useAuthUser';
+import { useUserLocation } from '../services/useUserLocation';
 
 export default function LocationsModal() {
     const [isOpen, setIsOpen] = useState(true);
-    const [locations, setLocations] = useState<UserLocation[]>(MOCK_LOCATIONS);
+
+    const { user } = useAuthUser();
+    const { locations, loading } = useUserLocation(user?.uid ?? null);
 
     const handleDelete = (id: string) => {
-        setLocations((prev) => prev.filter((l) => l.locationId !== id));
     };
 
     if (!isOpen) {
@@ -58,7 +38,6 @@ export default function LocationsModal() {
                 className="w-full max-w-sm overflow-hidden rounded-[2.5rem] border border-[#88B04B]/20 bg-[#FFFBF4] dark:bg-[#0A0B0D] shadow-2xl transition-colors duration-300"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Header */}
                 <div className="flex items-center justify-between border-b border-[#88B04B]/10 px-7 py-5">
                     <h2 className="font-outfit text-lg font-black tracking-tight text-[#1E1E1E] dark:text-[#F5F3EF]">
                         Mis Ubicaciones
@@ -84,7 +63,7 @@ export default function LocationsModal() {
                     ) : (
                         locations.map((loc) => (
                             <LocationCard
-                                key={loc.locationId}
+                                key={loc.id}
                                 location={loc}
                                 onDelete={handleDelete}
                             />
@@ -97,7 +76,7 @@ export default function LocationsModal() {
                         onClick={() => alert('Añadir nueva ubicación')}
                         className="
                             flex w-full items-center justify-center gap-2 rounded-full
-                            border-2 border-dashed border-[#88B04B]/40 py-3
+                            border-2 border-[#88B04B]/40 py-3
                             font-outfit text-[11px] font-black uppercase tracking-[0.15em] text-[#88B04B]
                             transition-all hover:border-[#88B04B] hover:bg-[#88B04B]/5 active:scale-95
                         "

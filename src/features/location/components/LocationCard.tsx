@@ -1,31 +1,16 @@
+import { Trash2 } from 'lucide-react';
+import type { Location } from '../types';
+import { TYPE_ICONS } from '../constants/locationIcons';
 
-import { X, Plus, Trash2, Home, Briefcase, Dumbbell, MapPin } from 'lucide-react';
-export type LocationType = 'home' | 'work' | 'gym' | 'other';
-
-export interface UserLocation {
-    locationId: string;
-    userId: string;
-    label: string;
-    type: LocationType;
-    lat: number;
-    lng: number;
-    isDefault: boolean;
-}
-const TYPE_ICONS: Record<LocationType, React.ReactNode> = {
-    home: <Home size={16} />,
-    work: <Briefcase size={16} />,
-    gym: <Dumbbell size={16} />,
-    other: <MapPin size={16} />,
-};
-
-export default function LocationCard({
-    location,
-    onDelete,
-}: {
-    location: UserLocation;
+interface LocationCardProps {
+    location: Location;
     onDelete: (id: string) => void;
-}) {
-    const { locationId, label, type, lat, lng, isDefault } = location;
+}
+
+export default function LocationCard({ location, onDelete }: LocationCardProps) {
+    const { id, label, type, lat, lng, isDefault } = location;
+
+    if (!id) return null;
 
     return (
         <div
@@ -33,7 +18,8 @@ export default function LocationCard({
                 flex items-center gap-3 rounded-[1.25rem] border px-4 py-3 transition-all duration-300
                 ${isDefault
                     ? 'border-[#88B04B]/50 bg-[#88B04B]/5 dark:bg-[#88B04B]/10'
-                    : 'border-[#88B04B]/15 bg-white dark:bg-[#141518] dark:border-white/10 hover:border-[#88B04B]/40'}
+                    : 'border-[#88B04B]/15 bg-white dark:bg-[#141518] dark:border-white/10 hover:border-[#88B04B]/40'
+                }
             `}
         >
             <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#88B04B]/10 text-[#88B04B]">
@@ -43,7 +29,7 @@ export default function LocationCard({
             <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                     <span className="font-outfit text-sm font-extrabold leading-none text-[#1E1E1E] dark:text-[#F5F3EF]">
-                        {label}
+                        {type}
                     </span>
                     {isDefault && (
                         <span className="rounded-full bg-[#88B04B] px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white">
@@ -53,7 +39,7 @@ export default function LocationCard({
                 </div>
 
                 <p className="mt-1 font-inter text-[10px] font-bold uppercase tracking-widest text-[#88B04B]">
-                    {type}
+                    {label}
                 </p>
 
                 <p className="mt-0.5 font-mono text-[11px] tabular-nums text-[#1E1E1E]/60 dark:text-[#F5F3EF]/50">
@@ -62,7 +48,8 @@ export default function LocationCard({
             </div>
 
             <button
-                onClick={() => onDelete(locationId)}
+                onClick={() => onDelete(id)}
+                aria-label={`Eliminar ${label}`}
                 className="
                     flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full
                     border border-red-200/50 text-red-500 opacity-60 transition-all
