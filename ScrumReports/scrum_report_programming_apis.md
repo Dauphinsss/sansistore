@@ -105,3 +105,11 @@
 - **Today:** Desarrollo de la historia de usario asignada.
 - **Blockers:** Duda sobre que campo de la colección orders se usara para que el vendedor marque el pedido como "listo para entrega", para que pueda ser asignado a un mensajero
 
+***
+
+## 07-05-2026
+
+### José Daniel Virreira Rufino
+- **Yesterday:** Realicé la página base para la nueva pantalla de las acciones de delivery en la que todo el grupo colocará sus funciones. Trabajé en la funcionalidad de la HU que me corresponde
+- **Today:** Participaré en la reunión de la demo y terminaré de pulir las funcionalidades pendientes hasta la hora límite del *code freeze*
+- **Blockers:** None
