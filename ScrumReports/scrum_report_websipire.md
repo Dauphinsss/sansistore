@@ -94,3 +94,9 @@
  * **Yesterday:** Arreglar algunos detalles de la parte de frontend
 * **Today:** Crear productos mockeados, miestrastanto, para que se pueda entender la vista de la HU *“Como comprador quiero pagar contra entrega”*, ya que depende de otra HU que aun no a sido implementada en este Sprint. "Agregar producto a carrito"
 * **Blockers:** Entender las dependencias con la HU que estoy trabajando
+
+## Maria Victoria Grageda Vallejos
+
+* **Yesterday:** Realicé correcciones de bugs y ajustes en la parte de frontend relacionados con la HU: *“Como comprador quiero pagar contra entrega”*, trabajando junto con Dayana para mejorar el funcionamiento de la vista.
+* **Today:** Apoyaré en la creación de productos mockeados para que se pueda entender correctamente la vista de la HU *“Como comprador quiero pagar contra entrega”*, ya que depende de otra HU que aún no ha sido implementada en este Sprint: *“Agregar producto a carrito”*.
+* **Blockers:** Entender las dependencias con la HU que estoy trabajando.
