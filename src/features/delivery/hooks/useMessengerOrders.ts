@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   acceptMessengerOrder,
   getMessengerOrders,
@@ -34,36 +34,47 @@ export function useMessengerOrders(messengerId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
+  const requestIdRef = useRef(0);
 
-  useEffect(() => {
-    let cancelled = false;
+  const refreshOrders = useCallback(
+    async (options?: { keepLoading?: boolean }) => {
+      const requestId = requestIdRef.current + 1;
+      requestIdRef.current = requestId;
 
-    setLoading(true);
-    setError(null);
+      if (options?.keepLoading !== false) {
+        setLoading(true);
+      }
 
-    getMessengerOrders(messengerId)
-      .then((nextOrders) => {
-        if (!cancelled) {
+      setError(null);
+
+      try {
+        const nextOrders = await getMessengerOrders(messengerId);
+
+        if (requestIdRef.current === requestId) {
           setOrders(nextOrders);
         }
-      })
-      .catch(() => {
-        if (!cancelled) {
+      } catch {
+        if (requestIdRef.current === requestId) {
           setError('No se pudieron cargar los pedidos asignados.');
         }
-      })
-      .finally(() => {
-        if (!cancelled) {
+      } finally {
+        if (requestIdRef.current === requestId) {
           setLoading(false);
         }
-      });
+      }
+    },
+    [messengerId],
+  );
 
-    return () => {
-      cancelled = true;
-    };
-  }, [messengerId]);
+  useEffect(() => {
+    void refreshOrders();
+  }, [refreshOrders]);
 
   const acceptOrder = async (orderId: string) => {
+    if (activeOrderId) {
+      return;
+    }
+
     try {
       validateOrderAction(orders, orderId, messengerId, 'aceptar');
     } catch (validationError) {
@@ -79,13 +90,8 @@ export function useMessengerOrders(messengerId: string) {
     setError(null);
 
     try {
-      const updatedOrder = await acceptMessengerOrder(orderId, messengerId);
-
-      setOrders((currentOrders) =>
-        currentOrders.map((order) =>
-          order.id === orderId ? updatedOrder : order,
-        ),
-      );
+      await acceptMessengerOrder(orderId, messengerId);
+      await refreshOrders({ keepLoading: false });
     } catch (acceptError) {
       if (acceptError instanceof Error) {
         setError(acceptError.message);
@@ -98,6 +104,10 @@ export function useMessengerOrders(messengerId: string) {
   };
 
   const rejectOrder = async (orderId: string) => {
+    if (activeOrderId) {
+      return;
+    }
+
     try {
       validateOrderAction(orders, orderId, messengerId, 'rechazar');
     } catch (validationError) {
@@ -113,13 +123,8 @@ export function useMessengerOrders(messengerId: string) {
     setError(null);
 
     try {
-      const updatedOrder = await rejectMessengerOrder(orderId, messengerId);
-
-      setOrders((currentOrders) =>
-        currentOrders.map((order) =>
-          order.id === orderId ? updatedOrder : order,
-        ),
-      );
+      await rejectMessengerOrder(orderId, messengerId);
+      await refreshOrders({ keepLoading: false });
     } catch (rejectError) {
       if (rejectError instanceof Error) {
         setError(rejectError.message);
@@ -138,5 +143,6 @@ export function useMessengerOrders(messengerId: string) {
     activeOrderId,
     acceptOrder,
     rejectOrder,
+    refreshOrders,
   };
 }

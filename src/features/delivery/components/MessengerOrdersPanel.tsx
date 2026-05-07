@@ -47,6 +47,7 @@ const statusCopy: Record<OrderStatus, { label: string; tone: string }> = {
 type OrderCardProps = {
   order: DeliveryOrder;
   isProcessing: boolean;
+  hasBusySibling: boolean;
   onAccept: (orderId: string) => void;
   onReject: (orderId: string) => void;
 };
@@ -54,15 +55,19 @@ type OrderCardProps = {
 function OrderCard({
   order,
   isProcessing,
+  hasBusySibling,
   onAccept,
   onReject,
 }: OrderCardProps) {
   const status = statusCopy[order.status];
   const canAccept = order.status === 'ASSIGNED' && !isProcessing;
   const canReject = order.status === 'ASSIGNED' && !isProcessing;
+  const isBlockedByOtherAction = hasBusySibling && !isProcessing;
   const actionHint =
     order.status === 'ASSIGNED'
-      ? 'Puedes aceptar o rechazar este pedido.'
+      ? isBlockedByOtherAction
+        ? 'Espera a que termine la operacion en otro pedido.'
+        : 'Puedes aceptar o rechazar este pedido.'
       : order.status === 'ACCEPTED'
         ? 'Este pedido ya fue aceptado y ya no debe volver a decidirse.'
         : order.status === 'PENDING_REASSIGNMENT'
@@ -119,9 +124,9 @@ function OrderCard({
         <button
           type="button"
           onClick={() => onAccept(order.id)}
-          disabled={!canAccept}
+          disabled={!canAccept || isBlockedByOtherAction}
           className={`min-w-[140px] rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.18em] transition-opacity ${
-            canAccept
+            canAccept && !isBlockedByOtherAction
               ? 'bg-primary text-bg-dark'
               : 'bg-primary text-bg-dark opacity-50'
           }`}
@@ -131,9 +136,9 @@ function OrderCard({
         <button
           type="button"
           onClick={() => onReject(order.id)}
-          disabled={!canReject}
+          disabled={!canReject || isBlockedByOtherAction}
           className={`min-w-[140px] rounded-full border px-5 py-3 text-xs font-black uppercase tracking-[0.18em] transition-opacity ${
-            canReject
+            canReject && !isBlockedByOtherAction
               ? 'border-rose-500/50 text-rose-500'
               : 'border-rose-500/30 text-rose-500 opacity-50'
           }`}
@@ -221,6 +226,7 @@ export default function MessengerOrdersPanel({
     activeOrderId,
     acceptOrder,
     rejectOrder,
+    refreshOrders,
   } =
     useMessengerOrders(messengerId);
 
@@ -303,6 +309,25 @@ export default function MessengerOrdersPanel({
               </p>
             </div>
 
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-secondary-bg-light px-4 py-3">
+              <p className="text-sm text-text-light/65">
+                Si cambias de mensajero o una accion tarda en responder, la
+                vista refresca el estado mas reciente del panel.
+              </p>
+              <button
+                type="button"
+                onClick={() => void refreshOrders()}
+                disabled={loading || activeOrderId !== null}
+                className={`rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.18em] ${
+                  loading || activeOrderId !== null
+                    ? 'bg-primary/30 text-bg-dark/70'
+                    : 'bg-primary text-bg-dark'
+                }`}
+              >
+                Refrescar
+              </button>
+            </div>
+
             {orders.length === 0 ? (
               <EmptyState />
             ) : (
@@ -312,6 +337,7 @@ export default function MessengerOrdersPanel({
                     key={order.id}
                     order={order}
                     isProcessing={activeOrderId === order.id}
+                    hasBusySibling={activeOrderId !== null}
                     onAccept={acceptOrder}
                     onReject={rejectOrder}
                   />
