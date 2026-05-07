@@ -8,6 +8,7 @@ import {
   getDocs,
   runTransaction,
   serverTimestamp,
+  getDoc,
   type Unsubscribe,
   type Firestore,
 } from 'firebase/firestore';
@@ -38,6 +39,81 @@ function docToOrder(id: string, data: OrderDoc): Order {
   };
 }
 
+async function enrichOrdersWithData(
+  db: Firestore,
+  orders: Order[],
+): Promise<Order[]> {
+  if (orders.length === 0) return [];
+
+  const buyerIds = [...new Set(orders.map((o) => o.buyerId))];
+  const locationIds = [...new Set(orders.map((o) => o.locationId))];
+
+  const [buyerMap, locationMap] = await Promise.all([
+    fetchBuyersData(db, buyerIds),
+    fetchLocationsData(db, locationIds),
+  ]);
+
+  return orders.map((order) => ({
+    ...order,
+    buyerName: buyerMap[order.buyerId],
+    locationLabel: locationMap[order.locationId],
+  }));
+}
+
+async function fetchBuyersData(
+  db: Firestore,
+  buyerIds: string[],
+): Promise<Record<string, string>> {
+  if (buyerIds.length === 0) return {};
+
+  try {
+    const map: Record<string, string> = {};
+
+    const userSnapshots = await Promise.all(
+      buyerIds.map((uid) => getDoc(doc(db, 'users', uid)))
+    );
+
+    userSnapshots.forEach((userSnap) => {
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        map[userSnap.id] = data.displayName ?? data.email ?? 'Comprador desconocido';
+      }
+    });
+
+    return map;
+  } catch {
+    console.error('Error al obtener a los compradores');
+    return {};
+  }
+}
+
+async function fetchLocationsData(
+  db: Firestore,
+  locationIds: string[],
+): Promise<Record<string, string>> {
+  if (locationIds.length === 0) return {};
+
+  try {
+    const map: Record<string, string> = {};
+
+    const locationSnapshots = await Promise.all(
+      locationIds.map((locId) => getDoc(doc(db, 'locations', locId)))
+    );
+
+    locationSnapshots.forEach((locSnap) => {
+      if (locSnap.exists()) {
+        const data = locSnap.data();
+        map[locSnap.id] = data.label ?? 'Ubicación desconocida';
+      }
+    });
+
+    return map;
+  } catch {
+    console.error('Error al obtener la localizacióin');
+    return {};
+  }
+}
+
 
 export function subscribeSellerOrders(
   db: Firestore,
@@ -53,9 +129,11 @@ export function subscribeSellerOrders(
   let firstReservedLoaded = false;
   let firstReadyLoaded = false;
 
-  const emit = () => {
+  const emit = async () => {
     if (firstReservedLoaded && firstReadyLoaded) {
-      onData([...reserved], [...ready]);
+      const enrichedReserved = await enrichOrdersWithData(db, [...reserved]);
+      const enrichedReady = await enrichOrdersWithData(db, [...ready]);
+      onData(enrichedReserved, enrichedReady);
     }
   };
 

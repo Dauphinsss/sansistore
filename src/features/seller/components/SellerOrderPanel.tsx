@@ -35,6 +35,9 @@ export default function SellerOrdersPanel() {
 
   const handleCancel = () => setPendingOrder(null);
 
+  console.log('Reserved Orders:', reserved);
+  console.log('Ready Orders:', ready);
+
   return (
     <div className="min-h-screen bg-(--theme-bg) px-4 pb-10 pt-10 md:px-8 xl:px-10">
       {pendingOrder && (

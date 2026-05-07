@@ -41,7 +41,7 @@ export const OrderCard = ({
               className="font-800 text-lg tracking-tight text-(--theme-text)"
               style={{ fontFamily: 'Outfit, sans-serif' }}
             >
-              #{order.orderId.slice(-6).toUpperCase()}
+              {order.buyerName?.toUpperCase()}
             </p>
 
             <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -164,7 +164,7 @@ export const OrderCard = ({
                 />
               </svg>
 
-              ¡Marcado como listo!
+              Marcado como listo
             </span>
           ) : (
             <button

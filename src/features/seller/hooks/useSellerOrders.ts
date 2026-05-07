@@ -71,7 +71,7 @@ export function useSellerOrders(): UseSellerOrdersReturn {
       const items = await fetchOrderItems(db, orderId);
       itemsCache.current[orderId] = items;
       setExpandedItems(items);
-    } catch (err) {
+    } catch {
       setError('No se pudieron cargar los productos del pedido.');
     } finally {
       setItemsLoading(false);
@@ -89,8 +89,8 @@ export function useSellerOrders(): UseSellerOrdersReturn {
         setExpandedItems([]);
       }
       setTimeout(() => setSuccessOrderId(null), 3000);
-    } catch (err: any) {
-      setError(err.message ?? 'Error al marcar el pedido como listo.');
+    } catch {
+      setError('Error al marcar el pedido como listo.');
     } finally {
       setMarkingOrderId(null);
     }
