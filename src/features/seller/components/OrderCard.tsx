@@ -168,7 +168,7 @@ export const OrderCard = ({
             <button
               onClick={() => onMarkReady(order)}
               disabled={isMarking}
-              className="flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-700 text-white transition hover:opacity-90 active:scale-95 disabled:opacity-60"
+              className="flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-700 text-white transition hover:opacity-90 active:scale-95 disabled:opacity-60"
             >
               {isMarking ? (
                 <>
