@@ -83,73 +83,44 @@ export default function MapPicker() {
         }
     };
 
+
     return (
-        <div
-            style={{
-                background: "var(--theme-card-bg)",
-                color: "var(--theme-text)",
-                padding: "16px",
-                borderRadius: "1.25rem",
-                border: "1px solid var(--theme-border)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "14px",
-            }}
-        >
-            <h1 style={{ fontWeight: 800 }}>
+        <div className="bg-(--theme-card-bg) text-(--theme-text) p-4 rounded-2xl border border-(--theme-border) flex flex-col gap-3.5">
+ 
+            <h1 className="font-extrabold text-lg">
                 Seleccionar ubicacion
             </h1>
-
+ 
             {showError && errorMessage && (
-                <div
-                    style={{
-                        background: "#ff4444",
-                        color: "white",
-                        padding: "12px",
-                        borderRadius: "12px",
-                        marginBottom: "10px",
-                        fontSize: "14px",
-                        whiteSpace: "pre-line",
-                        animation: "slideDown 0.3s ease-out",
-                    }}
-                >
+                <div className="bg-red-500 text-white px-3 py-3 rounded-xl mb-2.5 text-sm whitespace-pre-line animate-[slideDown_0.3s_ease-out]">
                     {errorMessage}
                 </div>
             )}
-
-            <div
-                style={{
-                    background: "var(--theme-secondary-bg)",
-                    padding: "8px 12px",
-                    borderRadius: "8px",
-                    fontSize: "12px",
-                    marginBottom: "8px",
-                }}
-            >
+ 
+            <div className="bg-(--theme-secondary-bg) px-3 py-2 rounded-lg text-xs mb-2">
                 <strong>Zonas permitidas:</strong>
-                <ul style={{ margin: "4px 0 0 20px", padding: 0 }}>
+                <ul className="mt-1 ml-5 list-disc">
                     {allowedZones.map((zone, idx) => (
                         <li key={idx}>
                             <strong>{zone.name}</strong>
                             <br />
-                            <small style={{ opacity: 0.7 }}>
+                            <small className="opacity-70">
                                 Área definida por {zone.points.length} puntos
                             </small>
                         </li>
                     ))}
                 </ul>
             </div>
-
+ 
+            {/* Leaflet requiere height como inline style — no procesa clases CSS externas */}
             <MapContainer
                 center={mapCenter}
                 zoom={16}
-                style={{
-                    height: '320px',
-                    borderRadius: '1.25rem',
-                }}
+                style={{ height: "320px" }}
+                className="rounded-2xl"
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
+ 
                 {allowedZones.map((zone, idx) => (
                     <Polygon
                         key={idx}
@@ -162,7 +133,7 @@ export default function MapPicker() {
                         }}
                     />
                 ))}
-
+ 
                 <Marker position={[lat, lng]} />
                 <MapEvents
                     setLat={setLat}
@@ -170,56 +141,35 @@ export default function MapPicker() {
                     onLocationChange={handleLocationChange}
                 />
             </MapContainer>
-
+ 
             <div>
-                <h4 style={{ fontWeight: 700 }}>Ubicacion</h4>
-                <div style={{ display: "flex", gap: "10px" }}>
-                    <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: "12px", opacity: 0.7 }}>Latitud</label>
+                <h4 className="font-bold mb-1">Ubicacion</h4>
+                <div className="flex gap-2.5">
+                    <div className="flex-1">
+                        <label className="text-xs opacity-70">Latitud</label>
                         <input
                             value={lat.toFixed(6)}
                             readOnly
-                            style={{
-                                width: "100%",
-                                padding: "10px",
-                                borderRadius: "12px",
-                                border: "1px solid var(--theme-border)",
-                                background: "var(--theme-secondary-bg)",
-                                color: "var(--theme-text)",
-                            }}
+                            className="w-full px-2.5 py-2 rounded-xl border border-(--theme-border) bg-(--theme-secondary-bg) text-(--theme-text)"
                         />
                     </div>
-                    <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: "12px", opacity: 0.7 }}>Longitud</label>
+                    <div className="flex-1">
+                        <label className="text-xs opacity-70">Longitud</label>
                         <input
                             value={lng.toFixed(6)}
                             readOnly
-                            style={{
-                                width: "100%",
-                                padding: "10px",
-                                borderRadius: "12px",
-                                border: "1px solid var(--theme-border)",
-                                background: "var(--theme-secondary-bg)",
-                                color: "var(--theme-text)",
-                            }}
+                            className="w-full px-2.5 py-2 rounded-xl border border-(--theme-border) bg-(--theme-secondary-bg) text-(--theme-text)"
                         />
                     </div>
                 </div>
             </div>
-
+ 
             <div>
-                <h4 style={{ fontWeight: 700 }}>Tipo de lugar</h4>
+                <h4 className="font-bold mb-1">Tipo de lugar</h4>
                 <select
                     value={type}
                     onChange={(e) => setType(e.target.value as LocationType)}
-                    style={{
-                        width: '100%',
-                        padding: '10px',
-                        borderRadius: '12px',
-                        border: '1px solid var(--theme-border)',
-                        background: 'var(--theme-bg)',
-                        color: 'var(--theme-text)',
-                    }}
+                    className="w-full px-2.5 py-2 rounded-xl border border-(--theme-border) bg-(--theme-bg) text-(--theme-text)"
                 >
                     <option value="AULA">Aula</option>
                     <option value="LABORATORIO">Laboratorio</option>
@@ -231,35 +181,20 @@ export default function MapPicker() {
                     <option value="OTRO">Otro</option>
                 </select>
             </div>
-
+ 
             <div>
-                <h4 style={{ fontWeight: 700 }}>Detalles de la ubicacion</h4>
+                <h4 className="font-bold mb-1">Detalles de la ubicacion</h4>
                 <input
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
                     placeholder="Ej: Aula 962 - Facultad de Tecnología"
-                    style={{
-                        width: '100%',
-                        padding: '10px',
-                        borderRadius: '12px',
-                        border: '1px solid var(--theme-border)',
-                        background: 'var(--theme-bg)',
-                        color: 'var(--theme-text)',
-                    }}
+                    className="w-full px-2.5 py-2 rounded-xl border border-(--theme-border) bg-(--theme-bg) text-(--theme-text)"
                 />
             </div>
-
+ 
             <button
                 onClick={handleSave}
-                style={{
-                    background: "var(--color-primary)",
-                    color: "white",
-                    padding: "12px",
-                    borderRadius: "9999px",
-                    fontWeight: 700,
-                    marginTop: "6px",
-                    cursor: "pointer",
-                }}
+                className="bg-(--color-primary) text-white py-3 rounded-full font-bold mt-1.5 cursor-pointer"
             >
                 Guardar
             </button>
