@@ -3,12 +3,12 @@ import { X } from 'lucide-react';
 import type { UserRole, CreateUserPayload } from '../types';
 import { ROLE_LABELS, ROLE_COLORS } from '../types';
 
-const SELECTABLE_ROLES: UserRole[] = ['mensajero', 'vendedor', 'operador', 'admin'];
+const SELECTABLE_ROLES: UserRole[] = ['mensajero', 'vendedor', 'operador_inv', 'admin'];
 
 interface RegisterUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegister: (payload: CreateUserPayload) => boolean;
+  onRegister: (payload: CreateUserPayload) => Promise<boolean>;
 }
 
 export default function RegisterUserModal({
@@ -21,6 +21,7 @@ export default function RegisterUserModal({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [serverError, setServerError] = useState('');
 
   if (!isOpen) return null;
 
@@ -49,19 +50,28 @@ export default function RegisterUserModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setServerError('');
     if (!validate()) return;
 
-    const success = onRegister({
-      displayName: displayName.trim(),
-      email: email.trim(),
-      phoneNumber: phoneNumber.trim(),
-      role: selectedRole!,
-    });
+    try {
+      const success = await onRegister({
+        displayName: displayName.trim(),
+        email: email.trim(),
+        phoneNumber: phoneNumber.trim(),
+        role: selectedRole!,
+      });
 
-    if (success) {
-      resetForm();
-      onClose();
+      if (success) {
+        resetForm();
+        onClose();
+      }
+    } catch (error) {
+      setServerError(
+        error instanceof Error
+          ? error.message
+          : 'No se pudo registrar el usuario.',
+      );
     }
   };
 
@@ -71,6 +81,7 @@ export default function RegisterUserModal({
     setPhoneNumber('');
     setSelectedRole(null);
     setErrors({});
+    setServerError('');
   };
 
   const handleClose = () => {
@@ -107,6 +118,12 @@ export default function RegisterUserModal({
             <X size={18} />
           </button>
         </div>
+
+        {serverError && (
+          <div className="mx-6 mt-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-[#991b1b] text-[12px] font-medium">
+            {serverError}
+          </div>
+        )}
 
         {/* Form */}
         <div className="px-6 py-4 flex flex-col gap-5">

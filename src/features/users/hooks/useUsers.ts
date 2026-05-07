@@ -1,14 +1,35 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { User, UserRole, CreateUserPayload } from '../types';
-import { MOCK_USERS } from '../services/userService';
+import { createUser, getUsers } from '../services/userService';
 
 export function useUsers() {
-  const [users, setUsers] = useState<User[]>(MOCK_USERS);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadUsers() {
+      try {
+        const loadedUsers = await getUsers();
+        if (!ignore) setUsers(loadedUsers);
+      } catch (error) {
+        if (!ignore) {
+          showError(error instanceof Error ? error.message : 'No se pudo cargar usuarios.');
+        }
+      }
+    }
+
+    loadUsers();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -33,30 +54,20 @@ export function useUsers() {
     setTimeout(() => setErrorMessage(''), 4000);
   };
 
-  const registerUser = (payload: CreateUserPayload) => {
-    // Validate email is not already registered
-    const emailExists = users.some(
-      (u) => u.email.toLowerCase() === payload.email.toLowerCase()
-    );
-    if (emailExists) {
-      showError('Este correo electrónico ya está registrado.');
-      return false;
+  const registerUser = async (payload: CreateUserPayload) => {
+    try {
+      const { user, temporaryPassword } = await createUser(payload);
+      setUsers((prev) => [...prev, user]);
+      const passwordHint = temporaryPassword
+        ? ` Contraseña temporal: ${temporaryPassword}`
+        : '';
+      showSuccess(`Usuario "${payload.displayName}" registrado exitosamente.${passwordHint}`);
+      return true;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : 'No se pudo registrar el usuario.',
+      );
     }
-
-    // TODO: Replace with Firebase Auth + Firestore creation
-    const newUser: User = {
-      uid: crypto.randomUUID(),
-      email: payload.email,
-      displayName: payload.displayName,
-      phoneNumber: payload.phoneNumber,
-      roles: [payload.role],
-      isActive: true,
-      createdAt: new Date(),
-    };
-
-    setUsers((prev) => [...prev, newUser]);
-    showSuccess(`Usuario "${payload.displayName}" registrado exitosamente.`);
-    return true;
   };
 
   return {

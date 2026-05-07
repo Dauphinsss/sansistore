@@ -96,7 +96,7 @@ export default function RegisterUserModal({
       newErrors.email = 'Por favor, ingrese un formato de correo electrónico válido.';
     } else {
       const domain = trimmedEmail.split('@')[1];
-      if (domain !== '@est.umss.edu') {
+      if (domain !== 'est.umss.edu') {
         newErrors.email = 'Por favor, ingrese un formato de correo electrónico válido.';
       }
     }

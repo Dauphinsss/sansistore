@@ -1,5 +1,5 @@
-import { auth } from '../../../lib/firebase';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
+import { auth } from '../../../../lib/firebase';
 import type { CreateUserPayload, User, UserRole } from '../types';
 
 interface UsersResponse {
@@ -7,9 +7,16 @@ interface UsersResponse {
 }
 
 interface CreateUserResponse {
-  message: string;
   user: User;
   temporaryPassword?: string;
+}
+
+function toBackendRole(role: UserRole) {
+  return role === 'operador' ? 'operador_inv' : role;
+}
+
+function toFrontendRole(role: string): UserRole {
+  return (role === 'operador_inv' ? 'operador' : role) as UserRole;
 }
 
 async function getAuthorizationHeader(): Promise<Record<string, string>> {
@@ -29,6 +36,7 @@ async function getAuthorizationHeader(): Promise<Record<string, string>> {
 function normalizeUser(user: User): User {
   return {
     ...user,
+    roles: user.roles.map((role) => toFrontendRole(role)),
     createdAt: user.createdAt ? new Date(user.createdAt) : undefined,
   };
 }
@@ -38,16 +46,8 @@ async function parseApiError(response: Response) {
   return body?.message ?? 'Ocurrio un error al procesar la solicitud.';
 }
 
-export async function getUsers(params?: {
-  search?: string;
-  role?: UserRole | 'all';
-}): Promise<User[]> {
-  const searchParams = new URLSearchParams();
-
-  if (params?.search) searchParams.set('search', params.search);
-  if (params?.role && params.role !== 'all') searchParams.set('role', params.role);
-
-  const response = await fetch(`/api/users?${searchParams.toString()}`, {
+export async function getUsers(): Promise<User[]> {
+  const response = await fetch('/api/users', {
     headers: await getAuthorizationHeader(),
   });
 
@@ -68,7 +68,12 @@ export async function createUser(
       'Content-Type': 'application/json',
       ...(await getAuthorizationHeader()),
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      displayName: payload.displayName,
+      email: payload.email,
+      phoneNumber: payload.phoneNumber,
+      roles: payload.roles.map((role) => toBackendRole(role)),
+    }),
   });
 
   if (!response.ok) {

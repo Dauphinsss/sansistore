@@ -1,7 +1,7 @@
 //src/features/admin/users/hooks/useUsers.ts
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { User, UserRole, CreateUserPayload } from '../types';
-import { MOCK_USERS } from '../services/userService';
+import { createUser, getUsers } from '../services/userService';
 
 interface ToastState {
   message: string;
@@ -9,11 +9,35 @@ interface ToastState {
 }
 
 export function useUsers() {
-  const [users, setUsers] = useState<User[]>(MOCK_USERS);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadUsers() {
+      try {
+        const loadedUsers = await getUsers();
+        if (!ignore) setUsers(loadedUsers);
+      } catch (error) {
+        if (!ignore) {
+          showToast(
+            error instanceof Error ? error.message : 'No se pudo cargar usuarios.',
+            'error',
+          );
+        }
+      }
+    }
+
+    loadUsers();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -37,30 +61,8 @@ export function useUsers() {
   };
 
   const registerUser = async (payload: CreateUserPayload): Promise<boolean> => {
-    // Validate email is not already registered
-    const emailExists = users.some(
-      (u) => u.email.toLowerCase() === payload.email.toLowerCase()
-    );
-    if (emailExists) {
-      // Throw error so the modal catches it and shows inline banner
-      throw new Error('Este correo electrónico ya está registrado.');
-    }
-
-    // TODO: Replace with Firebase Auth + Firestore creation
-    // Simulate network delay for loading state demo
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    const newUser: User = {
-      uid: crypto.randomUUID(),
-      email: payload.email,
-      displayName: payload.displayName,
-      phoneNumber: payload.phoneNumber,
-      roles: payload.roles,
-      isActive: true,
-      createdAt: new Date(),
-    };
-
-    setUsers((prev) => [...prev, newUser]);
+    const { user } = await createUser(payload);
+    setUsers((prev) => [...prev, user]);
     showToast(`Usuario "${payload.displayName}" registrado exitosamente.`, 'success');
     return true;
   };

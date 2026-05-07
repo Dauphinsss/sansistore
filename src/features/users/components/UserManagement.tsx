@@ -11,7 +11,7 @@ const FILTER_ROLES: { value: UserRole | 'all'; label: string }[] = [
   { value: 'admin', label: 'Administrador' },
   { value: 'vendedor', label: 'Vendedor' },
   { value: 'mensajero', label: 'Mensajero' },
-  { value: 'operador', label: 'Operador inv.' },
+  { value: 'operador_inv', label: 'Operador inv.' },
 ];
 
 export default function UserManagement() {
@@ -49,9 +49,9 @@ export default function UserManagement() {
     <div className="flex flex-col gap-5">
       {/* Success message */}
       {successMessage && (
-        <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[rgba(136,176,75,0.12)] border border-[rgba(136,176,75,0.25)] text-[#5a7a2e] text-[13px] font-medium animate-fade-in">
-          <CheckCircle2 size={16} />
-          {successMessage}
+        <div className="inline-flex w-fit max-w-full self-start items-center gap-2 px-4 py-3 rounded-xl bg-[rgba(136,176,75,0.12)] border border-[rgba(136,176,75,0.25)] text-[#5a7a2e] text-[13px] font-medium animate-fade-in">
+          <CheckCircle2 size={16} className="shrink-0" />
+          <span className="min-w-0 break-words">{successMessage}</span>
         </div>
       )}
 
