@@ -6,6 +6,29 @@ import {
 } from '../services/messengerOrdersService';
 import type { DeliveryOrder } from '../types';
 
+function validateOrderAction(
+  orders: DeliveryOrder[],
+  orderId: string,
+  messengerId: string,
+  actionLabel: 'aceptar' | 'rechazar',
+) {
+  const order = orders.find((currentOrder) => currentOrder.id === orderId);
+
+  if (!order) {
+    throw new Error('El pedido ya no esta disponible en la vista actual.');
+  }
+
+  if (order.assignedMessengerId !== messengerId) {
+    throw new Error('No puedes modificar un pedido asignado a otro mensajero.');
+  }
+
+  if (order.status !== 'ASSIGNED') {
+    throw new Error(
+      `No puedes ${actionLabel} un pedido con estado ${order.status}.`,
+    );
+  }
+}
+
 export function useMessengerOrders(messengerId: string) {
   const [orders, setOrders] = useState<DeliveryOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,6 +64,17 @@ export function useMessengerOrders(messengerId: string) {
   }, [messengerId]);
 
   const acceptOrder = async (orderId: string) => {
+    try {
+      validateOrderAction(orders, orderId, messengerId, 'aceptar');
+    } catch (validationError) {
+      if (validationError instanceof Error) {
+        setError(validationError.message);
+      } else {
+        setError('No se pudo validar el pedido antes de aceptarlo.');
+      }
+      return;
+    }
+
     setActiveOrderId(orderId);
     setError(null);
 
@@ -64,6 +98,17 @@ export function useMessengerOrders(messengerId: string) {
   };
 
   const rejectOrder = async (orderId: string) => {
+    try {
+      validateOrderAction(orders, orderId, messengerId, 'rechazar');
+    } catch (validationError) {
+      if (validationError instanceof Error) {
+        setError(validationError.message);
+      } else {
+        setError('No se pudo validar el pedido antes de rechazarlo.');
+      }
+      return;
+    }
+
     setActiveOrderId(orderId);
     setError(null);
 

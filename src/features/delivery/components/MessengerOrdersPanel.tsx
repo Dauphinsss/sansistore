@@ -60,6 +60,14 @@ function OrderCard({
   const status = statusCopy[order.status];
   const canAccept = order.status === 'ASSIGNED' && !isProcessing;
   const canReject = order.status === 'ASSIGNED' && !isProcessing;
+  const actionHint =
+    order.status === 'ASSIGNED'
+      ? 'Puedes aceptar o rechazar este pedido.'
+      : order.status === 'ACCEPTED'
+        ? 'Este pedido ya fue aceptado y ya no debe volver a decidirse.'
+        : order.status === 'PENDING_REASSIGNMENT'
+          ? 'Este pedido fue rechazado y queda pendiente de reasignacion.'
+          : 'Este pedido ya no se puede operar desde esta vista.';
 
   return (
     <article className="flex flex-col gap-5 rounded-[24px] border border-border-light bg-card-bg-light p-5 shadow-[0_18px_50px_rgba(0,0,0,0.06)] transition-transform duration-300 hover:-translate-y-1">
@@ -133,6 +141,8 @@ function OrderCard({
           {isProcessing ? 'Procesando...' : 'Rechazar'}
         </button>
       </div>
+
+      <p className="text-xs font-medium text-text-light/55">{actionHint}</p>
     </article>
   );
 }
