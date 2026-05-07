@@ -1,29 +1,53 @@
-import { useState } from 'react';
-
-interface Category {
-  categoryId: string;
-  name: string;
-  description?: string;
-  active: boolean;
-}
+import { useEffect, useState } from 'react';
+import {
+  getCategoryById,
+  updateCategory,
+  deleteCategory,
+} from '../../../features/admin/services/categoryService';
+import type { Category } from '../../../features/admin/types';
 
 interface Props {
-  category: Category;
+  categoryId: string;
 }
 
-export default function CategoryEditForm({ category }: Props) {
-  const [name, setName] = useState(category.name);
-  const [description, setDescription] = useState(category.description ?? '');
-  const [active, setActive] = useState(category.active);
+export default function CategoryEditForm({ categoryId }: Props) {
+  const [category, setCategory] = useState<Category | null>(null);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [active, setActive] = useState(true);
   const [errors, setErrors] = useState<{ name?: string }>({});
   const [toast, setToast] = useState<{ type: 'ok' | 'err'; msg: string } | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const showToast = (type: 'ok' | 'err', msg: string) => {
     setToast({ type, msg });
     if (type === 'ok') setTimeout(() => setToast(null), 3000);
   };
+
+  // Cargar la categoría desde Firestore al montar
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const data = await getCategoryById(categoryId);
+        if (!data) {
+          window.location.href = '/admin/categories';
+          return;
+        }
+        setCategory(data);
+        setName(data.name);
+        setDescription(data.description ?? '');
+        setActive(data.active);
+      } catch {
+        showToast('err', 'Error al cargar la categoría.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategory();
+  }, [categoryId]);
 
   const validate = () => {
     const newErrors: { name?: string } = {};
@@ -35,24 +59,52 @@ export default function CategoryEditForm({ category }: Props) {
 
   const handleSubmit = async () => {
     if (!validate()) return;
-    setLoading(true);
+    setSaving(true);
+    setToast(null);
 
-    // TODO: reemplazar con llamada real a Firestore (updateCategory)
-    await new Promise((r) => setTimeout(r, 800));
-
-    showToast('ok', 'Cambios guardados correctamente en Firestore.');
-    setLoading(false);
+    try {
+      await updateCategory(categoryId, { name, description, active });
+      showToast('ok', 'Cambios guardados correctamente en Firestore.');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Error al guardar los cambios.';
+      if (msg.includes('nombre')) {
+        setErrors({ name: msg });
+      } else {
+        showToast('err', msg);
+      }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDelete = async () => {
-    setLoading(true);
-
-    // TODO: reemplazar con llamada real a Firestore (deleteCategory)
-    await new Promise((r) => setTimeout(r, 600));
-
-    // Redirigir a la lista después de eliminar
-    window.location.href = '/admin/categories';
+    setDeleting(true);
+    try {
+      await deleteCategory(categoryId);
+      window.location.href = '/admin/categories';
+    } catch {
+      showToast('err', 'Error al eliminar la categoría.');
+      setDeleting(false);
+    }
   };
+
+  // Loading skeleton
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FFFBF4]">
+        <nav className="bg-[#0A0B0D] px-4 h-14 flex items-center gap-3">
+          <span className="text-white/50 text-sm">← Categorías</span>
+          <span className="text-white font-semibold text-sm">Editar categoría</span>
+        </nav>
+        <div className="max-w-lg mx-auto px-4 py-6 flex flex-col gap-4">
+          <div className="h-8 bg-gray-100 rounded-lg animate-pulse w-1/2" />
+          <div className="h-10 bg-gray-100 rounded-lg animate-pulse" />
+          <div className="h-24 bg-gray-100 rounded-lg animate-pulse" />
+          <div className="h-14 bg-gray-100 rounded-lg animate-pulse" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFFBF4]">
@@ -70,20 +122,19 @@ export default function CategoryEditForm({ category }: Props) {
         </span>
       </nav>
 
-      {/* Edit header con nombre e ID */}
+      {/* Edit header */}
       <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3">
         <div className="w-9 h-9 rounded-lg bg-[rgba(136,176,75,0.12)] flex items-center justify-center text-lg">
           🍽️
         </div>
         <div>
-          <div className="text-[13px] font-semibold text-[#1A1A1A]">{category.name}</div>
-          <div className="text-[9px] font-mono text-gray-400">categoryId: {category.categoryId}</div>
+          <div className="text-[13px] font-semibold text-[#1A1A1A]">{category?.name}</div>
+          <div className="text-[9px] font-mono text-gray-400">categoryId: {categoryId}</div>
         </div>
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-6">
 
-        {/* Sección datos */}
         <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide pb-2 border-b border-gray-100 mb-4">
           Datos de la categoría
         </div>
@@ -126,20 +177,18 @@ export default function CategoryEditForm({ category }: Props) {
           />
         </div>
 
-        {/* Sección estado */}
         <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide pb-2 border-b border-gray-100 mb-4">
           Estado
         </div>
 
+        {/* Toggle estado */}
         <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 mb-6">
           <div>
             <p className="text-[12px] font-medium text-[#1A1A1A]">
               {active ? 'Categoría activa' : 'Categoría inactiva'}
             </p>
             <p className="text-[10px] text-gray-400 mt-0.5">
-              {active
-                ? 'Visible en la tienda virtual'
-                : 'No visible en la tienda virtual'}
+              {active ? 'Visible en la tienda virtual' : 'No visible en la tienda virtual'}
             </p>
           </div>
           <button
@@ -156,7 +205,7 @@ export default function CategoryEditForm({ category }: Props) {
           </button>
         </div>
 
-        {/* Botones guardar / cancelar */}
+        {/* Botones guardar/cancelar */}
         <div className="flex gap-3 mb-3">
           <a
             href="/admin/categories"
@@ -166,10 +215,10 @@ export default function CategoryEditForm({ category }: Props) {
           </a>
           <button
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={saving}
             className="flex-1 bg-[#88B04B] text-white text-[13px] font-semibold py-2.5 rounded-full hover:bg-[#5E7E2F] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {loading ? 'Guardando...' : 'Guardar cambios'}
+            {saving ? 'Guardando...' : 'Guardar cambios'}
           </button>
         </div>
 
@@ -196,10 +245,10 @@ export default function CategoryEditForm({ category }: Props) {
               </button>
               <button
                 onClick={handleDelete}
-                disabled={loading}
+                disabled={deleting}
                 className="flex-1 text-[12px] font-semibold text-white bg-red-500 py-2 rounded-full hover:bg-red-600 transition-colors disabled:opacity-60"
               >
-                {loading ? 'Eliminando...' : 'Sí, eliminar'}
+                {deleting ? 'Eliminando...' : 'Sí, eliminar'}
               </button>
             </div>
           </div>

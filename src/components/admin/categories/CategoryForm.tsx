@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createCategory } from '../../../features/admin/services/categoryService';
 
 export default function CategoryForm() {
   const [name, setName] = useState('');
@@ -24,30 +25,35 @@ export default function CategoryForm() {
   const handleSubmit = async () => {
     if (!validate()) return;
     setLoading(true);
+    setToast(null);
 
-    // TODO: reemplazar con llamada real a Firestore (createCategory)
-    await new Promise((r) => setTimeout(r, 800)); // simulación
-    const nameTaken = name.toLowerCase() === 'pizzas'; // simulación de nombre duplicado
-
-    if (nameTaken) {
-      setErrors({ name: 'Ya existe una categoría con ese nombre.' });
+    try {
+      await createCategory({ name, description });
+      showToast('ok', `Categoría "${name}" creada exitosamente.`);
+      setName('');
+      setDescription('');
+      setActive(true);
+      setErrors({});
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Error al crear la categoría.';
+      if (msg.includes('nombre')) {
+        setErrors({ name: msg });
+      } else {
+        showToast('err', msg);
+      }
+    } finally {
       setLoading(false);
-      return;
     }
-
-    showToast('ok', `Categoría "${name}" creada exitosamente.`);
-    setName('');
-    setDescription('');
-    setActive(true);
-    setErrors({});
-    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-[#FFFBF4]">
       {/* Topbar */}
       <nav className="bg-[#0A0B0D] px-4 h-14 flex items-center gap-3">
-        <a href="/admin/categories" className="text-white/50 text-sm hover:text-white transition-colors">
+        <a
+          href="/admin/categories"
+          className="text-white/50 text-sm hover:text-white transition-colors"
+        >
           ← Categorías
         </a>
         <span className="text-white font-semibold text-sm">Nueva categoría</span>

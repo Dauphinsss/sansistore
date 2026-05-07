@@ -1,24 +1,15 @@
-import { useState } from 'react';
-
-interface Category {
-  categoryId: string;
-  name: string;
-  description?: string;
-  active: boolean;
-}
-
-// Datos de prueba — se reemplazarán con Firestore en el backend
-const MOCK_CATEGORIES: Category[] = [
-  { categoryId: 'cat_001', name: 'Nacional', description: 'Comida típica boliviana', active: true },
-  { categoryId: 'cat_002', name: 'Pizzas', description: 'Pizzas artesanales y al horno', active: true },
-  { categoryId: 'cat_003', name: 'Sushi', description: 'Rolls y platos japoneses', active: true },
-  { categoryId: 'cat_004', name: 'Burgers', description: 'Hamburguesas artesanales', active: true },
-  { categoryId: 'cat_005', name: 'Café', description: 'Bebidas calientes y frías', active: false },
-];
+import { useEffect, useState } from 'react';
+import {
+  getCategories,
+  toggleCategoryStatus,
+} from '../../../features/admin/services/categoryService';
+import type { Category } from '../../../features/admin/types';
 
 export default function CategoryList() {
-  const [categories, setCategories] = useState<Category[]>(MOCK_CATEGORIES);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ type: 'ok' | 'err'; msg: string } | null>(null);
 
   const showToast = (type: 'ok' | 'err', msg: string) => {
@@ -26,15 +17,38 @@ export default function CategoryList() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleToggle = (id: string) => {
-    setCategories((prev) =>
-      prev.map((cat) =>
-        cat.categoryId === id ? { ...cat, active: !cat.active } : cat
-      )
-    );
-    const cat = categories.find((c) => c.categoryId === id);
-    if (cat) {
-      showToast('ok', `"${cat.name}" ${cat.active ? 'desactivada' : 'activada'} correctamente.`);
+  // Cargar categorías desde Firestore al montar el componente
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch {
+        showToast('err', 'Error al cargar las categorías.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleToggle = async (id: string, currentActive: boolean) => {
+    setTogglingId(id);
+    try {
+      await toggleCategoryStatus(id, !currentActive);
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat.categoryId === id ? { ...cat, active: !currentActive } : cat
+        )
+      );
+      const cat = categories.find((c) => c.categoryId === id);
+      if (cat) {
+        showToast('ok', `"${cat.name}" ${currentActive ? 'desactivada' : 'activada'} correctamente.`);
+      }
+    } catch {
+      showToast('err', 'Error al cambiar el estado de la categoría.');
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -48,7 +62,10 @@ export default function CategoryList() {
     <div className="min-h-screen bg-[#FFFBF4]">
       {/* Topbar */}
       <nav className="bg-[#0A0B0D] px-4 h-14 flex items-center gap-3">
-        <a href="/admin" className="text-white/50 text-sm hover:text-white transition-colors">
+        <a
+          href="/admin"
+          className="text-white/50 text-sm hover:text-white transition-colors"
+        >
           ← Dashboard
         </a>
         <span className="text-white font-semibold text-sm">Categorías</span>
@@ -61,9 +78,11 @@ export default function CategoryList() {
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h1 className="text-[15px] font-semibold text-[#1A1A1A]">Gestión de categorías</h1>
+            <h1 className="text-[15px] font-semibold text-[#1A1A1A]">
+              Gestión de categorías
+            </h1>
             <p className="text-[11px] text-[#888880] mt-0.5">
-              {categories.length} categorías · {activeCount} activas
+              {loading ? 'Cargando...' : `${categories.length} categorías · ${activeCount} activas`}
             </p>
           </div>
           <a
@@ -88,68 +107,80 @@ export default function CategoryList() {
           />
         </div>
 
+        {/* Loading state */}
+        {loading && (
+          <div className="flex flex-col gap-2">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        )}
+
         {/* Lista */}
-        <div className="flex flex-col gap-2">
-          {filtered.length === 0 && (
-            <div className="text-center py-10 text-[13px] text-gray-400">
-              No se encontraron categorías.
-            </div>
-          )}
-          {filtered.map((cat) => (
-            <div
-              key={cat.categoryId}
-              className={`flex items-center gap-3 px-4 py-3 bg-white border rounded-xl transition-opacity ${
-                cat.active ? 'border-gray-200' : 'border-gray-100 opacity-60'
-              }`}
-            >
-              <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-semibold text-[#1A1A1A]">{cat.name}</div>
-                {cat.description && (
-                  <div className="text-[11px] text-gray-400 mt-0.5 truncate">{cat.description}</div>
-                )}
-                <div className="text-[9px] text-gray-300 font-mono mt-0.5">{cat.categoryId}</div>
+        {!loading && (
+          <div className="flex flex-col gap-2">
+            {filtered.length === 0 && (
+              <div className="text-center py-10 text-[13px] text-gray-400">
+                {search ? 'No se encontraron categorías.' : 'No hay categorías registradas aún.'}
               </div>
-
-              {/* Status pill */}
-              <span
-                className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${
-                  cat.active
-                    ? 'bg-[rgba(136,176,75,0.15)] text-[#5E7E2F]'
-                    : 'bg-gray-100 text-gray-400'
+            )}
+            {filtered.map((cat) => (
+              <div
+                key={cat.categoryId}
+                className={`flex items-center gap-3 px-4 py-3 bg-white border rounded-xl transition-opacity ${
+                  cat.active ? 'border-gray-200' : 'border-gray-100 opacity-60'
                 }`}
               >
-                {cat.active ? 'Activa' : 'Inactiva'}
-              </span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-semibold text-[#1A1A1A]">{cat.name}</div>
+                  {cat.description && (
+                    <div className="text-[11px] text-gray-400 mt-0.5 truncate">{cat.description}</div>
+                  )}
+                  <div className="text-[9px] text-gray-300 font-mono mt-0.5">{cat.categoryId}</div>
+                </div>
 
-              {/* Toggle */}
-              <button
-                onClick={() => handleToggle(cat.categoryId)}
-                className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
-                  cat.active ? 'bg-[#88B04B]' : 'bg-gray-300'
-                }`}
-              >
+                {/* Status pill */}
                 <span
-                  className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all ${
-                    cat.active ? 'left-[18px]' : 'left-0.5'
+                  className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${
+                    cat.active
+                      ? 'bg-[rgba(136,176,75,0.15)] text-[#5E7E2F]'
+                      : 'bg-gray-100 text-gray-400'
                   }`}
-                />
-              </button>
+                >
+                  {cat.active ? 'Activa' : 'Inactiva'}
+                </span>
 
-              {/* Editar */}
-              <a
-                href={`/admin/categories/edit/${cat.categoryId}`}
-                className="text-[11px] font-medium text-[#5E7E2F] bg-[rgba(136,176,75,0.12)] border border-[rgba(136,176,75,0.3)] px-2.5 py-1 rounded-md hover:bg-[rgba(136,176,75,0.2)] transition-colors whitespace-nowrap"
-              >
-                Editar
-              </a>
-            </div>
-          ))}
-        </div>
+                {/* Toggle */}
+                <button
+                  onClick={() => handleToggle(cat.categoryId, cat.active)}
+                  disabled={togglingId === cat.categoryId}
+                  className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 disabled:opacity-50 ${
+                    cat.active ? 'bg-[#88B04B]' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all ${
+                      cat.active ? 'left-[18px]' : 'left-0.5'
+                    }`}
+                  />
+                </button>
+
+                {/* Editar */}
+                <a
+                  href={`/admin/categories/edit/${cat.categoryId}`}
+                  className="text-[11px] font-medium text-[#5E7E2F] bg-[rgba(136,176,75,0.12)] border border-[rgba(136,176,75,0.3)] px-2.5 py-1 rounded-md hover:bg-[rgba(136,176,75,0.2)] transition-colors whitespace-nowrap"
+                >
+                  Editar
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Toast */}
         {toast && (
           <div
-            className={`fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-3 rounded-xl text-[12px] font-medium shadow-lg transition-all ${
+            className={`fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-3 rounded-xl text-[12px] font-medium shadow-lg ${
               toast.type === 'ok'
                 ? 'bg-[rgba(136,176,75,0.12)] border border-[rgba(136,176,75,0.3)] text-[#5E7E2F]'
                 : 'bg-red-50 border border-red-200 text-red-700'
