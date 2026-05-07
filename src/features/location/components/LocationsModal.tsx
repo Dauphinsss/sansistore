@@ -6,15 +6,16 @@ import LocationCard from "./LocationCard";
 import type { Location } from "../types";
 import { useAuthUser } from '../../../hooks/useAuthUser';
 import { useUserLocation } from '../hooks/useUserLocation';
+import { useDeleteLocation } from '../hooks/useDeleteLocation';
+
 
 export default function LocationsModal() {
     const [isOpen, setIsOpen] = useState(true);
 
     const { user } = useAuthUser();
     const { locations, loading } = useUserLocation(user?.uid ?? null);
+    const { handleDelete } = useDeleteLocation();
 
-    const handleDelete = (id: string) => {
-    };
 
     if (!isOpen) {
         return (
