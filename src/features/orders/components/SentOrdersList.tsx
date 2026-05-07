@@ -40,14 +40,23 @@ export default function SentOrdersList() {
       aria-labelledby="orders-title"
     >
       <h2 className="col-span-full tracking-[-0.07em] text-[calc(4.48431vw+36.5112px)] mb-16 leading-[100%]">
-        Pedidos enviados <sup className="top-[-1em] text-[0.4em] tracking-tight">({orders.length})</sup>
+        Pedidos enviados
+        {!loading && (
+          <sup
+            className="top-[-1.5em] text-[0.35em] tracking-tight ml-5"
+          >
+            ({orders.length === 0 ? "sin pedidos" : orders.length})
+          </sup>
+        )}
       </h2>
 
       {loading ? (
-        <div className="col-span-full flex justify-center items-center py-40 gap-x-5">
+        <div className="col-span-full flex justify-center items-center h-80 gap-x-5">
           <GridSpinner />
           <LoadingMessage />
         </div>
+      ) : orders.length === 0 ? (
+        <div className="col-span-full h-80" />
       ) : (
         <>
           <OrderFilter
@@ -57,7 +66,7 @@ export default function SentOrdersList() {
             setShowFilters={setShowFilters}
           />
 
-          <div className="grid grid-cols-subgrid col-span-full min-[960px]:col-start-8 min-[960px]:col-end-25">
+          <div className="grid grid-cols-subgrid col-span-full min-[960px]:col-start-8 min-[960px]:col-end-25 mb-10">
             <OrderHeader />
             <ul className="col-span-full grid grid-cols-subgrid">
               {filteredOrders.map((order) => (
