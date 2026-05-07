@@ -81,18 +81,37 @@ function getBadgeData(product: Product | null) {
   };
 }
 
-function renderStars(rating: number) {
-  return Array.from({ length: 5 }, (_, index) => (
-    <Star
-      key={`${rating}-${index}`}
-      size={14}
-      className={
-        index < rating
-          ? 'fill-primary text-primary'
-          : 'text-text-light opacity-20'
-      }
-    />
-  ));
+function renderStars(rating: number, prefix: string = '') {
+  return Array.from({ length: 5 }, (_, index) => {
+    const starPosition = index + 1;
+    const isFilled = rating >= starPosition;
+    const isHalf = !isFilled && rating > index && rating < starPosition;
+    const fillState = isFilled ? 'full' : isHalf ? 'half' : 'empty';
+    const testId = prefix ? `${prefix}-star-${index}-${fillState}` : `star-${index}-${fillState}`;
+
+    return (
+      <div
+        key={`${rating}-${index}`}
+        className="relative inline-block"
+        data-testid={testId}
+      >
+        <Star
+          size={14}
+          className="text-text-light opacity-20"
+        />
+        <div
+          className={`absolute left-0 top-0 overflow-hidden ${
+            isHalf ? 'w-1/2' : isFilled ? 'w-full' : 'w-0'
+          }`}
+        >
+          <Star
+            size={14}
+            className="fill-primary text-primary"
+          />
+        </div>
+      </div>
+    );
+  });
 }
 
 function getReviewTimestamp(review: Review) {
@@ -373,7 +392,7 @@ export default function ProductDetail({
     : 0;
   const roundedAverage = reviewsCount ? Math.round(averageRating) : 0;
   const averageLabel = reviewsCount
-    ? `${roundedAverage.toFixed(1)}/5`
+    ? `${averageRating.toFixed(1)} de 5`
     : 'Sin calificaciones';
   const reviewSortOptions: Array<{ value: ReviewSortKey; label: string }> = [
     { value: 'recent', label: 'Más recientes' },
@@ -649,7 +668,7 @@ export default function ProductDetail({
                 <>
                   <div className="mt-6 grid gap-4 rounded-3xl border border-border-light bg-secondary-bg-light/45 p-5 sm:grid-cols-[auto_1fr] sm:items-center">
                     <div className="flex items-center gap-2">
-                      {renderStars(roundedAverage)}
+                      {renderStars(averageRating, 'average')}
                     </div>
                     <div className="space-y-1">
                       <p className="text-base font-bold text-text-light">
