@@ -1,19 +1,18 @@
-import { Search, UserPlus, ChevronDown, CheckCircle2, XCircle } from 'lucide-react';
+//src/features/admin/users/components/UserManagement.tsx
+import { Search, UserPlus, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useUsers } from '../hooks/useUsers';
-import { ROLE_LABELS } from '../types';
 import type { UserRole } from '../types';
 import UserTable from './UserTable';
 import RegisterUserModal from './RegisterUserModal';
-import UserEditModal from './UserEditModal.tsx';
-import type { User } from '../types';
+import Toast from './Toast';
 
 const FILTER_ROLES: { value: UserRole | 'all'; label: string }[] = [
   { value: 'all', label: 'Todos los roles' },
   { value: 'admin', label: 'Administrador' },
   { value: 'vendedor', label: 'Vendedor' },
   { value: 'mensajero', label: 'Mensajero' },
-  { value: 'operador_inv', label: 'Operador inv.' },
+  { value: 'operador', label: 'Operador inv.' },
 ];
 
 export default function UserManagement() {
@@ -26,18 +25,9 @@ export default function UserManagement() {
     isModalOpen,
     setIsModalOpen,
     registerUser,
-    editUser,
-    successMessage,
-    errorMessage,
+    toast,
+    dismissToast,
   } = useUsers();
-
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
-  const handleEdit = (user: User) => {
-    setSelectedUser(user);
-    setEditModalOpen(true);
-  };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -58,29 +48,13 @@ export default function UserManagement() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Success message */}
-      {successMessage && (
-        <div className="inline-flex w-fit max-w-full self-start items-center gap-2 px-4 py-3 rounded-xl bg-[rgba(136,176,75,0.12)] border border-[rgba(136,176,75,0.25)] text-[#5a7a2e] text-[13px] font-medium animate-fade-in">
-          <CheckCircle2 size={16} className="shrink-0" />
-          <span className="min-w-0 break-words">{successMessage}</span>
-        </div>
-      )}
-
-      {/* Error message */}
-      {errorMessage && (
-        <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[rgba(220,60,60,0.08)] border border-[rgba(220,60,60,0.2)] text-[#c43c3c] text-[13px] font-medium animate-fade-in">
-          <XCircle size={16} />
-          {errorMessage}
-        </div>
-      )}
-
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         {/* Search */}
         <div className="relative flex-1">
           <Search
             size={16}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--theme-text)]/30"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-(--theme-text)/30"
           />
           <input
             type="text"
@@ -89,11 +63,11 @@ export default function UserManagement() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="
               w-full pl-10 pr-4 py-2.5 rounded-xl text-[13px]
-              bg-[var(--theme-card-bg)] border border-[var(--theme-border)]
-              text-[var(--theme-text)]
-              placeholder:text-[var(--theme-text)]/30
+              bg-(--theme-card-bg) border border-(--theme-border)
+              text-(--theme-text)
+              placeholder:text-(--theme-text)/30
               outline-none
-              focus:border-[#88b04b]
+              focus:border-primary
               transition-colors duration-150
             "
           />
@@ -106,9 +80,9 @@ export default function UserManagement() {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="
                 flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px]
-                bg-[var(--theme-card-bg)] border border-[var(--theme-border)]
-                text-[var(--theme-text)]/70
-                hover:border-[#88b04b]/40
+                bg-(--theme-card-bg) border border-(--theme-border)
+                text-(--theme-text)/70
+                hover:border-primary/40
                 transition-colors duration-150
                 whitespace-nowrap
               "
@@ -125,7 +99,7 @@ export default function UserManagement() {
                 className="
                   absolute right-0 top-full mt-1.5 z-20
                   w-48
-                  bg-[var(--theme-card-bg)] border border-[var(--theme-border)]
+                  bg-(--theme-card-bg) border border-(--theme-border)
                   rounded-xl shadow-lg overflow-hidden
                 "
               >
@@ -141,8 +115,8 @@ export default function UserManagement() {
                       transition-colors duration-100
                       ${
                         roleFilter === option.value
-                          ? 'bg-[#88b04b]/10 text-[#88b04b] font-medium'
-                          : 'text-[var(--theme-text)]/60 hover:bg-[var(--theme-text)]/5'
+                          ? 'bg-primary/10 text-primary font-medium'
+                          : 'text-(--theme-text)/60 hover:bg-(--theme-text)/5'
                       }
                     `}
                   >
@@ -158,7 +132,7 @@ export default function UserManagement() {
             onClick={() => setIsModalOpen(true)}
             className="
               flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium
-              bg-[#88b04b] text-white
+              bg-primary text-white
               hover:bg-[#7aa043]
               active:bg-[#6d9039]
               transition-colors duration-150
@@ -174,7 +148,7 @@ export default function UserManagement() {
       </div>
 
       {/* Table */}
-      <UserTable users={users} onEdit={handleEdit} />
+      <UserTable users={users} />
 
       {/* Modal */}
       <RegisterUserModal
@@ -183,12 +157,15 @@ export default function UserManagement() {
         onRegister={registerUser}
       />
 
-      <UserEditModal
-        isOpen={editModalOpen}
-        user={selectedUser}
-        onClose={() => setEditModalOpen(false)}
-        onSave={editUser}
-      />
+      {/* Toast notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={dismissToast}
+        />
+      )}
     </div>
   );
 }
+
