@@ -122,6 +122,52 @@ function EmptyState() {
   );
 }
 
+function LoadingState() {
+  return (
+    <div className="mt-6 grid gap-4">
+      {[0, 1].map((item) => (
+        <div
+          key={item}
+          className="animate-pulse rounded-[24px] border border-border-light bg-card-bg-light p-5"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-3">
+              <div className="h-3 w-28 rounded-full bg-secondary-bg-light" />
+              <div className="h-6 w-44 rounded-full bg-secondary-bg-light" />
+            </div>
+            <div className="h-8 w-28 rounded-full bg-secondary-bg-light" />
+          </div>
+
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <div className="h-18 rounded-2xl bg-secondary-bg-light" />
+            <div className="h-18 rounded-2xl bg-secondary-bg-light" />
+            <div className="h-18 rounded-2xl bg-secondary-bg-light sm:col-span-2" />
+          </div>
+
+          <div className="mt-5 flex flex-wrap gap-3">
+            <div className="h-11 w-36 rounded-full bg-secondary-bg-light" />
+            <div className="h-11 w-36 rounded-full bg-secondary-bg-light" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ErrorState({ message }: { message: string }) {
+  return (
+    <div className="mt-6 rounded-[28px] border border-rose-500/20 bg-rose-500/8 px-6 py-10 text-center">
+      <p className="text-[11px] font-black uppercase tracking-[0.3em] text-rose-500">
+        Error de carga
+      </p>
+      <h2 className="mt-3 text-2xl font-black tracking-tight text-text-light">
+        No se pudieron obtener tus pedidos
+      </h2>
+      <p className="mx-auto mt-3 max-w-lg text-sm text-text-light/65">{message}</p>
+    </div>
+  );
+}
+
 export default function MessengerOrdersPanel({
   messengerId,
 }: MessengerOrdersPanelProps) {
@@ -145,7 +191,7 @@ export default function MessengerOrdersPanel({
           </p>
           {loading && (
             <p className="text-sm text-text-light/60">
-              Preparando el panel de entregas...
+              Cargando pedidos asignados desde la fuente temporal del flujo...
             </p>
           )}
           {error && <p className="text-sm font-semibold text-red-500">{error}</p>}
@@ -156,6 +202,10 @@ export default function MessengerOrdersPanel({
             </p>
           )}
         </div>
+
+        {loading && <LoadingState />}
+
+        {!loading && error && <ErrorState message={error} />}
 
         {!loading && !error && (
           <div className="mt-6 space-y-4">
@@ -168,6 +218,9 @@ export default function MessengerOrdersPanel({
                   {orders.length} pedidos asignados
                 </h2>
               </div>
+              <p className="text-sm text-text-light/60">
+                Datos temporales compatibles con el flujo real de la HU.
+              </p>
             </div>
 
             {orders.length === 0 ? (
