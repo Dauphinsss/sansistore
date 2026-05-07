@@ -51,8 +51,8 @@ test.describe('Product Detail Page', () => {
     // Check original price
     await expect(page.getByText(/Bs\s10\.00/)).toBeVisible();
 
-    // Check offer badge
-    await expect(page.getByText('Oferta')).toBeVisible();
+    // Check offer badge with discount percentage
+    await expect(page.getByText(/-20%/)).toBeVisible();
 
     // Check offer price (strikethrough old price, new price displayed)
     await expect(page.getByText(/Bs\s7\.99/)).toBeVisible();
