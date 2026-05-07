@@ -150,7 +150,8 @@ export default function SellerOrdersPanel() {
                       expandedOrderId === order.orderId
                     }
                     onToggle={toggleOrderDetail}
-                    onMarkReady={handleMarkReady}
+                    title="Marcar como listo"
+                    onClick={handleMarkReady}
                     isMarking={markingOrderId === order.orderId}
                     isSuccess={successOrderId === order.orderId}
                   />
@@ -203,6 +204,8 @@ export default function SellerOrdersPanel() {
                       itemsLoading &&
                       expandedOrderId === order.orderId
                     }
+                    title="Asignar a mensajero"
+                    onClick={() => { }}
                     onToggle={toggleOrderDetail}
                     isMarking={false}
                     isSuccess={false}

@@ -99,7 +99,7 @@ export const ConfirmModal = ({
                 Procesando…
               </span>
             ) : (
-              'Marcar como listo'
+              'Confirmar'
             )}
           </button>
         </div>

@@ -10,7 +10,8 @@ interface Props {
   expandedItems: OrderItem[];
   itemsLoading: boolean;
   onToggle: (id: string) => void;
-  onMarkReady?: (order: Order) => void;
+  title: string;
+  onClick?: (order: Order) => void;
   isMarking: boolean;
   isSuccess: boolean;
 }
@@ -21,7 +22,8 @@ export const OrderCard = ({
   expandedItems,
   itemsLoading,
   onToggle,
-  onMarkReady,
+  title,
+  onClick,
   isMarking,
   isSuccess,
 }: Props) => {
@@ -144,7 +146,7 @@ export const OrderCard = ({
         </div>
       )}
 
-      {onMarkReady && (
+      {onClick && (
         <div className="flex justify-end border-t border-(--theme-border) px-4 py-4">
           {isSuccess ? (
             <span className="flex items-center gap-1.5 text-sm font-600 text-primary">
@@ -166,7 +168,7 @@ export const OrderCard = ({
             </span>
           ) : (
             <button
-              onClick={() => onMarkReady(order)}
+              onClick={() => onClick(order)}
               disabled={isMarking}
               className="flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-700 text-white transition hover:opacity-90 active:scale-95 disabled:opacity-60"
             >
@@ -211,7 +213,7 @@ export const OrderCard = ({
                     />
                   </svg>
 
-                  Marcar como listo
+                  {title}
                 </>
               )}
             </button>
