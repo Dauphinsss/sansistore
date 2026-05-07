@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createCategory } from '../../../features/admin/services/categoryService';
+import { createCategory } from '../services/categoryService';
 
 export default function CategoryForm() {
   const [name, setName] = useState('');

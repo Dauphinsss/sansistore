@@ -3,8 +3,8 @@ import {
   getCategoryById,
   updateCategory,
   deleteCategory,
-} from '../../../features/admin/services/categoryService';
-import type { Category } from '../../../features/admin/types';
+} from '../services/categoryService';
+import type { Category } from '../types';
 
 interface Props {
   categoryId: string;

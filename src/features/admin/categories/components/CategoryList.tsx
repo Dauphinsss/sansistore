@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import {
   getCategories,
   toggleCategoryStatus,
-} from '../../../features/admin/services/categoryService';
-import type { Category } from '../../../features/admin/types';
+} from '../services/categoryService';
+import type { Category } from '../types';
 
 export default function CategoryList() {
   const [categories, setCategories] = useState<Category[]>([]);
