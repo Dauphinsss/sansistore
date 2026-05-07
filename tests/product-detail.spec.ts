@@ -102,12 +102,13 @@ test.describe('Product Detail Page', () => {
     await expect(page.getByText(/No pudimos encontrar esta página/)).toBeVisible();
   });
 
-  test('displays category information', async ({ page }) => {
+  test('displays breadcrumb navigation', async ({ page }) => {
     await page.goto('/productos/leche-test-instock');
 
-    // Check that breadcrumb/navigation shows category or product path
-    await expect(page.getByText('Productos')).toBeVisible();
-    await expect(page.getByText('Detalle')).toBeVisible();
+    // Check that breadcrumb navigation is visible with correct links
+    const breadcrumb = page.getByLabel('Ruta de navegación');
+    await expect(breadcrumb.getByRole('link', { name: 'Productos' })).toBeVisible();
+    await expect(breadcrumb.getByText('Detalle')).toBeVisible();
   });
 
   test('add to cart button is functional', async ({ page }) => {
