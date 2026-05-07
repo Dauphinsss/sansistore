@@ -1,6 +1,6 @@
 import type { DeliveryOrder } from '../types';
 
-const mockOrders: DeliveryOrder[] = [
+let mockOrders: DeliveryOrder[] = [
   {
     id: 'ORD-1041',
     buyerId: 'buyer-001',
@@ -51,4 +51,39 @@ export async function getMessengerOrders(messengerId: string): Promise<DeliveryO
   }
 
   return mockOrders.filter((order) => order.assignedMessengerId === messengerId);
+}
+
+export async function acceptMessengerOrder(
+  orderId: string,
+  messengerId: string,
+): Promise<DeliveryOrder> {
+  await wait(450);
+
+  const orderIndex = mockOrders.findIndex((order) => order.id === orderId);
+
+  if (orderIndex === -1) {
+    throw new Error('No se encontro el pedido seleccionado.');
+  }
+
+  const order = mockOrders[orderIndex];
+
+  if (order.assignedMessengerId !== messengerId) {
+    throw new Error('El pedido no pertenece al mensajero activo.');
+  }
+
+  if (order.status !== 'ASSIGNED') {
+    throw new Error('Solo se pueden aceptar pedidos en estado ASSIGNED.');
+  }
+
+  const updatedOrder: DeliveryOrder = {
+    ...order,
+    status: 'ACCEPTED',
+    acceptedAt: new Date(),
+  };
+
+  mockOrders = mockOrders.map((currentOrder) =>
+    currentOrder.id === orderId ? updatedOrder : currentOrder,
+  );
+
+  return updatedOrder;
 }

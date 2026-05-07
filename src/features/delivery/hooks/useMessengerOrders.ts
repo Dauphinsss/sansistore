@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
-import { getMessengerOrders } from '../services/messengerOrdersService';
+import {
+  acceptMessengerOrder,
+  getMessengerOrders,
+} from '../services/messengerOrdersService';
 import type { DeliveryOrder } from '../types';
 
 export function useMessengerOrders(messengerId: string) {
   const [orders, setOrders] = useState<DeliveryOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -35,9 +39,34 @@ export function useMessengerOrders(messengerId: string) {
     };
   }, [messengerId]);
 
+  const acceptOrder = async (orderId: string) => {
+    setActiveOrderId(orderId);
+    setError(null);
+
+    try {
+      const updatedOrder = await acceptMessengerOrder(orderId, messengerId);
+
+      setOrders((currentOrders) =>
+        currentOrders.map((order) =>
+          order.id === orderId ? updatedOrder : order,
+        ),
+      );
+    } catch (acceptError) {
+      if (acceptError instanceof Error) {
+        setError(acceptError.message);
+      } else {
+        setError('No se pudo aceptar el pedido.');
+      }
+    } finally {
+      setActiveOrderId(null);
+    }
+  };
+
   return {
     orders,
     loading,
     error,
+    activeOrderId,
+    acceptOrder,
   };
 }

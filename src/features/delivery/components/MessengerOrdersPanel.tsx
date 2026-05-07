@@ -1,9 +1,17 @@
+import { useState } from 'react';
 import type { DeliveryOrder, OrderStatus } from '../types';
 import { useMessengerOrders } from '../hooks/useMessengerOrders';
 
 type MessengerOrdersPanelProps = {
-  messengerId: string;
+  initialMessengerId: string;
 };
+
+const messengerOptions = [
+  { id: 'juan.mensajero', label: 'Juan', note: 'Con pedidos asignados' },
+  { id: 'lucas.mensajero', label: 'Lucas', note: 'Con un pedido asignado' },
+  { id: 'empty.mensajero', label: 'Sin pedidos', note: 'Prueba de estado vacio' },
+  { id: 'error.mensajero', label: 'Forzar error', note: 'Prueba de estado error' },
+];
 
 const statusCopy: Record<OrderStatus, { label: string; tone: string }> = {
   READY_FOR_DELIVERY: {
@@ -36,8 +44,15 @@ const statusCopy: Record<OrderStatus, { label: string; tone: string }> = {
   },
 };
 
-function OrderCard({ order }: { order: DeliveryOrder }) {
+type OrderCardProps = {
+  order: DeliveryOrder;
+  isProcessing: boolean;
+  onAccept: (orderId: string) => void;
+};
+
+function OrderCard({ order, isProcessing, onAccept }: OrderCardProps) {
   const status = statusCopy[order.status];
+  const canAccept = order.status === 'ASSIGNED' && !isProcessing;
 
   return (
     <article className="flex flex-col gap-5 rounded-[24px] border border-border-light bg-card-bg-light p-5 shadow-[0_18px_50px_rgba(0,0,0,0.06)] transition-transform duration-300 hover:-translate-y-1">
@@ -88,10 +103,15 @@ function OrderCard({ order }: { order: DeliveryOrder }) {
       <div className="flex flex-wrap gap-3">
         <button
           type="button"
-          disabled
-          className="min-w-[140px] rounded-full bg-primary px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-bg-dark opacity-50"
+          onClick={() => onAccept(order.id)}
+          disabled={!canAccept}
+          className={`min-w-[140px] rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.18em] transition-opacity ${
+            canAccept
+              ? 'bg-primary text-bg-dark'
+              : 'bg-primary text-bg-dark opacity-50'
+          }`}
         >
-          Aceptar
+          {isProcessing ? 'Aceptando...' : 'Aceptar'}
         </button>
         <button
           type="button"
@@ -169,9 +189,11 @@ function ErrorState({ message }: { message: string }) {
 }
 
 export default function MessengerOrdersPanel({
-  messengerId,
+  initialMessengerId,
 }: MessengerOrdersPanelProps) {
-  const { orders, loading, error } = useMessengerOrders(messengerId);
+  const [messengerId, setMessengerId] = useState(initialMessengerId);
+  const { orders, loading, error, activeOrderId, acceptOrder } =
+    useMessengerOrders(messengerId);
 
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-24 sm:px-6">
@@ -186,6 +208,35 @@ export default function MessengerOrdersPanel({
 
       <div className="rounded-[28px] border border-border-light bg-card-bg-light p-6 shadow-[0_24px_80px_rgba(0,0,0,0.08)]">
         <div className="space-y-3 border-b border-border-light pb-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-1">
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-text-light/45">
+                Identidad temporal de desarrollo
+              </p>
+              <p className="text-sm text-text-light/60">
+                Cambia de mensajero para probar visibilidad, vacio y error sin
+                depender todavia del login real.
+              </p>
+            </div>
+
+            <label className="flex w-full max-w-sm flex-col gap-2">
+              <span className="text-[11px] font-black uppercase tracking-[0.22em] text-text-light/45">
+                Seleccionar mensajero
+              </span>
+              <select
+                value={messengerId}
+                onChange={(event) => setMessengerId(event.target.value)}
+                className="rounded-2xl border border-border-light bg-secondary-bg-light px-4 py-3 text-sm font-semibold text-text-light outline-none transition-colors focus:border-primary"
+              >
+                {messengerOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label} - {option.note}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
           <p className="text-sm font-semibold text-text-light/70">
             Mensajero activo: <span className="text-text-light">{messengerId}</span>
           </p>
@@ -228,7 +279,12 @@ export default function MessengerOrdersPanel({
             ) : (
               <div className="grid gap-4">
                 {orders.map((order) => (
-                  <OrderCard key={order.id} order={order} />
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    isProcessing={activeOrderId === order.id}
+                    onAccept={acceptOrder}
+                  />
                 ))}
               </div>
             )}
