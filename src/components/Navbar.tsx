@@ -57,11 +57,13 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const currentTheme =
-      document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
-    setTheme(currentTheme);
+    const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
+    const currentTheme = savedTheme || (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+    if (currentTheme !== theme) {
+      setTheme(currentTheme);
+    }
     setThemeReady(true);
-  }, []);
+  }, [theme]);
 
   const handleLogin = async () => {
     try {
@@ -138,6 +140,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-8">
               {[
                 { label: 'Productos', href: '/productos' },
+                { label: 'Pedidos', href: '/orders/sent' },
                 { label: 'Novedades', href: '#' },
                 { label: 'Ofertas', href: '#' },
                 { label: 'Inventario', href: '/inventory' },
@@ -150,6 +153,7 @@ export default function Navbar() {
                   {item.label}
                 </a>
               ))}
+            </div>
 
             <a
               href="/admin"
@@ -157,10 +161,9 @@ export default function Navbar() {
             >
               Admin
             </a>
-          </div>
 
-      {/* ACTIONS */}
-      <div className="flex items-center gap-3">   
+            {/* ACTIONS */}
+            <div className="flex items-center gap-3">   
               {/* SEARCH */}
               <button className="transition-all text-text-light opacity-[0.60] hover:text-primary hover:opacity-100">
                 <Search size={18} />
