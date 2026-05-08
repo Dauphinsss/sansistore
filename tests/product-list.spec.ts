@@ -1,16 +1,17 @@
 import { test, expect } from '@playwright/test';
 
 test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status !== testInfo.expectedStatus) {
     const screenshot = await page.screenshot({
-        fullPage: true,
+      fullPage: true,
     });
 
     await testInfo.attach('full-page-screenshot', {
-        body: screenshot,
-        contentType: 'image/png',
+      body: screenshot,
+      contentType: 'image/png',
     });
+  }
 });
-
 
 test.describe('Avaiable product list', () => {
     test('load products page', async ({ page }) => {
