@@ -74,3 +74,11 @@
 - **Yesterday:**    Agregar redireccion al inventario en la pagina.
 - **Today:**        Agregar el sidebar y layout dentro la pagina de inventarios.
 - **Blockers:**     Problemas al hacer push a la rama main.
+
+# Daily Report
+# 05/06/2026
+
+## Soliz Moya Alejandra
+- **Yesterday:**    Mejore los detalles de las US.
+- **Today:**        Ayude en el diseño del formulario de productos.
+- **Blockers:**     Ninguno.
