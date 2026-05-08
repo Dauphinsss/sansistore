@@ -87,3 +87,8 @@
 - **Yesterday:**    Refactorizar la modal de productos.
 - **Today:**        Refactorizar el Sidebar.
 - **Blockers:**     ninguno.
+
+## Willian D. Gonza Rojas
+- **Yesterday:**    Realizar la estructura del proyecto
+- **Today:**        Terminar la creacion de productos
+- **Blockers:**     conlflictos menores
