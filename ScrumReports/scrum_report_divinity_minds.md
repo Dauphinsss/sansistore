@@ -106,8 +106,14 @@
 
 # Daily Report - Team 1
 
+## Gutierrez Hinojosa Jhon Deymar
+
+- **Yesterday:** Trabajé en las pruebas automatizadas de detalles de producto y en la automatización del workflow de GitHub para la ejecución y generación de reportes de pruebas.
+- **Today:** Planificaré y organizaré las pruebas correspondientes al Sprint 2, definiendo los escenarios y casos prioritarios a cubrir.
+- **Blockers:** n/a
+
 ## Merudia Calderon Dayeza
 
-- **Yesterday:** Realize test para la lista de productos, con categorias, ofertas y el buscaor.
-- **Today:** n/a.
-- **Blockers:** n/a.
+ - **Yesterday:** Realicé pruebas para la lista de productos, incluyendo categorías, ofertas y el buscador.
+ - **Today:** Me preparo para el siguiente sprint: revisión de pruebas, priorización de historias de usuario y planificación de tareas.
+ - **Blockers:** n/a.
