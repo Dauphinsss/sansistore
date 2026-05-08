@@ -53,23 +53,50 @@ export default function UserEditModal({
   };
 
   const handleSubmit = async () => {
-    if (!name || !email) {
-      setError("Todos los campos obligatorios deben completarse.");
+    if (!name.trim()) {
+      setError("El nombre completo es obligatorio.");
+      return;
+    }
+    if (name.trim().length < 3) {
+      setError("El nombre es demasiado corto (mín. 3 caracteres).");
+      return;
+    }
+    if (/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/.test(name)) {
+      setError("El nombre solo puede contener letras.");
+      return;
+    }
+    if (!email.trim()) {
+      setError("El correo electrónico es obligatorio.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("Ingrese un correo electrónico válido.");
+      return;
+    }
+    if (email.trim().split('@')[1] !== 'est.umss.edu') {
+      setError("Solo se permite el dominio @est.umss.edu.");
+      return;
+    }
+    if (phone && (phone.length !== 8 || !/^[67]/.test(phone))) {
+      setError("El teléfono debe tener 8 dígitos e iniciar con 6 o 7.");
       return;
     }
     if (roles.length === 0) {
       setError("El usuario debe tener al menos un rol seleccionado.");
       return;
     }
+    if (roles.length > 2) {
+      setError("El usuario no puede tener más de 2 roles asignados.");
+      return;
+    }
 
-  const result = await onSave(user.uid, {
-    displayName: name.trim(),
-    // Solo manda email si cambió
-    ...(email.trim() !== user.email && { email: email.trim() }),
-    phoneNumber: phone.trim(),
-    roles,
-    isActive,
-  });
+    const result = await onSave(user.uid, {
+      displayName: name.trim(),
+      ...(email.trim() !== user.email && { email: email.trim() }),
+      phoneNumber: phone.trim(),
+      roles,
+      isActive,
+    });
 
     if (result) {
       setSuccess("Usuario actualizado correctamente.");
