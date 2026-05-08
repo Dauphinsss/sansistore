@@ -208,7 +208,7 @@ export default function SellerOrdersPanel() {
                       expandedOrderId === order.orderId
                     }
                     title="Asignar a mensajero"
-                    onClick={() => { }}
+                    onClick={() => { window.location.href = '/seller/assign'; }}
                     onToggle={toggleOrderDetail}
                     isMarking={false}
                     isSuccess={false}

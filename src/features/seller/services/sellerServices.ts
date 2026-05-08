@@ -9,10 +9,11 @@ import {
   runTransaction,
   serverTimestamp,
   getDoc,
+  updateDoc,
   type Unsubscribe,
   type Firestore,
 } from 'firebase/firestore';
-import type { Order, OrderItem, OrderDoc, OrderItemDoc } from '../types';
+import type { Order, OrderItem, OrderDoc, OrderItemDoc, Messenger } from '../types';
 
 
 function toDate(value: unknown): Date | null {
@@ -256,4 +257,86 @@ export async function markOrderAsReady(
   });
 
   return { deliveryId };
+}
+
+export function subscribeAssignedOrders(
+  db: Firestore,
+  sellerId: string,
+  onData: (assigned: Order[]) => void,
+  onError?: (err: Error) => void,
+): Unsubscribe {
+  const q = query(
+    collection(db, 'orders'),
+    where('sellerId', '==', sellerId),
+    where('status', '==', 'ASIGNADO'),
+    orderBy('updatedAt', 'desc'),
+  );
+
+  return onSnapshot(
+    q,
+    async (snap) => {
+      const orders = snap.docs.map((d) => docToOrder(d.id, d.data() as OrderDoc));
+      const enriched = await enrichOrdersWithData(db, orders);
+      onData(enriched);
+    },
+    (err) => onError?.(err),
+  );
+}
+
+export async function unassignCourierFromDelivery(
+  db: Firestore,
+  deliveryId: string,
+  orderId: string,
+): Promise<void> {
+  await Promise.all([
+    updateDoc(doc(db, 'deliveries', deliveryId), {
+      courierId: null,
+      status: 'CREADO',
+      assignedAt: null,
+      updatedAt: serverTimestamp(),
+    }),
+    updateDoc(doc(db, 'orders', orderId), {
+      status: 'LISTO',
+      deliveryStatus: 'CREADO',
+      updatedAt: serverTimestamp(),
+    }),
+  ]);
+}
+
+export async function fetchMessengers(db: Firestore): Promise<Messenger[]> {
+  const q = query(
+    collection(db, 'users'),
+    where('roles', 'array-contains', 'mensajero'),
+    where('isActive', '==', true),
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => {
+    const data = d.data();
+    return {
+      uid: d.id,
+      displayName: data.displayName ?? data.email ?? 'Mensajero',
+      institutionalId: data.institutionalId ?? '',
+    };
+  });
+}
+
+export async function assignCourierToDelivery(
+  db: Firestore,
+  deliveryId: string,
+  orderId: string,
+  courierId: string,
+): Promise<void> {
+  await Promise.all([
+    updateDoc(doc(db, 'deliveries', deliveryId), {
+      courierId,
+      status: 'assigned',
+      assignedAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    }),
+    updateDoc(doc(db, 'orders', orderId), {
+      status: 'ASIGNADO',
+      deliveryStatus: 'ASIGNADO',
+      updatedAt: serverTimestamp(),
+    }),
+  ]);
 }

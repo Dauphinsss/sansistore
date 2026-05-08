@@ -63,3 +63,9 @@ export type OrderItemDoc = {
   quantity: number;
   subtotal: number;
 };
+
+export interface Messenger {
+  uid: string;
+  displayName: string;
+  institutionalId: string;
+}
