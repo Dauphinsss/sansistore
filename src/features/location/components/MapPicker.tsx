@@ -70,11 +70,9 @@ export default function MapPicker() {
     };
 
     try {
-      await saveLocation(payload);
-      alert(getSuccessMessage(lat, lng));
+      await saveLocation(payload); 
     } catch (err) {
       console.error("ERROR:", err);
-      alert("Error al guardar la ubicación");
     }
   };
 
