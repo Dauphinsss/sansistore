@@ -92,7 +92,7 @@
 ## Dayana Saleth Ortuño Guzman
 
  * **Yesterday:** Arreglar algunos detalles de la parte de frontend
-* **Today:** Crear productos mockeados, miestrastanto, para que se pueda entender la vista de la HU *“Como comprador quiero pagar contra entrega”*, ya que depende de otra HU que aun no a sido implementada en este Sprint. "Agregar producto a carrito"
+* **Today:** Crear productos mockeados, miestras tanto, para que se pueda entender la vista de la HU *“Como comprador quiero pagar contra entrega”*, ya que depende de otra HU que aun no a sido implementada en este Sprint. "Agregar producto a carrito"
 * **Blockers:** Entender las dependencias con la HU que estoy trabajando
 
 ## Maria Victoria Grageda Vallejos
