@@ -115,7 +115,7 @@ export default function Navbar() {
 
           {/* LINKS */}
           <div className="hidden md:flex items-center gap-8">
-            {[{ label: 'Productos', href: '/productos' }, { label: 'Novedades', href: '#' }, { label: 'Ofertas', href: '#' }].map((item) => (
+            {[{ label: 'Productos', href: '/productos' }, { label: 'Pedidos', href: '/orders/sent' }, { label: 'Novedades', href: '#' }, { label: 'Ofertas', href: '#' }].map((item) => (
               <a
                 key={item.label}
                 href={item.href}
