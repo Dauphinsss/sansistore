@@ -7,10 +7,22 @@ export const STATUS_LABELS: Record<OrderStatus, string> = {
 
 export const AVAILABLE_STATUSES = Object.keys(STATUS_LABELS) as OrderStatus[];
 
+export interface OrderItem {
+  itemId: string;
+  productId: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+  subtotal: number;
+  description?: string;
+}
+
 export interface Order {
   id: string;
   status: OrderStatus;
   delivery: {
     destination: string;
   };
+  total?: number;
+  items: OrderItem[];
 }

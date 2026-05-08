@@ -6,12 +6,14 @@ import OrderHeader from "./OrderHeader";
 import OrderItem from "./OrderItem";
 import GridSpinner from "./GridSpinner";
 import LoadingMessage from "./LoadingMessage";
+import OrderProductDetail from "./OrderProductDetail";
 
 export default function SentOrdersList() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedStatuses, setSelectedStatuses] = useState<OrderStatus[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     getSentOrders().then((data) => {
@@ -55,6 +57,11 @@ export default function SentOrdersList() {
           <GridSpinner />
           <LoadingMessage />
         </div>
+      ) : selectedOrder ? (
+        <OrderProductDetail
+          order={selectedOrder}
+          onBack={() => setSelectedOrder(null)}
+        />
       ) : orders.length === 0 ? (
         <div className="col-span-full h-80" />
       ) : (
@@ -70,7 +77,11 @@ export default function SentOrdersList() {
             <OrderHeader />
             <ul className="col-span-full grid grid-cols-subgrid">
               {filteredOrders.map((order) => (
-                <OrderItem key={order.id} order={order} />
+                <OrderItem 
+                  key={order.id} 
+                  order={order} 
+                  onViewDetail={() => setSelectedOrder(order)} 
+                />
               ))}
             </ul>
           </div>
