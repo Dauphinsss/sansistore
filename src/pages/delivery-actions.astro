@@ -1,12 +1,3 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar';
-import DeliveryActionsPanel from '../features/mensajero/components/DeliveryActionsPanel';
+return Astro.redirect('/courier');
 ---
-
-<Layout title="Delivery Actions">
-  <Navbar client:load />
-  <main class="min-h-screen bg-bg-light pt-14 text-text-light">
-    <DeliveryActionsPanel client:load />
-  </main>
-</Layout>

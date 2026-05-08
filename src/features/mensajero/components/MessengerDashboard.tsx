@@ -516,7 +516,7 @@ export default function MessengerDashboard({
               </a>
               <a
                 className="messenger-courier-link inline-flex h-10 items-center justify-center rounded-full px-6 text-sm font-bold"
-                href="/delivery-actions"
+                href="/courier"
               >
                 Mensajero
               </a>
@@ -528,7 +528,7 @@ export default function MessengerDashboard({
       <div className="messenger-container">
         <section>
           <h1 className="text-4xl font-black tracking-normal">
-            {clientSection === 'assigned' ? 'Pedidos asignados' : 'Entregados hoy'}
+            {clientSection === 'assigned' ? 'Pedidos aceptados' : 'Entregados'}
           </h1>
           <p className="messenger-copy mt-2 text-base">
             {clientSection === 'assigned'
@@ -593,7 +593,7 @@ export default function MessengerDashboard({
             <section className="messenger-summary-grid mt-9 grid gap-6">
               <SummaryCard
                 icon={<CheckCircle2 size={20} />}
-                label="Entregados Hoy"
+                label="Cantidad completados"
                 value={deliveredOrders.length}
               />
               <SummaryCard
@@ -608,7 +608,7 @@ export default function MessengerDashboard({
 
             <section className="mt-11">
               <h2 className="mb-6 text-2xl font-black tracking-normal">
-                Entregados hoy
+                Historial
               </h2>
 
               <div className="space-y-4">
