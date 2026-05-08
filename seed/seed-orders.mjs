@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
-import { seedUsers, seedLocations, seedOrders, seedDeliveries } from './seed-orders-data.mjs';
+import { seedUsers } from './seed-orders-data.mjs';
 
-export async function run({ adminApp, db }) {
+export async function run({ db }) {
   const firestore = db;
 
   // Helper function to delete a collection recursively
@@ -21,7 +21,7 @@ export async function run({ adminApp, db }) {
     await batch.commit();
   }
 
-  // Clean up existing data
+  // Clean up existing data (Safe for local dev)
   await deleteCollection(firestore.collection('orders'));
   await deleteCollection(firestore.collection('deliveries'));
   await deleteCollection(firestore.collection('locations'));

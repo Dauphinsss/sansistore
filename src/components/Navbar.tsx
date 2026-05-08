@@ -57,11 +57,13 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const currentTheme =
-      document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
-    setTheme(currentTheme);
+    const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
+    const currentTheme = savedTheme || (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+    if (currentTheme !== theme) {
+      setTheme(currentTheme);
+    }
     setThemeReady(true);
-  }, []);
+  }, [theme]);
 
   const handleLogin = async () => {
     try {
