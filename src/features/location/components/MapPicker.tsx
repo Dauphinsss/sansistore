@@ -48,7 +48,7 @@ export default function MapPicker() {
 
     try {
       await saveLocation(payload);
-      
+    
     } catch (err) {
     }
   };
