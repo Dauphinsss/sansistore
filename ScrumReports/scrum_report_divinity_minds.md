@@ -130,3 +130,9 @@
 - **Yesterday:** Detecté y reporté bugs y errores funcionales en distintas HUs del Sprint 1.Además, creé y actualicé la documentación correspondiente de historias de usuario para mantener trazabilidad y claridad en los requerimientos.
 - **Today:** Continuar con la validación de funcionalidades y apoyo en la corrección de errores detectados durante la integración final del Sprint 1.
 - **Blockers:** n/a.
+
+## Marcos Velasquez Vela
+
+- **Yesterday:** Corregí los controles de expansión del detalle de producto (título y descripción), estabilicé la detección de overflow, ajusté la visibilidad del botón expandir y el alto de clamp; además actualicé dependencias menores.
+- **Today:** Validar los cambios en `ProductDetail` y apoyar la integración/QA antes del merge.
+- **Blockers:** n/a.
