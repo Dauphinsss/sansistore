@@ -273,7 +273,7 @@ export default function FeaturedProducts({
     let result = products;
 
     // Hide products without stock
-    result = result.filter((product) => product.stockAvailable > 0);
+    result = result.filter((product) => (product.stockAvailable ?? 0) > 0);
 
     if (showOffersOnly) {
       result = result.filter((product) => hasValidOffer(product));
