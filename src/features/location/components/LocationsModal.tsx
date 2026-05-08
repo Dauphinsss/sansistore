@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { X, Plus, MapPin, Loader2 } from 'lucide-react';
-
 import LocationCard from './LocationCard';
 import { useDeleteLocation } from '../hooks/useDeleteLocation';
 import { useSetDefaultLocation } from '../hooks/useSetDefaultLocation';
@@ -14,7 +13,6 @@ interface LocationsModalProps {
     onClose: () => void;
     onConfirm: (location: Location) => void;
     onAddNew: () => void;
-
 }
 
 export default function LocationsModal({
@@ -38,15 +36,15 @@ export default function LocationsModal({
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0A0B0D]/60 px-4 backdrop-blur-md"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-[--theme-bg]/60 px-4 backdrop-blur-md"
             onClick={onClose}
         >
             <div
-                className="w-full max-w-sm overflow-hidden rounded-[2.5rem] border border-[#88B04B]/20 bg-[#FFFBF4] dark:bg-[#0A0B0D] shadow-2xl transition-colors duration-300"
+                className="w-full max-w-sm overflow-hidden rounded-[2.5rem] border border-[#88B04B]/20 bg-[--theme-card-bg] shadow-2xl transition-colors duration-300"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between border-b border-[#88B04B]/10 px-7 py-5">
-                    <h2 className="font-outfit text-lg font-black tracking-tight text-[#1E1E1E] dark:text-[#F5F3EF]">
+                    <h2 className="font-outfit text-lg font-black tracking-tight text-[--theme-text] transition-colors duration-300">
                         Mis Ubicaciones
                     </h2>
                     <button
@@ -54,7 +52,7 @@ export default function LocationsModal({
                         aria-label="Cerrar modal"
                         className="
                             flex h-9 w-9 items-center justify-center rounded-full
-                            bg-[#1A1B1E]/5 dark:bg-white/5 text-[#1E1E1E] dark:text-[#F5F3EF]
+                            bg-[--theme-secondary-bg] text-[--theme-text]
                             hover:bg-[#88B04B] hover:text-white transition-all duration-200
                         "
                     >
@@ -64,12 +62,12 @@ export default function LocationsModal({
 
                 <div className="flex max-h-[22rem] flex-col gap-3 overflow-y-auto p-5 custom-scrollbar">
                     {loading ? (
-                        <div className="flex flex-col items-center gap-3 py-12 text-[#1E1E1E]/40 dark:text-[#F5F3EF]/30">
+                        <div className="flex flex-col items-center gap-3 py-12 text-[--theme-text]/40">
                             <Loader2 size={28} className="animate-spin text-[#88B04B]/60" />
                             <p className="font-outfit text-sm font-bold">Cargando ubicaciones...</p>
                         </div>
                     ) : locations.length === 0 ? (
-                        <div className="flex flex-col items-center gap-3 py-12 text-[#1E1E1E]/40 dark:text-[#F5F3EF]/30">
+                        <div className="flex flex-col items-center gap-3 py-12 text-[--theme-text]/40">
                             <MapPin size={32} className="text-[#88B04B]/40" />
                             <p className="font-outfit text-sm font-bold">No hay destinos guardados</p>
                         </div>
@@ -123,6 +121,9 @@ export default function LocationsModal({
                 .custom-scrollbar::-webkit-scrollbar-thumb { 
                     background: rgba(136, 176, 75, 0.2); 
                     border-radius: 10px; 
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(136, 176, 75, 0.4);
                 }
             `}} />
         </div>

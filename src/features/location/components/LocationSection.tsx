@@ -23,23 +23,22 @@ export default function LocationSection() {
     }, [loading, locations]);
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-[#FFFBF4] dark:bg-[#0A0B0D]">
+        <div className="flex min-h-screen items-center justify-center bg-[--theme-bg] transition-colors duration-300">
             <div className="flex items-center gap-3">
-
                 {selectedLocation ? (
-                    <div className="flex items-center gap-2.5 rounded-full border border-[#88B04B]/30 bg-[#88B04B]/5 px-4 py-2.5">
+                    <div className="flex items-center gap-2.5 rounded-full border border-[#88B04B]/30 bg-[#88B04B]/5 px-4 py-2.5 transition-colors duration-300">
                         <MapPin size={14} className="shrink-0 text-[#88B04B]" />
-                        <span className="font-outfit text-sm font-bold text-[#1E1E1E] dark:text-[#F5F3EF]">
+                        <span className="font-outfit text-sm font-bold text-[--theme-text] transition-colors duration-300">
                             {selectedLocation.label}
                         </span>
-                        <span className="font-mono text-[11px] text-[#1E1E1E]/50 dark:text-[#F5F3EF]/40">
+                        <span className="font-mono text-[11px] text-[--theme-text]/50 transition-colors duration-300">
                             {selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}
                         </span>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-2 rounded-full border border-dashed border-[#88B04B]/25 px-4 py-2.5">
+                    <div className="flex items-center gap-2 rounded-full border border-dashed border-[#88B04B]/25 px-4 py-2.5 transition-colors duration-300">
                         <MapPin size={14} className="shrink-0 text-[#88B04B]/40" />
-                        <span className="font-outfit text-sm font-bold text-[#1E1E1E]/30 dark:text-[#F5F3EF]/30">
+                        <span className="font-outfit text-sm font-bold text-[--theme-text]/30 transition-colors duration-300">
                             Sin destino
                         </span>
                     </div>
@@ -58,7 +57,6 @@ export default function LocationSection() {
                 </button>
             </div>
 
-            {/* Modal lista */}
             {modalView === 'list' && (
                 <LocationsModal
                     locations={locations}
@@ -74,18 +72,17 @@ export default function LocationSection() {
                 />
             )}
 
-            {/* Modal mapa */}
             {modalView === 'map' && (
                 <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0A0B0D]/60 px-4 backdrop-blur-md"
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-[--theme-bg]/60 px-4 backdrop-blur-md"
                     onClick={() => setModalView('list')}
                 >
                     <div
-                        className="w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-[#88B04B]/20 bg-[#FFFBF4] dark:bg-[#0A0B0D] shadow-2xl transition-colors duration-300"
+                        className="w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-[#88B04B]/20 bg-[--theme-card-bg] shadow-2xl transition-colors duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between border-b border-[#88B04B]/10 px-7 py-5">
-                            <h2 className="font-outfit text-lg font-black tracking-tight text-[#1E1E1E] dark:text-[#F5F3EF]">
+                            <h2 className="font-outfit text-lg font-black tracking-tight text-[--theme-text] transition-colors duration-300">
                                 Nueva Ubicación
                             </h2>
                             <button
@@ -93,7 +90,7 @@ export default function LocationSection() {
                                 aria-label="Volver a la lista"
                                 className="
                                     flex h-9 w-9 items-center justify-center rounded-full
-                                    bg-[#1A1B1E]/5 dark:bg-white/5 text-[#1E1E1E] dark:text-[#F5F3EF]
+                                    bg-[--theme-secondary-bg] text-[--theme-text]
                                     hover:bg-[#88B04B] hover:text-white transition-all duration-200
                                 "
                             >
