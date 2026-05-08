@@ -105,3 +105,8 @@
 - **Today:** Desarrollo de la historia de usario asignada.
 - **Blockers:** Duda sobre que campo de la colección orders se usara para que el vendedor marque el pedido como "listo para entrega", para que pueda ser asignado a un mensajero
 
+### Jhoel Gustavo Aiza Arce
+
+- **Yesterday:** Sincronización de la rama de trabajo con los últimos cambios de `main`, integrando los nuevos servicios de seller y componentes de UI (Navbar, filtros de categorías y lógica de cobro) desarrollados por otros equipos.
+- **Today:** Implementación del **panel de entregas para el mensajero** y desarrollo de la lógica para **marcar pedidos como "EN CAMINO"** para permitir el seguimiento en tiempo real. Además, se integró el acceso directo al dashboard de mensajería en el Navbar principal y se validó la persistencia de datos en Firebase.
+- **Blockers:** None.
