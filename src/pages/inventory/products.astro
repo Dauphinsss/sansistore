@@ -1,20 +1,24 @@
 ---
-// src/pages/inventory/index.astro
 import InventoryLayout from '../../layouts/InventoryLayout.astro';
 import { StockTable } from '../../features/inventory/components/StockTable.tsx';
+import { ProductModal } from '../../features/inventory/components/ProductModal.tsx';
 ---
 
-<InventoryLayout title="Sansistore | Inventario">
+<InventoryLayout title="Sansistore | Mis Productos">
   <div class="flex items-center justify-between mb-8">
     <h1
       class="font-['Outfit'] font-black text-2xl tracking-tight text-(--theme-text)"
     >
-      Panel de <span class="text-primary">Inventario</span>
+      Mis <span class="text-primary">Productos</span>
     </h1>
+
+    {/* Inyectamos el componente con client:load para activar React */}
+    <ProductModal client:load />
   </div>
 
-  {/* 2. También inyectamos la tabla para que no se vea vacío */}
-  <div class="mt-4">
+  <div
+    class="bg-(--theme-card-bg) border border-(--theme-border) rounded-2xl p-6"
+  >
     <StockTable client:load />
   </div>
 </InventoryLayout>
