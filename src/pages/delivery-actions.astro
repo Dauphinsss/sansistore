@@ -1,13 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar';
+import MessengerDashboard from '../features/mensajero/components/MessengerDashboard';
 ---
 
 <Layout title="Delivery Actions">
   <Navbar client:load />
   <main class="min-h-screen bg-bg-light pt-14 text-text-light">
-    <section class="flex gap-4 p-4">
-      <aside class="w-56 rounded-xl border border-border-light bg-card-bg-light p-3">
+    <section class="flex flex-col gap-4 p-4 lg:flex-row">
+      <aside class="w-full rounded-xl border border-border-light bg-card-bg-light p-3 lg:w-56 lg:shrink-0">
         <p class="mb-3 px-2 text-xs font-semibold uppercase text-primary">
           Delivery
         </p>
@@ -17,10 +18,8 @@ import Navbar from '../components/Navbar';
         </button>
       </aside>
 
-      <section class="flex-1 rounded-xl border border-border-light bg-card-bg-light p-4">
-        <h1 class="text-lg font-semibold">
-          Pedidos asignados
-        </h1>
+      <section class="min-w-0 flex-1 rounded-xl border border-border-light bg-card-bg-light p-4">
+        <MessengerDashboard client:load embedded />
       </section>
     </section>
   </main>
