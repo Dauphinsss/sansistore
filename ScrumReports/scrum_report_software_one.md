@@ -151,3 +151,56 @@
     - **Integración con Main:** Actualización de la rama local con `main` para asegurar compatibilidad.
 - **Blockers:** None.
 
+# 12/05/ 2026
+## Daily Reports - Team 6 SoftwareOne
+
+
+### Llanos Vega Juan Carlos
+
+
+- **Yesterday:**
+- Se agregó la base de datos tipada para la HU-075, agregando la estructura de OrderItem dentro de src/features/orders/types.ts, permitiendo que cada pedido tenga productos con nombre, cantidad, precio unitario, subtotal y descripción.
+- Se actualizaron los datos de prueba de pedidos, modificando src/features/orders/placeholder-data.ts para incluir productos dentro de cada pedido y también un caso especial de pedido sin productos para validar el escenario de aceptación.
+- Se implementó el componente de detalle de productos del pedido, creando src/features/orders/components/OrderProductDetail.tsx, donde se muestra el ID del pedido, destino, estado, productos, cantidades, precios, subtotales y total.
+- Se integró la visualización del detalle desde la lista de pedidos enviados, modificando SentOrdersList.tsx para agregar la acción “Ver detalle”, permitiendo seleccionar un pedido y volver a la lista sin perder la navegación. 
+- Se validó visualmente la funcionalidad en local, comprobando que al ingresar a /orders/sent se puede abrir el detalle de un pedido y visualizar correctamente los productos asociados, cumpliendo la parte principal de la HU-075.
+
+
+- **Today:** Se preparó todo el entorno de la herramienta Retrospective en Trello para todo los equipos de desarrollo, asimismo se coordinó con el Product Owner coordinar con los equipos para la entrega de sus links de trabajo, y se hizo la entrega de sus links retrospectiva a cada grupo 
+- **Blockers:** None
+
+
+### Rodriguez Torrico Arnold Guery
+
+
+- **Yesterday:** Realice la revisión y ajuste de la integración entre los componentes de listado y detalle de pedidos para asegurar una navegación consistente dentro del flujo de pedidos enviados, verificando que el cambio de vista no afecte el estado actual de la pantalla. 
+También realice pruebas funcionales en entorno local sobre el flujo completo de consulta de pedidos enviados, verificando apertura del detalle, retorno a la lista y correcta persistencia de la navegación del usuario. 
+- **Today:** realizar seguimiento del proceso de retrospectiva de los equipos dentro de Trello, verificando el acceso correcto a los tableros compartidos. Asimismo, se realizó el monitoreo de la recepción de enlaces de trabajo pendientes y se dio soporte en la coordinación para mantener el flujo de comunicación en equipos.
+- **Blockers:** None 
+
+
+### Pereira Fiorilo Oliver Do Santos
+- **Yesterday:** Realice la revisión de código de los PR de mi equipo, y seguidamente la aprobación de estos para mergear a la rama principal.      
+- **Today:** Realizaré mi parte de la retrospectiva y revisaré las US pendientes en el dashboard.
+- **Blockers:** Tuve un bloqueo con mi invitacion de gitlab que solo tenia permisos de escritura por lo cual no podía pushear mis cambios pero ya se soluciono.
+
+
+### Paqui Rojas Aaron David
+
+
+- **Yesterday:**Una vez resueltos los fallos técnicos que limitaron mi progreso, me enfoqué en un proceso de reintegración y nivelación. Esto incluyó el estudio detallado de los nuevos manuales y documentos técnicos del Sprint. 
+- **Today:**Para el día de hoy, mi prioridad es completar mis aportes correspondientes a la retrospectiva, además de realizar un seguimiento exhaustivo de las Historias de Usuario que aún permanecen pendientes o en revisión dentro del tablero de control. 
+- **Blockers:** None
+
+
+### Gutiérrez Fuentes Alexander Raul
+
+
+- **Yesterday:** Integré OrderProductDetail (HU de un compañero) con SentOrdersList. Esto incluyó:
+	- Ajustes para que el detalle de productos encaje de forma natural en la grilla de SentOrdersList.
+	- Adaptación del componente al estándar de diseño y estética definidos, manteniendo consistencia visual.
+	- Corrección de errores en la visualización del desglose de productos (por ejemplo, órdenes con múltiples productos que no se mostraban correctamente).
+	- Integración de ambas HUs a la rama main, resolviendo conflictos típicos de integración.
+	- Hice el demo desde el entorno desplegado, facilitando la revisión y validación de las funcionalidades.
+- **Today:** Preparé y completé la retrospective del sprint, incluyendo análisis de lo que salió bien, lo que salió mal, mejoras y reconocimientos.  
+- **Blockers:** Ninguno relevante por el momento
