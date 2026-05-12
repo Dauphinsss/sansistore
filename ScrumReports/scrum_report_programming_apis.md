@@ -145,8 +145,20 @@
 - **Today:** Escogeré una nueva historia de usuario para empezar con el siguiente sprint, participaré en el Sprint de Retrospectiva tal y como indica el protocolo Scrum LeSS.
 - **Blockers:** Trabajo duplicado y falta de coordinación **(solucionado)**.
 
+<<<<<<< HEAD
 ### Jhoel Gustavo Aiza Arce
 
 - **Yesterday:** Finalización de las pruebas de integración del flujo de estados "EN CAMINO" y validación de la persistencia en Firebase para el cierre del Sprint 1.
 - **Today:** Participación en la **Sprint Retrospective** para analizar el desempeño del equipo y definición de objetivos para el inicio del **Sprint 2**. Selección de nuevas historias de usuario orientadas a la optimización del módulo de delivery.
 - **Blockers:** None.
+=======
+### Bruno Salcedo Cadiz
+- **Yesterday:** Realize el sprint retrospective y empeze a trabajar en la preparacion y desarrollo para el segundo sprint
+- **Today:** Escogere una o mas historias de usuario para trabajar en el segundo sprint
+- **Blockers:** None.
+
+### Efrain Peralta Felipe
+- **Yesterday:** Realize el sprint retrospective y empeze a trabajar en las historias de usuario para el segundo sprint
+- **Today:** Elegire las historias de usuario que trabaje para este segundo sprint.
+- **Blockers:** None.
+>>>>>>> c099f91a8ca8a7928b20096803af23333d721b74
