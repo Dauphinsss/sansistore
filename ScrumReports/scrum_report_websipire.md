@@ -118,3 +118,30 @@
 * **Yesterday:** Trabajé en algunos ajustes de frontend y en la integración de la funcionalidad de la HU-03: “Como mensajero quiero ver el monto exacto a cobrar”, enfocándome en la presentación del monto total antes de confirmar la entrega. 
 * **Today:** Crear pedidos mockeados para visualizar correctamente el flujo de la HU-03 mientras se completan otras funcionalidades relacionadas con la gestión de pedidos en este Sprint.*.
 * **Blockers:** Dependencia de funcionalidades relacionadas con el cálculo y registro de pedidos para completar las validaciones de la HU.
+
+# Daily Reports - Team 3 Webspire 12/05/26
+
+## Dayana Saleth Ortuño Guzman
+
+ * **Yesterday:** Realice el retrospective del sprint 1 con mi equipo.
+* **Today:** Analizar que HUs podriamos hacer para el segundo Sprint, considerando despendencias y demas.
+* **Blockers:** none
+## Maria Victoria Grageda Vallejos
+
+* **Yesterday:** Apoyé en la integración del módulo de courier junto con el grupo de Programming API's, revisando que el flujo relacionado con la HU *“Como mensajero, quiero ver el monto exacto a cobrar para evitar errores”* y *“Como mensajero, quiero marcar un pedido como entregado para registrar que la entrega fue completada”*, pueda conectarse correctamente con las funcionalidades necesarias del proceso de entrega y cobro.Realice el retrospective del sprint 1 con mi equipo.
+* **Today:** Se estuvieron revisando las historias de usuario correspondientes para el segundo parcial, verificando su estado, dependencias y posibles ajustes necesarios para continuar con el desarrollo del proyecto.
+* **Blockers:** None
+
+## Juan Daniel Vasquez Casana
+
+* **Yesterday:** Participé en la retrospectiva del Sprint 1 y apoyé en la revisión del flujo y los criterios de aceptación de las historias de usuario.
+* **Today:** Analizar las historias de usuario planificadas para el segundo Sprint, considerando dependencias y posibles mejoras en el flujo de entrega.
+* **Blockers:** None
+
+## Jose Brandon Pinedo Gonzales
+
+- **Yesterday:** Apoyé en la revisión del avance realizado durante el Sprint 1, verificando las funcionalidades desarrolladas y analizando qué historias de usuario quedaron pendientes o requieren ajustes para continuar con el segundo Sprint.
+
+- **Today:** Revisar las historias de usuario disponibles para el Sprint 2, considerando dependencias entre módulos, prioridades del proyecto y funcionalidades que pueden ser asignadas al equipo para avanzar de manera ordenada.
+
+- **Blockers:** None
