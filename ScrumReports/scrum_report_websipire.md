@@ -137,3 +137,11 @@
 * **Yesterday:** Participé en la retrospectiva del Sprint 1 y apoyé en la revisión del flujo y los criterios de aceptación de las historias de usuario.
 * **Today:** Analizar las historias de usuario planificadas para el segundo Sprint, considerando dependencias y posibles mejoras en el flujo de entrega.
 * **Blockers:** None
+
+## Jose Brandon Pinedo Gonzales
+
+- **Yesterday:** Apoyé en la revisión del avance realizado durante el Sprint 1, verificando las funcionalidades desarrolladas y analizando qué historias de usuario quedaron pendientes o requieren ajustes para continuar con el segundo Sprint.
+
+- **Today:** Revisar las historias de usuario disponibles para el Sprint 2, considerando dependencias entre módulos, prioridades del proyecto y funcionalidades que pueden ser asignadas al equipo para avanzar de manera ordenada.
+
+- **Blockers:** None
