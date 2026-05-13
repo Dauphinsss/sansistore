@@ -144,4 +144,10 @@
 
 - **Today:** Revisar las historias de usuario disponibles para el Sprint 2, considerando dependencias entre módulos, prioridades del proyecto y funcionalidades que pueden ser asignadas al equipo para avanzar de manera ordenada.
 
+- ## Alejandro Torrico Quispe
+
+- **Yesterday:** Participé en la retrospectiva del Sprint 1 y apoyé en la revisión de los problemas encontrados, especialmente las dependencias entre módulos que afectaron el avance del área de pagos.
+
+- **Today:** Analizar las historias de usuario disponibles para el Sprint 2, revisando su prioridad, dependencias y viabilidad para elegir correctamente cuáles se trabajarán durante el sprint.
+
 - **Blockers:** None
