@@ -156,8 +156,8 @@
 
 ## Merudia Calderon Dayeza
 
-- **Yesterday:** 
-- **Today:** 
+- **Yesterday:** Cerramos el Sprint 1 con la sesión de retrospectiva. Identificamos puntos de mejora grupal y preparamos las Historias de Usuario (HUs) para el siguiente ciclo.    
+- **Today:** Revisar a detalle las HUs del Sprint 2 e iniciar con el desglose y asignación de tareas para arrancar formalmente las actividades.
 - **Blockers:** n/a
 
 ## Merino Vidal Mateo Alejandro
