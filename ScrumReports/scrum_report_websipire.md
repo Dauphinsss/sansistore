@@ -177,3 +177,9 @@
 * **Yesterday:** Trabaje en el avance del mockup de la Hu que me toco para este sprint 
 * **Today:** Defini los criterios de aceptacion y analice el funcionamiento que debera tener para comunicarme con otras areas para la implementacion completa.
 * **Blockers:** none
+
+## Jose Brandon Pinedo Gonzales
+
+* **Yesterday:** Me reuní con el equipo para revisar las HUs propuestas para el Sprint 2 y definir cuáles serán trabajadas durante este sprint.
+* **Today:** Elaborar los criterios de aceptación de la HU que me tocó y revisar si tiene alguna dependencia con las tareas de los demás integrantes del equipo.
+* **Blockers:** none
