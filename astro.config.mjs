@@ -29,32 +29,14 @@ export default defineConfig({
         lang: 'es',
         icons: [
           {
-            src: '/pwa-144x144.png',
-            sizes: '144x144',
-            type: 'image/png',
-            purpose: 'maskable'
-          },
-          {
-            src: '/pwa-192x192.png',
+            src: '/maskable_icon_x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any'
-          },
-          {
-            src: '/pwa-384x384.png',
-            sizes: '384x384',
-            type: 'image/png',
             purpose: 'maskable'
           },
           {
-            src: '/pwa-512x512.png',
+            src: '/maskable_icon_x512.png',
             sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any'
-          },
-          {
-            src: '/pwa-1024x1024.png',
-            sizes: '1024x1024',
             type: 'image/png',
             purpose: 'maskable'
           },
