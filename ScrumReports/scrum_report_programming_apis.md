@@ -177,3 +177,9 @@
 - **Yesterday:** Participé en la elección de HU's de este segundo sprint, participé en el retrospective de todos los grupos en conjunto.
 - **Today:** Seleccionaré y empezaré a trabajar con una de las historias de usuario asignadas para este sprint.
 - **Blockers:** None.
+
+### Bruno Salcedo Cadiz
+
+- **Yesterday:** Seleccione mi historia de usuario a trabajar y añadir la descripcion, criteros de aceptacion y tareas
+- **Today:** Empezare a trabajar en la HU que escogi
+- **Blockers:** None.
