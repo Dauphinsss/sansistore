@@ -165,3 +165,9 @@
 * **Yesterday:** Reunion con equipo para definir qué HUs entran en el Sprint 2 y revisar las historias relacionadas al módulo de entrega y cobro.
 * **Today:** Escribir los criterios de aceptación de las HUs que me tocaron, relacionadas con entrega y cobro, y revisar si tienen dependencias con las tareas de los demás grupos.
 * **Blockers:** none
+
+## Juan Daniel Vasquez Casana
+
+* **Yesterday:** Revisé junto al equipo las HUs propuestas para el Sprint 2 y las historias relacionadas con las funcionalidades que se trabajarán durante el sprint.
+* **Today:** Escribir los criterios de aceptación de las HUs que me tocaron y analizar posibles dependencias con las tareas de los demás integrantes del equipo.
+* **Blockers:** none
