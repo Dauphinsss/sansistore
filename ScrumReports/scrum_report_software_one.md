@@ -204,3 +204,37 @@ También realice pruebas funcionales en entorno local sobre el flujo completo de
 	- Hice el demo desde el entorno desplegado, facilitando la revisión y validación de las funcionalidades.
 - **Today:** Preparé y completé la retrospective del sprint, incluyendo análisis de lo que salió bien, lo que salió mal, mejoras y reconocimientos.  
 - **Blockers:** Ninguno relevante por el momento.
+
+
+# 14/05/ 2026
+## Daily Reports - Team 6 SoftwareOne
+
+
+### Llanos Vega Juan Carlos
+- **Yesterday:** Se realizó la elaboración de las Historias de Usuario de la 77 al 81 señaladas en el del ToDo del plan de trabajo, así como su descripción y las pruebas de aceptación.
+- **Today:** Actualización de mi área local del vsCode conforme la rama principal del proyecto.
+- **Blockers:** Ninguno.
+
+
+### Rodriguez Torrico Arnold Guery
+- **Yesterday:** Apoyo en la definición y asignación de pesos/puntos de historia a las HU seleccionadas para el segundo sprint.
+- **Today:** Sincronización del repositorio local con la rama principal y revisión de la asignación inicial de tareas en el tablero.
+- **Blockers:** Ninguno.
+
+
+### Pereira Fiorilo Oliver Do Santos
+- **Yesterday:** Seleccionamos las Historias de usuario para el 2do sprint y su refinación con criterios de aceptación y asignación de pesos y tareas.
+- **Today:** Revisaré las historias de usuario para ver la designación de tareas,
+- **Blockers:** Ninguno hasta el momento.
+
+
+### Paqui Rojas Aaron David
+- **Yesterday:** Participación en la refinación de las HU (77 a 81) y en el desglose de tareas técnicas necesarias para el backlog del sprint.
+- **Today:** Configuración y actualización del entorno de desarrollo local con los últimos cambios del repositorio principal.
+- **Blockers:** Ninguno.
+
+
+### Gutiérrez Fuentes Alexander Raul
+- **Yesterday:** Revisé las HU disponibles en GitHub y pensé cuáles podrían ir para el sprint 2.
+- **Today:** Revisé el borrador de las HU (HU 77 a HU 81) que subió un compañero al drive del grupo para entender mejor los requerimientos del segundo sprint.
+- **Blockers:** None
