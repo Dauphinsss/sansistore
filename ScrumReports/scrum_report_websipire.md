@@ -125,7 +125,7 @@
 
  * **Yesterday:** Realice el retrospective del sprint 1 con mi equipo.
 * **Today:** Analizar que HUs podriamos hacer para el segundo Sprint, considerando despendencias y demas.
-* **Blockers:** none
+* **Blockers:** Dificultades a la hora de integrar, no nos dimos cuenta que esa parte tenia dependencia, lo cual nosotros creamos otro panel aparte, el problema fue que el grupo de Programing apis editaron nuestro codigo, para poner el sullo y no podiamos integrar.
 ## Maria Victoria Grageda Vallejos
 
 * **Yesterday:** Apoyé en la integración del módulo de courier junto con el grupo de Programming API's, revisando que el flujo relacionado con la HU *“Como mensajero, quiero ver el monto exacto a cobrar para evitar errores”* y *“Como mensajero, quiero marcar un pedido como entregado para registrar que la entrega fue completada”*, pueda conectarse correctamente con las funcionalidades necesarias del proceso de entrega y cobro.Realice el retrospective del sprint 1 con mi equipo.
