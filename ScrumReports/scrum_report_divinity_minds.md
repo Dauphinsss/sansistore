@@ -198,3 +198,9 @@
 - **Today:** Se iniciará la implementación de las tareas planificadas correspondientes a la HU.
 - **Blockers:** Ninguno.
 
+## Velasquez Vela Marcos
+
+- **Yesterday:** Participé en la Sprint Retrospective junto a mi grupo, apoyé en el desarrollo de la retrospective general y además revisé historias de usuario del Sprint 2 para identificar tareas y criterios pendientes.
+- **Today:** Dar seguimiento a los acuerdos obtenidos en la retrospectiva y continuar con la revisión de tareas e historias de usuario del Sprint 2.
+- **Blockers:** n/a.
+
