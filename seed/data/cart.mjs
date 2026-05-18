@@ -1,54 +1,54 @@
 import admin from 'firebase-admin';
-import users from './users.mjs';
-import products from './products.mjs';
+import { Users } from './users.mjs';
+import { Products } from './products.mjs';
 
 const cartItemsData = [
   {
-    user: user.ANA,
+    user: Users.ANA,
     items: [
       {
         cartItemId: 'cart-user-ana-1',
-        producto: products.LECHE_PIL_NATURAL_900_ML,
+        producto: Products.LECHE_PIL,
         quantity: 2,
       },
       {
         cartItemId: 'cart-user-ana-2',
-        producto: products.GALLETAS_AGUA_VICTORIA_120_GR,
+        producto: Products.GALLETAS_VICTORIA,
         quantity: 1,
       },
     ],
   },
   {
-    user: user.CARLOS,
+    user: Users.CARLOS,
     items: [
       {
         cartItemId: 'cart-user-carlos-1',
-        producto: products.ARROZ_GRANO_DE_ORO_CAISY_1_KG,
+        producto: Products.ARROZ_CAISY,
         quantity: 3,
       },
     ],
   },
   {
-    user: user.MARIA,
+    user: Users.MARIA,
     items: [
       {
         cartItemId: 'cart-user-maria-1',
-        producto: products.GALLETAS_AGUA_VICTORIA_120_GR,
+        producto: Products.GALLETAS_VICTORIA,
         quantity: 4,
       },
       {
         cartItemId: 'cart-user-maria-2',
-        producto: products.ACEITE_FINO_VEGETAL_900_ML,
+        producto: Products.ACEITE_FINO,
         quantity: 1,
       },
     ],
   },
   {
-    user: user.JUAN,
+    user: Users.JUAN,
     items: [
       {
         cartItemId: 'cart-user-juan-1',
-        producto: products.YOGURT_TEST_SIN_RESENAS,
+        producto: Products.YOGURT_TEST_SIN_RESENAS,
         quantity: 1,
       },
     ],

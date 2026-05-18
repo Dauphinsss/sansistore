@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.testing
+    working_dir: /app
     volumes:
-      - ./playwright-report:/app/playwright-report
-      - ./test-results:/app/test-results
+      - .:/app
     command: ["bunx", "playwright", "test"]

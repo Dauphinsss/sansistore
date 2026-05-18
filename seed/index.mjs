@@ -6,7 +6,7 @@ import { productList } from './data/products.mjs';
 import { locationList } from './data/locations.mjs';
 import { orderList } from './data/orders.mjs';
 import { deliveryList } from './data/deliveries.mjs';
-import { run as seedCartItems } from './seed-cartitems.mjs';
+import { run as seedCartItems } from './data/cart.mjs';
 
 process.env.FIRESTORE_EMULATOR_HOST =
   process.env.FIRESTORE_EMULATOR_HOST || 'localhost:8080';
