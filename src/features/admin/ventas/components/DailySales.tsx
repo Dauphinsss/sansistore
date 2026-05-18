@@ -1,4 +1,24 @@
+import { useState } from 'react';
+import { useDailySales } from '../hooks/useDailySales';
+
+const formatCurrency = (amount: number) =>
+  `Bs. ${amount.toLocaleString('es-BO', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+  })}`;
+
 export default function DailySales() {
+  const [startDateInput, setStartDateInput] = useState('');
+  const [endDateInput, setEndDateInput] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const { summary, dailySales, loading, error } = useDailySales(startDate, endDate);
+
+  const applyFilter = () => {
+    setStartDate(startDateInput);
+    setEndDate(endDateInput);
+  };
+
   return (
     /* Contenedor principal centrado y con ancho máximo para que no se estire */
     <div className="max-w-5xl mx-auto space-y-8 pb-10">
@@ -17,6 +37,8 @@ export default function DailySales() {
             <span className="text-[10px] font-bold text-[var(--theme-text)]/50 uppercase">Fecha de inicio</span>
             <input
               type="date"
+              value={startDateInput}
+              onChange={(event) => setStartDateInput(event.target.value)}
               className="w-full bg-transparent text-sm outline-none text-[var(--theme-text)] mt-0.5"
             />
           </div>
@@ -26,11 +48,14 @@ export default function DailySales() {
             <span className="text-[10px] font-bold text-[var(--theme-text)]/50 uppercase">Fecha de fin</span>
             <input
               type="date"
+              value={endDateInput}
+              onChange={(event) => setEndDateInput(event.target.value)}
               className="w-full bg-transparent text-sm outline-none text-[var(--theme-text)] mt-0.5"
             />
           </div>
 
           <button
+            onClick={applyFilter}
             className="px-8 py-3 rounded-xl bg-[#88b04b] hover:bg-[#7aa03f] transition-colors text-white text-sm font-medium"
           >
             Aplicar filtro
@@ -48,7 +73,7 @@ export default function DailySales() {
           {/* Tarjetas sin borde, fondo gris suave y texto centrado como en el mockup */}
           <div className="bg-black/5 rounded-2xl p-6 text-center flex flex-col justify-center">
             <p className="text-3xl font-bold text-[#88b04b] mb-1">
-              Bs. 12,840
+              {formatCurrency(summary.totalSales)}
             </p>
             <span className="text-[10px] font-bold text-[var(--theme-text)]/40 uppercase tracking-wider">
               Ventas totales
@@ -57,7 +82,7 @@ export default function DailySales() {
 
           <div className="bg-black/5 rounded-2xl p-6 text-center flex flex-col justify-center">
             <p className="text-3xl font-bold text-[var(--theme-text)] mb-1">
-              48
+              {summary.totalOrders}
             </p>
             <span className="text-[10px] font-bold text-[var(--theme-text)]/40 uppercase tracking-wider">
               Órdenes
@@ -66,7 +91,7 @@ export default function DailySales() {
 
           <div className="bg-black/5 rounded-2xl p-6 text-center flex flex-col justify-center">
             <p className="text-3xl font-bold text-[#88b04b] mb-1">
-              Bs. 267
+              {formatCurrency(summary.dailyAverage)}
             </p>
             <span className="text-[10px] font-bold text-[var(--theme-text)]/40 uppercase tracking-wider">
               Promedio diario
@@ -75,7 +100,7 @@ export default function DailySales() {
 
           <div className="bg-black/5 rounded-2xl p-6 text-center flex flex-col justify-center">
             <p className="text-3xl font-bold text-[#88b04b] mb-1">
-              15
+              {summary.daysWithSales}
             </p>
             <span className="text-[10px] font-bold text-[var(--theme-text)]/40 uppercase tracking-wider">
               Días con ventas
@@ -111,22 +136,17 @@ export default function DailySales() {
             </thead>
 
             <tbody>
-              {[
-                ['15/05/2026', 6, 'Bs. 1,980', 'Bs. 330'],
-                ['14/05/2026', 5, 'Bs. 1,450', 'Bs. 290'],
-                ['13/05/2026', 4, 'Bs. 1,120', 'Bs. 280'],
-                ['12/05/2026', 7, 'Bs. 2,310', 'Bs. 330'],
-              ].map((sale, index) => (
+              {dailySales.map((sale, index) => (
                 <tr
-                  key={sale[0]}
+                  key={sale.date}
                   className={index !== 0 ? "border-t border-[var(--theme-border)]/50" : ""}
                 >
-                  <td className="px-5 py-4 text-[var(--theme-text)]/80">{sale[0]}</td>
-                  <td className="px-5 py-4 text-[var(--theme-text)]/80">{sale[1]}</td>
+                  <td className="px-5 py-4 text-[var(--theme-text)]/80">{sale.date}</td>
+                  <td className="px-5 py-4 text-[var(--theme-text)]/80">{sale.orders}</td>
                   <td className="px-5 py-4 text-[#88b04b] font-medium">
-                    {sale[2]}
+                    {formatCurrency(sale.totalAmount)}
                   </td>
-                  <td className="px-5 py-4 text-[var(--theme-text)]/80">{sale[3]}</td>
+                  <td className="px-5 py-4 text-[var(--theme-text)]/80">{formatCurrency(sale.average)}</td>
                 </tr>
               ))}
             </tbody>
@@ -144,14 +164,16 @@ export default function DailySales() {
       </div>
 
       {/* Empty State */}
-      <div className="border-2 border-dashed border-[var(--theme-border)] rounded-2xl p-10 flex flex-col items-center justify-center text-center">
-        <p className="text-sm font-bold text-[var(--theme-text)]">
-          No se encontraron ventas en el rango seleccionado.
-        </p>
-        <p className="text-xs text-[var(--theme-text)]/50 mt-2">
-          Intenta con un rango de fechas diferente.
-        </p>
-      </div>
+      {!loading && !error && dailySales.length === 0 && (
+        <div className="border-2 border-dashed border-[var(--theme-border)] rounded-2xl p-10 flex flex-col items-center justify-center text-center">
+          <p className="text-sm font-bold text-[var(--theme-text)]">
+            No se encontraron ventas en el rango seleccionado.
+          </p>
+          <p className="text-xs text-[var(--theme-text)]/50 mt-2">
+            Intenta con un rango de fechas diferente.
+          </p>
+        </div>
+      )}
 
     </div>
   );
