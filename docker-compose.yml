@@ -5,5 +5,10 @@ services:
       dockerfile: Dockerfile.testing
     working_dir: /app
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./playwright.config.ts:/app/playwright.config.ts
+
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
     command: ["bunx", "playwright", "test"]
