@@ -76,7 +76,7 @@
 - **Blockers:**     Problemas al hacer push a la rama main.
 
 # Daily Report
-# 05/06/2026
+# 05/07/2026
 
 ## Soliz Moya Alejandra
 - **Yesterday:**    Mejore los detalles de las US.
@@ -92,3 +92,92 @@
 - **Yesterday:**    Realizar la estructura del proyecto
 - **Today:**        Terminar la creacion de productos
 - **Blockers:**     conlflictos menores
+
+
+
+
+# Daily Report
+# 05/12/2026
+  ## Gonza Rojas Willian D.
+  - **Yesterday:**    Revisar la demo, contratiempos de integracion
+  - **Today:**        Revisar y refinar US a trabajar en sprint 2
+  - **Blockers:**     Ninguno
+
+  ## Llanos Villarroel Vania F.
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Rios Quiruchi Edney Jhojan
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Sejas Arze Eddy
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Soliz Moya Alejandra
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+# Daily Report
+# 05/14/2026
+  ## Gonza Rojas Willian D.
+  - **Yesterday:**    Terminar el refinamiento de US y coordinar trabajo y seleccion de US del sprint 2
+  - **Today:**        Seleccionar una US (Visualizacion en tiempo real) y revisar el bug reportado en el repositorio remoto
+  - **Blockers:**     Bug detectado.
+
+  ## Llanos Villarroel Vania F.
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Rios Quiruchi Edney Jhojan
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Sejas Arze Eddy
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Soliz Moya Alejandra
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+
+
+
+# Daily Report
+# 05/19/2026
+  ## Gonza Rojas Willian D.
+  - **Yesterday:**    Replantear solución al bug reportado, se resolvio el bug (es una US mal resuelta) y se estuvo terminando la US de visualizacion de stock en tiempo real
+  - **Today:**        ---
+  - **Blockers:**     El bug tomó mas tiempo del previsto.
+
+  ## Llanos Villarroel Vania F.
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Rios Quiruchi Edney Jhojan
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Sejas Arze Eddy
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+  ## Soliz Moya Alejandra
+  - **Yesterday:**    
+  - **Today:**        
+  - **Blockers:**     
+
+ 
