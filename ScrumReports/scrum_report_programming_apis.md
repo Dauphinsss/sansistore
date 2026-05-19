@@ -199,3 +199,11 @@
 - **Yesterday:** Seleccione una historia de usuario.
 - **Today:** Definiré todo lo respecto a la historia de usuario
 - **Blockers:** None.
+
+## 19-05-2026
+
+### José Daniel Virreira Rufino
+
+- **Yesterday:** Estuve en contacto con el grupo de WebSpire para trabajar en las dependencias de nuestras historias de usuario.
+- **Today:** Trabajaré con el mapa ya implementado por el grupo de DivinityMinds para mi historia de usuario asignada.
+- **Blockers:** Entender la funcionalidad completa del mapa ya implementado.
