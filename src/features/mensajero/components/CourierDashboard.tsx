@@ -693,33 +693,6 @@ export default function CourierDashboard({ embedded = false }: { embedded?: bool
                                 <Eye className="h-4 w-4" />
                                 Ver detalle
                               </button>
-
-                              {/* ENTREGADO */}
-                              <button
-                                type="button"
-                                onClick={() => handleMarkDelivered(order)}
-                                disabled={updatingOrderId === order.id || !hasValidAmount}
-                                className="
-                                  inline-flex items-center justify-center gap-2
-                                  rounded-full
-                                  px-5 py-3
-                                  text-sm font-semibold
-                                  bg-[#88B04B] text-[#0A0B0D]
-                                  transition-all duration-200
-                                  hover:bg-[#769b3f]
-                                  active:scale-[0.98]
-                                  disabled:opacity-50 disabled:cursor-not-allowed
-                                  shadow-sm
-                                "
-                              >
-                                {updatingOrderId === order.id ? (
-                                  <LoaderCircle className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <BadgeCheck className="h-4 w-4" />
-                                )}
-                                Marcar entregado
-                              </button>
-
                               {/* NO ENTREGADO */}
                               <button
                                 type="button"
@@ -740,6 +713,22 @@ export default function CourierDashboard({ embedded = false }: { embedded?: bool
                                 No entregado
                               </button>
 
+                              {/* ENTREGADO */}
+                              <button
+                                type="button"
+                                onClick={() => handleMarkDelivered(order)}
+                                disabled={updatingOrderId === order.id || !hasValidAmount}
+                                className={`w-full ${primaryButtonClass}`}
+                              >
+                                {updatingOrderId === order.id ? (
+                                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <BadgeCheck className="h-4 w-4" />
+                                )}
+                                Marcar entregado
+                              </button>
+
+     
                             </div>
                           </td>
                         </tr>
