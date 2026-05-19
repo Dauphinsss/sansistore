@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import UndeliveredModal from '../modals/UndeliveredModal';
+
 import {
   ArrowLeft,
   BadgeCheck,
@@ -56,6 +58,7 @@ const ghostButtonClass =
 const primaryButtonClass =
   'inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-bold text-bg-dark transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60';
 
+
 function OrderDetailView({
   selectedOrder,
   selectedItemsCount,
@@ -65,6 +68,7 @@ function OrderDetailView({
   onBack,
   onOpenMaps,
   onMarkDelivered,
+  onMarkUndelivered,
 }: {
   selectedOrder: CourierOrder;
   selectedItemsCount: number;
@@ -74,6 +78,7 @@ function OrderDetailView({
   onBack: () => void;
   onOpenMaps: (order: CourierOrder) => void;
   onMarkDelivered: (order: CourierOrder) => Promise<void>;
+  onMarkUndelivered: (order: CourierOrder) => void; 
 }) {
   return (
     <section className={pageClassName}>
@@ -321,28 +326,26 @@ function OrderDetailView({
                 )}
                 Marcar como entregado
               </button>
-              
-               {/* NO ENTREGADO */}
-                <button
-                  type="button"
-                  onClick={() => onMarkDelivered(selectedOrder)}
-                  className="
-                    w-full inline-flex items-center justify-center gap-2
-                    rounded-full
-                    px-5 py-3
-                    text-sm font-semibold
-                    bg-[#7A3B2E] text-[#FFF8F2]
-                    transition-all duration-200
-                    hover:bg-[#5F2D23]
-                    active:scale-[0.98]
-                    shadow-sm
-                  "
-                >
-                  <PackageX className="h-4 w-4" />
 
-                  No entregado
-                </button>
-               
+            
+              <button
+                type="button"
+                onClick={() => onMarkUndelivered(selectedOrder)}
+                className="
+                  w-full inline-flex items-center justify-center gap-2
+                  rounded-full
+                  px-5 py-3
+                  text-sm font-semibold
+                  bg-[#7A3B2E] text-[#FFF8F2]
+                  transition-all duration-200
+                  hover:bg-[#5F2D23]
+                  active:scale-[0.98]
+                  shadow-sm
+                "
+              >
+                <PackageX className="h-4 w-4" />
+                No entregado
+              </button>
             </div>
           </aside>
         </div>
@@ -361,6 +364,9 @@ export default function CourierDashboard({ embedded = false }: { embedded?: bool
   const [updatingOrderId, setUpdatingOrderId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  const [selectedUndeliveredOrder, setSelectedUndeliveredOrder] =
+    useState<CourierOrder | null>(null);
 
   useEffect(() => {
     const unsubscribe = subscribeToCourierOrders((payload) => {
@@ -424,6 +430,27 @@ export default function CourierDashboard({ embedded = false }: { embedded?: bool
     }
   };
 
+  
+  const handleMarkUndelivered = (order: CourierOrder) => {
+    setSelectedUndeliveredOrder(order);
+  };
+
+  const handleConfirmUndelivered = async (
+    order: CourierOrder,
+    reason: string,
+    notes: string
+  ) => {
+    try {
+      console.log(order, reason, notes);
+
+      // request backend
+
+      setSelectedUndeliveredOrder(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleOpenMaps = (order: CourierOrder) => {
     const query = encodeURIComponent(
       `${order.deliveryZone}, Cochabamba, Bolivia`
@@ -455,272 +482,296 @@ export default function CourierDashboard({ embedded = false }: { embedded?: bool
 
   if (selectedOrder) {
     return (
-      <OrderDetailView
-        selectedOrder={selectedOrder}
-        selectedItemsCount={selectedItemsCount}
-        selectedOrderHasValidAmount={selectedOrderHasValidAmount}
-        updatingOrderId={updatingOrderId}
-        pageClassName={getPageClass(embedded)}
-        onBack={() => setSelectedOrder(null)}
-        onOpenMaps={handleOpenMaps}
-        onMarkDelivered={handleMarkDelivered}
-      />
+      <>
+        <OrderDetailView
+          selectedOrder={selectedOrder}
+          selectedItemsCount={selectedItemsCount}
+          selectedOrderHasValidAmount={selectedOrderHasValidAmount}
+          updatingOrderId={updatingOrderId}
+          pageClassName={getPageClass(embedded)}
+          onBack={() => setSelectedOrder(null)}
+          onOpenMaps={handleOpenMaps}
+          onMarkDelivered={handleMarkDelivered}
+          onMarkUndelivered={handleMarkUndelivered} 
+        />
+
+      
+        {selectedUndeliveredOrder && (
+          <UndeliveredModal
+            order={selectedUndeliveredOrder}
+            onClose={() => setSelectedUndeliveredOrder(null)}
+            onConfirm={handleConfirmUndelivered}
+            updatingOrderId={updatingOrderId}
+          />
+        )}
+      </>
     );
   }
 
   return (
-    <section className={getPageClass(embedded)}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-10 flex flex-col gap-3">
-          <p className="text-sm font-bold uppercase tracking-[0.28em] text-primary">
-            Operacion de entregas
-          </p>
+    <>
+      <section className={getPageClass(embedded)}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-10 flex flex-col gap-3">
+            <p className="text-sm font-bold uppercase tracking-[0.28em] text-primary">
+              Operacion de entregas
+            </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-4xl font-black tracking-[-0.04em] sm:text-5xl">
-                Gestion de entregas
-              </h1>
-              <p className={`mt-2 max-w-2xl text-sm font-semibold ${mutedTextClass}`}>
-                Gestiona pedidos pendientes, revisa lo cobrado y registra las
-                entregas del dia.
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h1 className="text-4xl font-black tracking-[-0.04em] sm:text-5xl">
+                  Gestion de entregas
+                </h1>
+                <p className={`mt-2 max-w-2xl text-sm font-semibold ${mutedTextClass}`}>
+                  Gestiona pedidos pendientes, revisa lo cobrado y registra las
+                  entregas del dia.
+                </p>
+              </div>
+
+              <div className="inline-flex items-center gap-2 self-start rounded-full border border-primary/20 bg-card-bg-light px-4 py-2 text-sm font-semibold text-text-light opacity-80 shadow-[0_10px_24px_rgba(18,32,56,0.08)]">
+                {syncing ? (
+                  <LoaderCircle className="h-4 w-4 animate-spin text-primary" />
+                ) : (
+                  <PackageCheck className="h-4 w-4 text-primary" />
+                )}
+                Sincronizando datos de pedidos
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-8 grid gap-5 lg:grid-cols-3">
+            <article className={cardBaseClass}>
+              <div className="flex items-center gap-5">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#fff2b8] text-[#d08a00]">
+                  <Box className="h-8 w-8" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-text-light opacity-70">
+                    Pendientes
+                  </p>
+                  <strong className="text-[3rem] leading-none font-black tracking-[-0.05em]">
+                    {stats.pendingCount}
+                  </strong>
+                </div>
+              </div>
+            </article>
+
+            <article className={cardBaseClass}>
+              <div className="flex items-center gap-5">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+                  <BadgeCheck className="h-8 w-8" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-text-light opacity-70">
+                    Entregados hoy
+                  </p>
+                  <strong className="text-[3rem] leading-none font-black tracking-[-0.05em]">
+                    {stats.deliveredTodayCount}
+                  </strong>
+                </div>
+              </div>
+            </article>
+
+            <article className={cardBaseClass}>
+              <div className="flex items-center gap-5">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+                  <Wallet className="h-8 w-8" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-text-light opacity-70">
+                    Total a cobrar
+                  </p>
+                  <strong className="text-[2.7rem] leading-none font-black tracking-[-0.05em]">
+                    {formatMoney(stats.pendingCashTotal)}
+                  </strong>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div className="overflow-hidden rounded-[30px] border border-border-light bg-card-bg-light shadow-[0_16px_36px_rgba(32,28,20,0.12)]">
+            <div className="border-b border-border-light px-8 py-6">
+              <h2 className="text-2xl font-black tracking-[-0.04em]">
+                Pedidos pendientes
+              </h2>
+              <p className="mt-1 text-sm font-semibold text-text-light opacity-55">
+                Pedidos pendientes de entrega y cobro contra entrega.
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 self-start rounded-full border border-primary/20 bg-card-bg-light px-4 py-2 text-sm font-semibold text-text-light opacity-80 shadow-[0_10px_24px_rgba(18,32,56,0.08)]">
-              {syncing ? (
-                <LoaderCircle className="h-4 w-4 animate-spin text-primary" />
-              ) : (
-                <PackageCheck className="h-4 w-4 text-primary" />
-              )}
-              Sincronizando datos de pedidos
-            </div>
+            {errorMessage ? (
+              <div className="border-b border-[#f97316]/15 bg-[#fff7ed] px-8 py-4 text-sm font-semibold text-[#9a3412] dark:border-[#f97316]/10 dark:bg-[#2a2117] dark:text-[#fdba74]">
+                {errorMessage}
+              </div>
+            ) : null}
+
+            {successMessage ? (
+              <div className="border-b border-primary/20 bg-primary/10 px-8 py-4 text-sm font-semibold text-primary">
+                {successMessage}
+              </div>
+            ) : null}
+
+            {loading ? (
+              <div className="flex min-h-72 items-center justify-center px-8 py-12 text-text-light opacity-55">
+                <LoaderCircle className="h-6 w-6 animate-spin" />
+              </div>
+            ) : pendingOrders.length === 0 ? (
+              <div className="px-8 py-16 text-center">
+                <p className="text-lg font-bold">No hay pedidos pendientes.</p>
+                <p className="mt-2 text-sm font-semibold text-text-light opacity-55">
+                  Los pedidos entregados hoy aparecen reflejados en las metricas
+                  superiores.
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-left">
+                  <thead className="bg-secondary-bg-light/50 text-sm font-black uppercase tracking-[0.08em] text-text-light">
+                    <tr>
+                      <th className="px-8 py-5">Codigo</th>
+                      <th className="px-8 py-5">Cliente</th>
+                      <th className="px-8 py-5">Zona</th>
+                      <th className="px-8 py-5">Monto</th>
+                      <th className="px-8 py-5">Estado</th>
+                      <th className="px-8 py-5">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingOrders.map((order) => {
+                      const expectedTotal = Number(
+                        (order.productsTotal + order.additionalCharges).toFixed(2)
+                      );
+                      const hasValidAmount =
+                        Number.isFinite(order.total) &&
+                        order.total > 0 &&
+                        Number(order.total.toFixed(2)) === expectedTotal;
+
+                      return (
+                        <tr
+                          key={order.id}
+                          className="border-t border-border-light text-[1.05rem] text-text-light"
+                        >
+                          <td className="px-8 py-5 font-medium">{order.orderCode}</td>
+                          <td className="px-8 py-5 font-medium">{order.buyerName}</td>
+                          <td className="px-8 py-5">
+                            <span className="inline-flex items-center gap-2 font-medium text-text-light opacity-75">
+                              <MapPin className="h-4 w-4" />
+                              {order.deliveryZone}
+                            </span>
+                          </td>
+                          <td className="px-8 py-5 font-medium">
+                            {hasValidAmount
+                              ? formatMoney(order.total)
+                              : 'Monto no disponible'}
+                          </td>
+                          <td className="px-8 py-5">
+                            <span
+                              className={`${badgeClass} bg-[#fff2b8] py-1 text-[#aa7300]`}
+                            >
+                              {order.paymentStatusLabel}
+                            </span>
+                          </td>
+                          <td className="px-8 py-5">
+                            <div className="flex flex-wrap items-center gap-3">
+
+                              {/* VER DETALLE */}
+                              <button
+                                type="button"
+                                onClick={() => setSelectedOrder(order)}
+                                className="
+                                  inline-flex items-center justify-center gap-2
+                                  rounded-full
+                                  px-5 py-3
+                                  text-sm font-semibold
+                                  bg-text-light text-bg-light
+                                  transition-all duration-200
+                                  hover:opacity-90
+                                  active:scale-[0.98]
+                                  shadow-sm
+                                "
+                              >
+                                <Eye className="h-4 w-4" />
+                                Ver detalle
+                              </button>
+
+                              {/* ENTREGADO */}
+                              <button
+                                type="button"
+                                onClick={() => handleMarkDelivered(order)}
+                                disabled={updatingOrderId === order.id || !hasValidAmount}
+                                className="
+                                  inline-flex items-center justify-center gap-2
+                                  rounded-full
+                                  px-5 py-3
+                                  text-sm font-semibold
+                                  bg-[#88B04B] text-[#0A0B0D]
+                                  transition-all duration-200
+                                  hover:bg-[#769b3f]
+                                  active:scale-[0.98]
+                                  disabled:opacity-50 disabled:cursor-not-allowed
+                                  shadow-sm
+                                "
+                              >
+                                {updatingOrderId === order.id ? (
+                                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <BadgeCheck className="h-4 w-4" />
+                                )}
+                                Marcar entregado
+                              </button>
+
+                              {/* NO ENTREGADO */}
+                              <button
+                                type="button"
+                                onClick={() => handleMarkUndelivered(order)}
+                                className="
+                                  inline-flex items-center justify-center gap-2
+                                  rounded-full
+                                  px-5 py-3
+                                  text-sm font-semibold
+                                  bg-[#7A3B2E] text-[#FFF8F2]
+                                  transition-all duration-200
+                                  hover:bg-[#5F2D23]
+                                  active:scale-[0.98]
+                                  shadow-sm
+                                "
+                              >
+                                <PackageX className="h-4 w-4" />
+                                No entregado
+                              </button>
+
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
-        </div>
 
-        <div className="mb-8 grid gap-5 lg:grid-cols-3">
-          <article className={cardBaseClass}>
-            <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#fff2b8] text-[#d08a00]">
-                <Box className="h-8 w-8" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-text-light opacity-70">
-                  Pendientes
-                </p>
-                <strong className="text-[3rem] leading-none font-black tracking-[-0.05em]">
-                  {stats.pendingCount}
-                </strong>
-              </div>
-            </div>
-          </article>
-
-          <article className={cardBaseClass}>
-            <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15 text-primary">
-                <BadgeCheck className="h-8 w-8" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-text-light opacity-70">
-                  Entregados hoy
-                </p>
-                <strong className="text-[3rem] leading-none font-black tracking-[-0.05em]">
-                  {stats.deliveredTodayCount}
-                </strong>
-              </div>
-            </div>
-          </article>
-
-          <article className={cardBaseClass}>
-            <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15 text-primary">
-                <Wallet className="h-8 w-8" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-text-light opacity-70">
-                  Total a cobrar
-                </p>
-                <strong className="text-[2.7rem] leading-none font-black tracking-[-0.05em]">
-                  {formatMoney(stats.pendingCashTotal)}
-                </strong>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div className="overflow-hidden rounded-[30px] border border-border-light bg-card-bg-light shadow-[0_16px_36px_rgba(32,28,20,0.12)]">
-          <div className="border-b border-border-light px-8 py-6">
-            <h2 className="text-2xl font-black tracking-[-0.04em]">
-              Pedidos pendientes
-            </h2>
-            <p className="mt-1 text-sm font-semibold text-text-light opacity-55">
-              Pedidos pendientes de entrega y cobro contra entrega.
+          <div className="mt-6 rounded-[26px] border border-border-light bg-card-bg-light/80 px-6 py-5 shadow-[0_10px_24px_rgba(18,32,56,0.06)] backdrop-blur">
+            <p className="text-sm font-semibold text-text-light opacity-65">
+              Historial entregado:{' '}
+              <span className="font-black text-text-light">
+                {deliveredOrders.length}
+              </span>{' '}
+              pedidos registrados como entregados.
             </p>
           </div>
-
-          {errorMessage ? (
-            <div className="border-b border-[#f97316]/15 bg-[#fff7ed] px-8 py-4 text-sm font-semibold text-[#9a3412] dark:border-[#f97316]/10 dark:bg-[#2a2117] dark:text-[#fdba74]">
-              {errorMessage}
-            </div>
-          ) : null}
-
-          {successMessage ? (
-            <div className="border-b border-primary/20 bg-primary/10 px-8 py-4 text-sm font-semibold text-primary">
-              {successMessage}
-            </div>
-          ) : null}
-
-          {loading ? (
-            <div className="flex min-h-72 items-center justify-center px-8 py-12 text-text-light opacity-55">
-              <LoaderCircle className="h-6 w-6 animate-spin" />
-            </div>
-          ) : pendingOrders.length === 0 ? (
-            <div className="px-8 py-16 text-center">
-              <p className="text-lg font-bold">No hay pedidos pendientes.</p>
-              <p className="mt-2 text-sm font-semibold text-text-light opacity-55">
-                Los pedidos entregados hoy aparecen reflejados en las metricas
-                superiores.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-left">
-                <thead className="bg-secondary-bg-light/50 text-sm font-black uppercase tracking-[0.08em] text-text-light">
-                  <tr>
-                    <th className="px-8 py-5">Codigo</th>
-                    <th className="px-8 py-5">Cliente</th>
-                    <th className="px-8 py-5">Zona</th>
-                    <th className="px-8 py-5">Monto</th>
-                    <th className="px-8 py-5">Estado</th>
-                    <th className="px-8 py-5">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pendingOrders.map((order) => {
-                    const expectedTotal = Number(
-                      (order.productsTotal + order.additionalCharges).toFixed(2)
-                    );
-                    const hasValidAmount =
-                      Number.isFinite(order.total) &&
-                      order.total > 0 &&
-                      Number(order.total.toFixed(2)) === expectedTotal;
-
-                    return (
-                      <tr
-                        key={order.id}
-                        className="border-t border-border-light text-[1.05rem] text-text-light"
-                      >
-                        <td className="px-8 py-5 font-medium">{order.orderCode}</td>
-                        <td className="px-8 py-5 font-medium">{order.buyerName}</td>
-                        <td className="px-8 py-5">
-                          <span className="inline-flex items-center gap-2 font-medium text-text-light opacity-75">
-                            <MapPin className="h-4 w-4" />
-                            {order.deliveryZone}
-                          </span>
-                        </td>
-                        <td className="px-8 py-5 font-medium">
-                          {hasValidAmount
-                            ? formatMoney(order.total)
-                            : 'Monto no disponible'}
-                        </td>
-                        <td className="px-8 py-5">
-                          <span
-                            className={`${badgeClass} bg-[#fff2b8] py-1 text-[#aa7300]`}
-                          >
-                            {order.paymentStatusLabel}
-                          </span>
-                        </td>
-                <td className="px-8 py-5">
-                  <div className="flex flex-wrap items-center gap-3">
-                    
-                    {/* VER DETALLE */}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedOrder(order)}
-                      className="
-                        inline-flex items-center justify-center gap-2
-                        rounded-full
-                        px-5 py-3
-                        text-sm font-semibold
-                        bg-text-light text-bg-light
-                        transition-all duration-200
-                        hover:opacity-90
-                        active:scale-[0.98]
-                        shadow-sm
-                      "
-                    >
-                      <Eye className="h-4 w-4" />
-                      Ver detalle
-                    </button>
-
-                    {/* ENTREGADO */}
-                    <button
-                      type="button"
-                      onClick={() => handleMarkDelivered(order)}
-                      disabled={updatingOrderId === order.id || !hasValidAmount}
-                      className="
-                        inline-flex items-center justify-center gap-2
-                        rounded-full
-                        px-5 py-3
-                        text-sm font-semibold
-                        bg-[#88B04B] text-[#0A0B0D]
-                        transition-all duration-200
-                        hover:bg-[#769b3f]
-                        active:scale-[0.98]
-                        disabled:opacity-50 disabled:cursor-not-allowed
-                        shadow-sm
-                      "
-                    >
-                      {updatingOrderId === order.id ? (
-                        <LoaderCircle className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <BadgeCheck className="h-4 w-4" />
-                      )}
-                      Marcar entregado
-                    </button>
-
-                   {/* NO ENTREGADO */}
-                      <button
-                        type="button"
-                        onClick={() => handleMarkDelivered(order)}
-                        className="
-                          w-full inline-flex items-center justify-center gap-2
-                          rounded-full
-                          px-5 py-3
-                          text-sm font-semibold
-                          bg-[#7A3B2E] text-[#FFF8F2]
-                          transition-all duration-200
-                          hover:bg-[#5F2D23]
-                          active:scale-[0.98]
-                          shadow-sm
-                        "
-                      >
-                        <PackageX className="h-4 w-4" />
-
-                        No entregado
-                      </button>
-
-                  </div>
-                </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
+      </section>
 
-        <div className="mt-6 rounded-[26px] border border-border-light bg-card-bg-light/80 px-6 py-5 shadow-[0_10px_24px_rgba(18,32,56,0.06)] backdrop-blur">
-          <p className="text-sm font-semibold text-text-light opacity-65">
-            Historial entregado:{' '}
-            <span className="font-black text-text-light">
-              {deliveredOrders.length}
-            </span>{' '}
-            pedidos registrados como entregados.
-          </p>
-        </div>
-      </div>
-    </section>
+      {/* modal también disponible en la vista de lista */}
+      {selectedUndeliveredOrder && (
+        <UndeliveredModal
+          order={selectedUndeliveredOrder}
+          onClose={() => setSelectedUndeliveredOrder(null)}
+          onConfirm={handleConfirmUndelivered}
+          updatingOrderId={updatingOrderId}
+        />
+      )}
+    </>
   );
 }
