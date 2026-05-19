@@ -5,6 +5,7 @@ import {
   Box,
   ClipboardList,
   Eye,
+  PackageX,
   LoaderCircle,
   MapPin,
   NotebookText,
@@ -320,6 +321,28 @@ function OrderDetailView({
                 )}
                 Marcar como entregado
               </button>
+              
+               {/* NO ENTREGADO */}
+                <button
+                  type="button"
+                  onClick={() => onMarkDelivered(selectedOrder)}
+                  className="
+                    w-full inline-flex items-center justify-center gap-2
+                    rounded-full
+                    px-5 py-3
+                    text-sm font-semibold
+                    bg-[#7A3B2E] text-[#FFF8F2]
+                    transition-all duration-200
+                    hover:bg-[#5F2D23]
+                    active:scale-[0.98]
+                    shadow-sm
+                  "
+                >
+                  <PackageX className="h-4 w-4" />
+
+                  No entregado
+                </button>
+               
             </div>
           </aside>
         </div>
@@ -607,31 +630,78 @@ export default function CourierDashboard({ embedded = false }: { embedded?: bool
                             {order.paymentStatusLabel}
                           </span>
                         </td>
-                        <td className="px-8 py-5">
-                          <div className="flex flex-wrap gap-3">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedOrder(order)}
-                              className="inline-flex items-center gap-2 rounded-2xl bg-text-light px-5 py-3 text-sm font-bold text-bg-light transition hover:opacity-90"
-                            >
-                              <Eye className="h-4 w-4" />
-                              Ver detalle
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleMarkDelivered(order)}
-                              disabled={updatingOrderId === order.id || !hasValidAmount}
-                              className={primaryButtonClass}
-                            >
-                              {updatingOrderId === order.id ? (
-                                <LoaderCircle className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <BadgeCheck className="h-4 w-4" />
-                              )}
-                              Marcar entregado
-                            </button>
-                          </div>
-                        </td>
+                <td className="px-8 py-5">
+                  <div className="flex flex-wrap items-center gap-3">
+                    
+                    {/* VER DETALLE */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedOrder(order)}
+                      className="
+                        inline-flex items-center justify-center gap-2
+                        rounded-full
+                        px-5 py-3
+                        text-sm font-semibold
+                        bg-text-light text-bg-light
+                        transition-all duration-200
+                        hover:opacity-90
+                        active:scale-[0.98]
+                        shadow-sm
+                      "
+                    >
+                      <Eye className="h-4 w-4" />
+                      Ver detalle
+                    </button>
+
+                    {/* ENTREGADO */}
+                    <button
+                      type="button"
+                      onClick={() => handleMarkDelivered(order)}
+                      disabled={updatingOrderId === order.id || !hasValidAmount}
+                      className="
+                        inline-flex items-center justify-center gap-2
+                        rounded-full
+                        px-5 py-3
+                        text-sm font-semibold
+                        bg-[#88B04B] text-[#0A0B0D]
+                        transition-all duration-200
+                        hover:bg-[#769b3f]
+                        active:scale-[0.98]
+                        disabled:opacity-50 disabled:cursor-not-allowed
+                        shadow-sm
+                      "
+                    >
+                      {updatingOrderId === order.id ? (
+                        <LoaderCircle className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <BadgeCheck className="h-4 w-4" />
+                      )}
+                      Marcar entregado
+                    </button>
+
+                   {/* NO ENTREGADO */}
+                      <button
+                        type="button"
+                        onClick={() => handleMarkDelivered(order)}
+                        className="
+                          w-full inline-flex items-center justify-center gap-2
+                          rounded-full
+                          px-5 py-3
+                          text-sm font-semibold
+                          bg-[#7A3B2E] text-[#FFF8F2]
+                          transition-all duration-200
+                          hover:bg-[#5F2D23]
+                          active:scale-[0.98]
+                          shadow-sm
+                        "
+                      >
+                        <PackageX className="h-4 w-4" />
+
+                        No entregado
+                      </button>
+
+                  </div>
+                </td>
                       </tr>
                     );
                   })}
